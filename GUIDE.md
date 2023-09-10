@@ -1,6 +1,10 @@
 # Guide
 
-This guide and codebase can be thought of as an *additional* resource for those that are already using [The Annotated Turing](https://www.amazon.com/Annotated-Turing-Through-Historic-Computability/dp/0470229055) (which I would regard as essential to understanding the paper).
+This guide and codebase can be thought of as a companion resource for those reading [On Computable Numbers, with an Application to the Entscheidungsproblem](https://www.cs.virginia.edu/~robins/Turing_Paper_1936.pdf) by Alan Turing.
+
+I can't recommend [The Annotated Turing](https://www.amazon.com/Annotated-Turing-Through-Historic-Computability/dp/0470229055) enough, this project would not have been possible without it.
+
+The guide annotates the paper section-by-section. I only quote directly from the paper when there is something to call out explicitly. When possible I bias towards a fully working implementation in code that the reader can use themselves.
 
 ## Introduction
 
@@ -14,8 +18,9 @@ Turing explains that his paper will be about [computable numbers](https://en.wik
 
 - $\mathbb{N}$ ([naturals](https://en.wikipedia.org/wiki/Natural_number)): $0$, $1$, $2$, ...
 - $\mathbb{Z}$ ([integers](https://en.wikipedia.org/wiki/Integer)): $-2$, $-1$, $0$, $1$, $2$, ...
-- $\mathbb{Q}$ ([rationals](https://en.wikipedia.org/wiki/Rational_number)): $1$, $\tfrac{1}{2}$, $\tfrac{7}{44}$, ...
-- $\mathbb{R}$ ([reals](https://en.wikipedia.org/wiki/Real_number)): 1, ${\sqrt {2}}$, $\pi$, ...
+- $\mathbb{Q}$ ([rationals](https://en.wikipedia.org/wiki/Rational_number)): $-1$, $1$, $\tfrac{1}{2}$, $\tfrac{7}{44}$, ...
+- $\mathbb{R}$ ([reals](https://en.wikipedia.org/wiki/Real_number)): $-1$, $1$, ${\sqrt {2}}$, $\pi$, ...
+- $\mathbb{C}$ ([complex](https://en.wikipedia.org/wiki/Real_number)): $-1$, $1$, ${\sqrt {2}}$, $\pi$, $i$, $2i+3$, ...
 
 The real numbers are all numbers which are not imaginary. When he says "expressions as a decimal", he is simply saying that he wants to deal with strings of digits ($0.333...$ rather than $\tfrac{1}{3}$) and in fact he will further limit his numbers to just binary digits ($0.010101...$).
 
