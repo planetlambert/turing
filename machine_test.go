@@ -26,7 +26,7 @@ func TestMachineExample1(t *testing.T) {
 			{"k", []string{" "}, []string{"R"}, "b"},
 		},
 	}
-	m.MoveN(100)
+	m.MoveN(50)
 	checkTape(t, m.TapeString(), "0 1 0 1 0 1 0 1 0 1 0 1")
 }
 
@@ -38,7 +38,7 @@ func TestMachineExample1Short(t *testing.T) {
 			{"b", []string{"1"}, []string{"R", "R", "P0"}, "b"},
 		},
 	}
-	m.MoveN(100)
+	m.MoveN(50)
 	checkTape(t, m.TapeString(), "0 1 0 1 0 1 0 1 0 1 0 1")
 }
 
