@@ -18,7 +18,7 @@ For those who intend to actually read the paper I recommend starting with The An
 For those who want to use the implementation, here is how to get started:
 
 ```
-go get github.com/planetlambert/turing
+go get github.com/planetlambert/turing@latest
 ```
 
 ```
@@ -29,8 +29,8 @@ import (
 )
 
 func main() {
-    m := &Machine{
-        MConfigurations: []MConfiguration{
+    m := &turing.Machine{
+        MConfigurations: turing.MConfigurations{
             {Name: "b", Symbols: []string{" "}, Operations: []string{"P0", "R"}, FinalMConfiguration: "c"},
             {Name: "c", Symbols: []string{" "}, Operations: []string{"R"},       FinalMConfiguration: "e"},
             {Name: "e", Symbols: []string{" "}, Operations: []string{"P1", "R"}, FinalMConfiguration: "k"},
