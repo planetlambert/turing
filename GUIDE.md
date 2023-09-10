@@ -107,14 +107,14 @@ type (
 
     MConfigurations []MConfiguration
 
-	MConfiguration struct {
-		Name                string
-		Symbols             []string
-		Operations          []string
-		FinalMConfiguration string
-	}
+    MConfiguration struct {
+        Name                string
+        Symbols             []string
+        Operations          []string
+        FinalMConfiguration string
+    }
 
-	Tape []string
+    Tape []string
 )
 ```
 
