@@ -287,8 +287,8 @@ func (m *Machine) newStartingMConfiguration() string {
 	}
 }
 
-func (m *Machine) newTape() Tape {
-	newTape := Tape{}
+func (m *Machine) newTape() []string {
+	newTape := []string{}
 	for _, square := range m.Tape {
 		newTape = append(newTape, m.mConfigurationSymbols[square])
 	}
@@ -296,7 +296,7 @@ func (m *Machine) newTape() Tape {
 }
 
 // Translates a tape
-func (sm SymbolMap) TranslateTape(tape Tape) string {
+func (sm SymbolMap) TranslateTape(tape []string) string {
 	var translatedTape strings.Builder
 	for _, square := range tape {
 		translatedTape.WriteString(sm[square])

@@ -101,11 +101,9 @@ Turing spends the remainder of the section giving a textual description of his "
 ```go
 type (
     Machine struct {
-        MConfigurations
-        Tape
+        MConfigurations []MConfiguration
+        Tape            []string
     }
-
-    MConfigurations []MConfiguration
 
     MConfiguration struct {
         Name                string
@@ -113,8 +111,6 @@ type (
         Operations          []string
         FinalMConfiguration string
     }
-
-    Tape []string
 )
 ```
 

@@ -16,7 +16,8 @@ type (
 
 		// The machine is supplied with a "tape" (the analogue of paper) running through it,
 		// and divided into sections (called "squares") each capable of bearing a "symbol".
-		Tape
+		// Our "tape" is a slice of strings because squares can contain multiple characters
+		Tape []string
 
 		// The m-configuration that the machine should start with. If empty the first m-configuration
 		// in the list is chosen.
@@ -74,9 +75,6 @@ type (
 		// In addition to any of these operations the m-configuration may be changed.
 		FinalMConfiguration string
 	}
-
-	// Our "tape" is a slice of strings because squares can contain multiple characters
-	Tape []string
 
 	// Well-known single-character codes used in an m-configuration's operations.
 	operationCode byte
