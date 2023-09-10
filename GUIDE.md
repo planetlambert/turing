@@ -96,7 +96,7 @@ This is quite philosophical but Turing is essentially just saying that the human
 
 ### The "Machine"
 
-Turing spends the remainder of the section giving a textual description of his "machines". This is of course the famous [Turing Machine](https://en.wikipedia.org/wiki/Turing_machine). I think his description is quite readable, so I won't try to explain it here. I will instead provide the type structure of the machine below (it can also be found at the top of [machine.go](./machine.go)).
+Turing spends the remainder of the section giving a textual description of his "machines". These are of course the famous [Turing Machines](https://en.wikipedia.org/wiki/Turing_machine). I think his description is quite readable, so I won't try to explain it here. I will instead provide a simplified version of the type structure of the machine below (it can also be found at the top of [machine.go](./machine.go)).
 
 ```go
 type (

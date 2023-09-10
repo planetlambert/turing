@@ -47,7 +47,7 @@ func TestParseMFunctionNoFunction(t *testing.T) {
 }
 
 func TestFindLeftMost(t *testing.T) {
-	mConfigurations := MConfigurations{
+	mConfigurations := []MConfiguration{
 		// Invokes the findLeftMost MFunction (`f`), printing `x` or `y` depending on if `0` is found
 		{"b", []string{"*", " "}, []string{"R", "R", "R"}, "f(ph(x), ph(y), 0)"},
 	}
@@ -91,7 +91,7 @@ func TestErase(t *testing.T) {
 	// Invokes the erase MFunction (`e`), printing `x` or `y` depending on if all `z` symbols are found and erased
 	eraseAllTest := MConfiguration{"b", []string{"*", " "}, []string{"R", "R"}, "e(ph(x), z)"}
 
-	mConfigurations := MConfigurations{}
+	mConfigurations := []MConfiguration{}
 	mConfigurations = append(mConfigurations, printAndHalt)
 	mConfigurations = append(mConfigurations, findLeftMost...)
 	mConfigurations = append(mConfigurations, erase...)
@@ -147,7 +147,7 @@ func TestPrintAtTheEnd(t *testing.T) {
 	// Invokes the printAtTheEnd MFunction (`pe`), printing `x` at the end of the sequence
 	printAtTheEndTest := MConfiguration{"b", []string{"*", " "}, []string{"R", "R"}, "pe(halt, x)"}
 
-	mConfigurations := MConfigurations{}
+	mConfigurations := []MConfiguration{}
 	mConfigurations = append(mConfigurations, findLeftMost...)
 	mConfigurations = append(mConfigurations, printAtTheEnd...)
 	mConfigurations = append(mConfigurations, printAtTheEndTest)
@@ -174,7 +174,7 @@ func TestFindLeft(t *testing.T) {
 	// Invokes the findLeft MFunction (`fl`) printing an `x` to the left of the first ocurrence of the symb ol
 	findLeftTest := MConfiguration{"b", []string{"*", " "}, []string{"R", "R"}, "fl(ph(x), ph(y), 0)"}
 
-	mConfigurations := MConfigurations{}
+	mConfigurations := []MConfiguration{}
 	mConfigurations = append(mConfigurations, printAndHalt)
 	mConfigurations = append(mConfigurations, findLeftMost...)
 	mConfigurations = append(mConfigurations, findLeft...)
@@ -217,7 +217,7 @@ func TestFindRight(t *testing.T) {
 	// Invokes the findRight MFunction (`fr`) printing an `x` to the right of the first ocurrence of the symb ol
 	findRightTest := MConfiguration{"b", []string{"*", " "}, []string{"R", "R"}, "fr(ph(x), ph(y), 0)"}
 
-	mConfigurations := MConfigurations{}
+	mConfigurations := []MConfiguration{}
 	mConfigurations = append(mConfigurations, printAndHalt)
 	mConfigurations = append(mConfigurations, findLeftMost...)
 	mConfigurations = append(mConfigurations, findRight...)
@@ -258,7 +258,7 @@ func TestCopy(t *testing.T) {
 	// Invokes the copy MFunction (`c`), copying the `0` to the left of `x` to the end of the sequence.
 	copyTest := MConfiguration{"b", []string{"*", " "}, []string{"R", "R"}, "c(halt, halt, x)"}
 
-	mConfigurations := MConfigurations{}
+	mConfigurations := []MConfiguration{}
 	mConfigurations = append(mConfigurations, findLeftMost...)
 	mConfigurations = append(mConfigurations, findLeft...)
 	mConfigurations = append(mConfigurations, printAtTheEnd...)
@@ -287,7 +287,7 @@ func TestCopyAndErase(t *testing.T) {
 	// Invokes the copyAndErase MFunction (`ce`), copying all of the marked figures and erasing all of the markers.
 	copyAndEraseAllTest := MConfiguration{"b", []string{"*", " "}, []string{"R", "R"}, "ce(halt, x)"}
 
-	mConfigurations := MConfigurations{}
+	mConfigurations := []MConfiguration{}
 	mConfigurations = append(mConfigurations, findLeftMost...)
 	mConfigurations = append(mConfigurations, findLeft...)
 	mConfigurations = append(mConfigurations, printAtTheEnd...)
@@ -333,7 +333,7 @@ func TestReplace(t *testing.T) {
 	// Invokes the replace MFunction (`re`), replace all markers with another.
 	replaceAllTest := MConfiguration{"b", []string{"*", " "}, []string{"R", "R"}, "re(halt, x, y)"}
 
-	mConfigurations := MConfigurations{}
+	mConfigurations := []MConfiguration{}
 	mConfigurations = append(mConfigurations, findLeftMost...)
 	mConfigurations = append(mConfigurations, replace...)
 	possibleSymbols := []string{"e", "0", "x", "y"}
@@ -375,7 +375,7 @@ func TestCopyAndReplace(t *testing.T) {
 	// Invokes the copyAndReplace MFunction (`cr`), copying the marked figures and replacing the marks.
 	copyAndReplaceAllTest := MConfiguration{"b", []string{"*", " "}, []string{"R", "R"}, "cr(halt, x, y)"}
 
-	mConfigurations := MConfigurations{}
+	mConfigurations := []MConfiguration{}
 	mConfigurations = append(mConfigurations, findLeftMost...)
 	mConfigurations = append(mConfigurations, findLeft...)
 	mConfigurations = append(mConfigurations, printAtTheEnd...)
@@ -425,7 +425,7 @@ func TestCompare(t *testing.T) {
 	// Invokes the compare MFunction (`cp`), printing `z` at the end if the figures are equal.
 	compareEqualTest := MConfiguration{"b", []string{"*", " "}, []string{"R", "R"}, "cp(pe(halt, z), halt, halt, x, y)"}
 
-	mConfigurations := MConfigurations{}
+	mConfigurations := []MConfiguration{}
 	mConfigurations = append(mConfigurations, findLeftMost...)
 	mConfigurations = append(mConfigurations, findLeft...)
 	mConfigurations = append(mConfigurations, printAtTheEnd...)
@@ -484,7 +484,7 @@ func TestCompareAndErase(t *testing.T) {
 	// Invokes the compareAndErase MFunction (`cpe`), erasing the markers if the sequence of figures are equal.
 	compareAndEraseAllTest := MConfiguration{"b", []string{"*", " "}, []string{"R", "R"}, "cpe(halt, halt, x, y)"}
 
-	mConfigurations := MConfigurations{}
+	mConfigurations := []MConfiguration{}
 	mConfigurations = append(mConfigurations, findLeftMost...)
 	mConfigurations = append(mConfigurations, findLeft...)
 	mConfigurations = append(mConfigurations, printAtTheEnd...)
@@ -530,7 +530,7 @@ func TestFindRightMost(t *testing.T) {
 	// Invokes the findRightMost MFunction (`g`), and prints to the right of the found character.
 	findRightMostTest := MConfiguration{"b", []string{"*", " "}, []string{"R", "R"}, "g(prh(x), 0)"}
 
-	mConfigurations := MConfigurations{}
+	mConfigurations := []MConfiguration{}
 	mConfigurations = append(mConfigurations, printAndHalt)
 	mConfigurations = append(mConfigurations, printToRightAndHalt)
 	mConfigurations = append(mConfigurations, findRightMost...)
@@ -571,7 +571,7 @@ func TestPrintAtTheEnd2(t *testing.T) {
 	// Invokes the printAtTheEnd2 MFunction (`pe2`), printing `x` and `y` at the end of the sequence
 	printAtTheEndTest := MConfiguration{"b", []string{"*", " "}, []string{"R", "R"}, "pe2(halt, x, y)"}
 
-	mConfigurations := MConfigurations{}
+	mConfigurations := []MConfiguration{}
 	mConfigurations = append(mConfigurations, findLeftMost...)
 	mConfigurations = append(mConfigurations, printAtTheEnd...)
 	mConfigurations = append(mConfigurations, printAtTheEnd2...)
@@ -597,7 +597,7 @@ func TestCopyAndErase2(t *testing.T) {
 	// Invokes the copyAndErase5 MFunction (`ce5`), copying all of the marked figures and erasing all of the markers.
 	copyAndEraseAll2Test := MConfiguration{"b", []string{"*", " "}, []string{"R", "R"}, "ce5(halt, x, s, t, u, v)"}
 
-	mConfigurations := MConfigurations{}
+	mConfigurations := []MConfiguration{}
 	mConfigurations = append(mConfigurations, findLeftMost...)
 	mConfigurations = append(mConfigurations, findLeft...)
 	mConfigurations = append(mConfigurations, printAtTheEnd...)
@@ -627,7 +627,7 @@ func TestEraseAll(t *testing.T) {
 	// Invokes the eraseAll MFunction (`e`), erasing all markers.
 	eraseAllTest := MConfiguration{"b", []string{"*", " "}, []string{"R", "R"}, "e(halt)"}
 
-	mConfigurations := MConfigurations{}
+	mConfigurations := []MConfiguration{}
 	mConfigurations = append(mConfigurations, eraseAll...)
 	possibleSymbols := []string{"e", "0", "x", "y"}
 

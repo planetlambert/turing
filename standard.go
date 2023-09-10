@@ -47,7 +47,7 @@ var (
 // Converts a Machine to a Machine that conforms to Turing's standard form.
 func (m *Machine) ToStandardTable() *StandardTable {
 	// The new MConfigurations of the machine
-	standardMConfigurations := MConfigurations{}
+	standardMConfigurations := []MConfiguration{}
 
 	// Turing prefers a format where ` ` (None) is S0, `0` is S1, `1` is S2 and so on
 	// This ensures ` ` (None) comes first
@@ -171,7 +171,7 @@ func (m *Machine) expandStandardOperations(mConfiguration MConfiguration) ([]str
 	} else {
 		lookingForPrint := true
 		for i, operation := range mConfiguration.Operations {
-			operationCode := OperationCode(operation[0])
+			operationCode := operationCode(operation[0])
 			if lookingForPrint {
 				if operationCode == Print {
 					symbol := string(operation[1:])

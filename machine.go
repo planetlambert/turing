@@ -7,47 +7,90 @@ import (
 )
 
 type (
+	// We may compare a man in the process of computing a real number to a machine...
 	Machine struct {
-		MConfigurations
+
+		// ...which is only capable of a finite number of conditions q1, q2, ..., qR which
+		// will be called "m-configurations".
+		MConfigurations []MConfiguration
+
+		// The machine is supplied with a "tape" (the analogue of paper) running through it,
+		// and divided into sections (called "squares") each capable of bearing a "symbol".
 		Tape
-		StartingMConfiguration   string
-		PossibleSymbols          []string // ` ` (None) is assumed
-		NoneSymbol               string   // Required as standard machines use `S0`
-		Debug                    bool
-		currentConfigurationName string
-		scannedSquare            int
-		halted                   bool
+
+		// The m-configuration that the machine should start with. If empty the first m-configuration
+		// in the list is chosen.
+		StartingMConfiguration string
+
+		// A list of all symbols the machine is capable of reading or printing.
+		// This field is used when dealing with special symbols `*` (Any), `!` (Not)
+		// Note: The ` ` (None) symbol does not have to be provided (it is assumed).
+		PossibleSymbols []string
+
+		// Defaults to ` ` (None), but can optionally be overridden here.
+		NoneSymbol string
+
+		// If `true`, the machine's complete configurations are printed at the end of each move.
+		Debug bool
+
+		// At any moment there is just one square, say the r-th, bearing the symbol S(r)
+		// which is "in the machine". We may call this square the "scanned square".
+		// The symbol on the scanned square may be called the "scanned symbol".
+		// The "scanned symbol" is the only one of which the machine is, so to speak, "directly aware".
+		scannedSquare int
+
+		// The current m-configuration of the machine.
+		currentMConfigurationName string
+
+		// Stores whether the machine has "halted" or not. A machine only halts if it cannot
+		// find an m-configuration.
+		halted bool
 
 		// For use when converting to StandardTable
-		mConfigurationNames   map[string]string
-		nameCount             int
+		mConfigurationNames map[string]string
+		// For use when converting to StandardTable
+		nameCount int
+		// For use when converting to StandardTable
 		mConfigurationSymbols map[string]string
-		symbolCount           int
+		// For use when converting to StandardTable
+		symbolCount int
 	}
 
-	MConfigurations []MConfiguration
-
+	// An m-configuration contains four components
 	MConfiguration struct {
-		Name                string
-		Symbols             []string
-		Operations          []string
+
+		// The possible behaviour of the machine at any moment is determined by the m-configuration qn ...
+		Name string
+
+		// ... and the scanned symbol S(r)
+		Symbols []string
+
+		// In some of the configurations in which the scanned square is blank (i.e. bears no symbol)
+		// the machine writes down a new symbol on the scanned square: in other configurations it
+		// erases the scanned symbol. The machine may also change the square which is being scanned,
+		// but only by shifting it one place to right or left.
+		Operations []string
+
+		// In addition to any of these operations the m-configuration may be changed.
 		FinalMConfiguration string
 	}
 
+	// Our "tape" is a slice of strings because squares can contain multiple characters
 	Tape []string
 
-	OperationCode byte
+	// Well-known single-character codes used in an m-configuration's operations.
+	operationCode byte
 )
 
 const (
+	Right operationCode = 'R'
+	Left  operationCode = 'L'
+	Erase operationCode = 'E'
+	Print operationCode = 'P'
+
 	None string = " "
 	Not  string = "!"
 	Any  string = "*"
-
-	Right OperationCode = 'R'
-	Left  OperationCode = 'L'
-	Erase OperationCode = 'E'
-	Print OperationCode = 'P'
 
 	mConfigurationNamePrefix   string = "q"
 	mConfigurationSymbolPrefix string = "S"
@@ -76,7 +119,7 @@ func (m *Machine) Move() {
 	symbol := m.scan()
 
 	// Find MConfiguration
-	mConfiguration, shouldHalt := m.findMConfiguration(m.currentConfigurationName, symbol)
+	mConfiguration, shouldHalt := m.findMConfiguration(m.currentMConfigurationName, symbol)
 
 	// An MConfiguration could not be found
 	if shouldHalt {
@@ -94,7 +137,7 @@ func (m *Machine) Move() {
 	}
 
 	// Move to specified final MConfiguration
-	m.currentConfigurationName = mConfiguration.FinalMConfiguration
+	m.currentMConfigurationName = mConfiguration.FinalMConfiguration
 }
 
 // Return the Tape represented as a string
@@ -121,18 +164,18 @@ func (m *Machine) printCompleteConfiguration() {
 		}
 		fmt.Print(strings.Repeat(" ", len(square)))
 	}
-	fmt.Println(m.currentConfigurationName)
+	fmt.Println(m.currentMConfigurationName)
 }
 
 func (m *Machine) init() {
-	if len(m.currentConfigurationName) == 0 {
+	if len(m.currentMConfigurationName) == 0 {
 		if m.Debug {
 			m.printMConfigurations()
 		}
 		if len(m.StartingMConfiguration) == 0 {
-			m.currentConfigurationName = m.MConfigurations[0].Name
+			m.currentMConfigurationName = m.MConfigurations[0].Name
 		} else {
-			m.currentConfigurationName = m.StartingMConfiguration
+			m.currentMConfigurationName = m.StartingMConfiguration
 		}
 	}
 	if len(m.NoneSymbol) == 0 {
@@ -195,7 +238,7 @@ func (m *Machine) findMConfiguration(mConfigurationName string, symbol string) (
 // Successively perform each operation
 func (m *Machine) performOperation(operation string) {
 	m.extendTape()
-	switch OperationCode(operation[0]) {
+	switch operationCode(operation[0]) {
 	case Right:
 		m.scannedSquare++
 	case Left:

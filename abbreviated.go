@@ -11,7 +11,7 @@ type AbbreviatedTable struct {
 	mConfigurationCount      int
 	newMConfigurationNames   map[string]string
 	wasAlreadyInterpretedMap map[string]bool
-	newMConfigurations       MConfigurations
+	newMConfigurations       []MConfiguration
 }
 
 const (
@@ -116,8 +116,8 @@ func (at *AbbreviatedTable) interpretMFunction(name string, params []string) str
 }
 
 // Finds all MFunctions whose definition matches the name and number of params
-func (at *AbbreviatedTable) findMFunctions(name string, numParams int) MConfigurations {
-	mFunctions := MConfigurations{}
+func (at *AbbreviatedTable) findMFunctions(name string, numParams int) []MConfiguration {
+	mFunctions := []MConfiguration{}
 	for _, mFunction := range at.MConfigurations {
 		mFunctionName, mFunctionParams := parseMFunction(mFunction.Name)
 		if name == mFunctionName && numParams == len(mFunctionParams) {
@@ -168,7 +168,7 @@ func (at *AbbreviatedTable) substituteSymbols(mFunctionSymbols []string, substit
 func (at *AbbreviatedTable) substituteOperations(mFunctionOperations []string, substitutions map[string]string) []string {
 	substitutedOperations := []string{}
 	for _, mFunctionOperation := range mFunctionOperations {
-		switch OperationCode(mFunctionOperation[0]) {
+		switch operationCode(mFunctionOperation[0]) {
 		case Print:
 			mFunctionOperationSymbol := string(mFunctionOperation[1])
 			if substitutedOperation, ok := substitutions[mFunctionOperationSymbol]; ok {
@@ -210,7 +210,7 @@ func (at *AbbreviatedTable) substituteFinalMConfigurationParams(mFunctionFinalMC
 // Saves a new MConfiguration
 func (at *AbbreviatedTable) saveMConfiguration(mConfiguration MConfiguration) {
 	if at.newMConfigurations == nil {
-		at.newMConfigurations = MConfigurations{}
+		at.newMConfigurations = []MConfiguration{}
 	}
 
 	at.newMConfigurations = append(at.newMConfigurations, mConfiguration)
@@ -260,7 +260,7 @@ func (at *AbbreviatedTable) markAsInterpreted(mFunctionName string, mFunctionPar
 }
 
 // Returns a sorted slice of the stored interpreted MConfigurations
-func (at *AbbreviatedTable) sortedNewMConfigurations() MConfigurations {
+func (at *AbbreviatedTable) sortedNewMConfigurations() []MConfiguration {
 	slices.SortFunc(at.newMConfigurations, func(a, b MConfiguration) int {
 		aInt, _ := strconv.Atoi(a.Name[1:])
 		bInt, _ := strconv.Atoi(b.Name[1:])

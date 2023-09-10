@@ -32,7 +32,7 @@ var (
 	// symbol of form `a` which is farthest to the left (the "first a")
 	// and the MConfiguration then becomes `C`. If there is no `a`
 	// then the MConfiguration becomes `B`.
-	findLeftMost = MConfigurations{
+	findLeftMost = []MConfiguration{
 		{"f(C, B, a)", []string{"e"}, []string{"L"}, "f1(C, B, a)"},
 		{"f(C, B, a)", []string{"!e", " "}, []string{"L"}, "f(C, B, a)"},
 		{"f1(C, B, a)", []string{"a"}, []string{}, "C"},
@@ -46,7 +46,7 @@ var (
 	// From `e(C, B, a)` the first `a` is erased and -> `C`.
 	// If there is no `a` -> `B`.
 	// From `e(B, a)` all letters `a` are erased and -> `B`.
-	erase = MConfigurations{
+	erase = []MConfiguration{
 		{"e(C, B, a)", []string{"*", " "}, []string{}, "f(e1(C, B, a), B, a)"},
 		{"e1(C, B, a)", []string{"*", " "}, []string{"E"}, "C"},
 		{"e(B, a)", []string{"*", " "}, []string{}, "e(e(B, a), B, a)"},
@@ -54,7 +54,7 @@ var (
 
 	// From `pe(C, b)` the machine prints `b` at the end of the sequence
 	// of symbols and -> `C`
-	printAtTheEnd = MConfigurations{
+	printAtTheEnd = []MConfiguration{
 		{"pe(C, b)", []string{"*", " "}, []string{}, "f(pe1(C, b), C, e)"},
 		{"pe1(C, b)", []string{"*"}, []string{"R", "R"}, "pe1(C, b)"},
 		{"pe1(C, b)", []string{" "}, []string{"Pb"}, "C"},
@@ -62,28 +62,28 @@ var (
 
 	// From `fl(C, B, a)` it does the same as for `f(C, B, a)`,
 	// but moves to the left before -> `C`
-	findLeft = MConfigurations{
+	findLeft = []MConfiguration{
 		{"l(C)", []string{"*", " "}, []string{"L"}, "C"},
 		{"fl(C, B, a)", []string{"*", " "}, []string{}, "f(l(C), B, a)"},
 	}
 
 	// From `fr(C, B, a)` it does the same as for `f(C, B, a)`,
 	// but moves to the right before -> `C`
-	findRight = MConfigurations{
+	findRight = []MConfiguration{
 		{"r(C)", []string{"*", " "}, []string{"R"}, "C"},
 		{"fr(C, B, a)", []string{"*", " "}, []string{}, "f(r(C), B, a)"},
 	}
 
 	// `c(C, B, a)`. The machine writes at the end the first symbol
 	// marked `a` and -> `C`
-	copy = MConfigurations{
+	copy = []MConfiguration{
 		{"c(C, B, a)", []string{"*", " "}, []string{}, "fl(c1(C), B, a)"},
 		{"c1(C)", []string{"_b"}, []string{}, "pe(C, _b)"},
 	}
 
 	// `ce(B, a)`. The machine copies down in order at the end
 	// all symbols marked `a` and erases the letters `a` -> `B`
-	copyAndErase = MConfigurations{
+	copyAndErase = []MConfiguration{
 		{"ce(C, B, a)", []string{"*", " "}, []string{}, "c(e(C, B, a), B, a)"},
 		{"ce(B, a)", []string{"*", " "}, []string{}, "ce(ce(B, a), B, a)"},
 	}
@@ -91,7 +91,7 @@ var (
 	// `re(C, B, a, b)`. The machine replaces the first `a` by `b` and
 	// -> `C` (-> `B` if there is no `a`).
 	// `re(B, a, b)`. The machine replaces all letters `a` by `b` -> `B`
-	replace = MConfigurations{
+	replace = []MConfiguration{
 		{"re(C, B, a, b)", []string{"*", " "}, []string{}, "f(re1(C, B, a, b), b, a)"},
 		{"re1(C, B, a, b)", []string{"*", " "}, []string{"E", "Pb"}, "C"},
 		{"re(B, a, b)", []string{"*", " "}, []string{}, "re(re(B, a, b), B, a, b)"},
@@ -99,7 +99,7 @@ var (
 
 	// `cr(B, a)` differs from `ce(B, a)` only in that the letters `a` are not erased.
 	// The MConfiguration `cr(B, a)` is taken up when no letters `b` are on the tape.
-	copyAndReplace = MConfigurations{
+	copyAndReplace = []MConfiguration{
 		{"cr(C, B, a, b)", []string{"*", " "}, []string{}, "c(re(C, B, a, b), B, a)"},
 		{"cr(B, a, b)", []string{"*", " "}, []string{}, "cr(cr(B, a, b), re(B, a, b), a, b)"},
 	}
@@ -107,7 +107,7 @@ var (
 	// The first symbol marked `a` and the first marked `b` are compared.
 	// If there is neither `a` nor `b` -> E. If there are both and the symbols are alike,
 	// -> `C`. Otherwise -> `A`.
-	compare = MConfigurations{
+	compare = []MConfiguration{
 		{"cp(C, A, E, a, b)", []string{"*", " "}, []string{}, "fl(cp1(C, A, b), f(A, E, b), a)"},
 		{"cp1(C, A, b)", []string{"_y"}, []string{}, "fl(cp2(C, A, _y), A, b)"},
 		{"cp2(C, A, y)", []string{"y"}, []string{}, "C"},
@@ -118,13 +118,13 @@ var (
 	// a similarity the first `a` and `b` are erased.
 	// `cpe(A, E, a, b)`. The sequence of symbols marked `a` is compared with the sequence
 	// marked `b`. -> `C` if they are similar. Otherwise -> `A`. Some of the symbols `a` and `b` are erased.
-	compareAndErase = MConfigurations{
+	compareAndErase = []MConfiguration{
 		{"cpe(C, A, E, a, b)", []string{"*", " "}, []string{}, "cp(e(e(C, C, b), C, a), A, E, a, b)"},
 		{"cpe(A, E, a, b)", []string{"*", " "}, []string{}, "cpe(cpe(A, E, a, b), A, E, a, b)"},
 	}
 
 	// `g(C, a)`. The machine finds the last symbol of form `a` -> `C`.
-	findRightMost = MConfigurations{
+	findRightMost = []MConfiguration{
 		{"g(C)", []string{"*"}, []string{"R"}, "g(C)"},
 		{"g(C)", []string{" "}, []string{"R"}, "g1(C)"},
 		{"g1(C)", []string{"*"}, []string{"R"}, "g(C)"},
@@ -135,14 +135,14 @@ var (
 	}
 
 	// `pe2(C, a, b)`. The machine prints `a b` at the end.
-	printAtTheEnd2 = MConfigurations{
+	printAtTheEnd2 = []MConfiguration{
 		{"pe2(C, a, b)", []string{"*", " "}, []string{}, "pe(pe(C, b), a)"},
 	}
 
 	// `ce3(B, a, b, y)`. The machine copies down at the end first the symbols
 	// marked `a` then those marked `b`, and finally those marked `y`.
 	// It erases the symbols `a`, `b`, `y`.
-	copyAndErase2 = MConfigurations{
+	copyAndErase2 = []MConfiguration{
 		{"ce2(B, a, b)", []string{"*", " "}, []string{}, "ce(ce(B, b), a)"},
 		{"ce3(B, a, b, y)", []string{"*", " "}, []string{}, "ce(ce2(B, b, y), a)"},
 		{"ce4(B, a, b, y, z)", []string{"*", " "}, []string{}, "ce(ce3(B, b, y, z), a)"},
@@ -150,7 +150,7 @@ var (
 	}
 
 	// From `e(C)` the marks are erased from all marked symbols -> `C`
-	eraseAll = MConfigurations{
+	eraseAll = []MConfiguration{
 		{"e(C)", []string{"e"}, []string{"R"}, "e1(C)"},
 		{"e(C)", []string{"!e", " "}, []string{"L"}, "e(C)"},
 		{"e1(C)", []string{"*"}, []string{"R", "E", "R"}, "e1(C)"},
@@ -159,7 +159,7 @@ var (
 
 	// `con(C, a)`. Starting from an F-square, S say, the sequence C of symbols describing
 	// a configuration closest on the right of S is marked out with letters a. -> `C`
-	configuration = MConfigurations{
+	configuration = []MConfiguration{
 		{"con(C, a)", []string{"!A", " "}, []string{"R", "R"}, "con(C, a)"},
 		{"con(C, a)", []string{"A"}, []string{"L", "Pa", "R"}, "con1(C, a)"},
 		{"con1(C, a)", []string{"A"}, []string{"R", "Pa", "R"}, "con1(C, a)"},
@@ -171,20 +171,20 @@ var (
 	}
 
 	// `b`. The machine prints `:`, `D`, `A` on the F-squares after `::` -> `anf`.
-	begin = MConfigurations{
+	begin = []MConfiguration{
 		{"b", []string{"*", " "}, []string{}, "f(b1, b1, ::)"},
 		{"b1", []string{"*", " "}, []string{"R", "R", "P:", "R", "R", "PD", "R", "R", "PA"}, "anf"},
 	}
 
 	// `anf`. The machine marks the configuration in the last complete configuration with `y`. -> `kom`
-	anfang = MConfigurations{
+	anfang = []MConfiguration{
 		{"anf", []string{"*", " "}, []string{}, "g(anf1, :)"},
 		{"anf1", []string{"*", " "}, []string{}, "con(kom, y)"},
 	}
 
 	// `kom`. The machine finds the last semi-colon not marked with `z`. It marks this semi-colon
 	// with `z` and the configuration following it with `x`.
-	kom = MConfigurations{
+	kom = []MConfiguration{
 		{"kom", []string{";"}, []string{"R", "Pz", "L"}, "con(kmp, x)"},
 		{"kom", []string{"z"}, []string{"L", "L"}, "kom"},
 		{"kom", []string{"!z", "!;", " "}, []string{"L"}, "kom"},
@@ -192,14 +192,14 @@ var (
 
 	// `kmp`. The machine compares the sequences marked `x` and `y`. It erases all letters
 	// `x` and `y`. -> `sim` if they are alike. Otherwise -> `kom`.
-	kmp = MConfigurations{
+	kmp = []MConfiguration{
 		{"kmp", []string{"*", " "}, []string{}, "cpe(e(e(anf, x), y), sim, x, y)"},
 	}
 
 	// `sim`. The machine marks out the instructions. That part of the instructions
 	// which refers to operations to be carried out is marked with `u`, and the final
 	// MConfiguration with `y`. The letters `z` are erased.
-	similar = MConfigurations{
+	similar = []MConfiguration{
 		{"sim", []string{"*", " "}, []string{}, "fl(sim1, sim1, z)"},
 		{"sim1", []string{"*", " "}, []string{}, "con(sim2, )"},
 		{"sim2", []string{"A"}, []string{}, "sim3"},
@@ -214,7 +214,7 @@ var (
 	// with `x`. The remainder of the complete configuration is divided into two
 	// parts, of which the first is marked with `v` and the last with `w`. A colon
 	// is printed after the whole. -> `sh`.
-	mark = MConfigurations{
+	mark = []MConfiguration{
 		{"mk", []string{"*", " "}, []string{}, "g(mk1, :)"},
 		{"mk1", []string{"!A", " "}, []string{"R", "R"}, "mk1"},
 		{"mk1", []string{"A"}, []string{"L", "L", "L", "L"}, "mk2"},
@@ -231,7 +231,7 @@ var (
 	// `sh`. The instructions (marked `u`) are examined. If it is found that they involve
 	// "Print 1", then `0`, `:` or `1`, `:` is printed at the end.
 	// Note: See `enhancedShow` for printing symbols beyong binary digits.
-	show = MConfigurations{
+	show = []MConfiguration{
 		{"sh", []string{"*", " "}, []string{}, "f(sh1, inst, u)"},
 		{"sh1", []string{"*", " "}, []string{"L", "L", "L"}, "sh2"},
 		{"sh2", []string{"D"}, []string{"R", "R", "R", "R"}, "sh3"},
@@ -246,7 +246,7 @@ var (
 
 	// `inst`. The next complete configuration is written down, carrying out the
 	// marked instructions. The letters `u`, `v`, `w`, `x`, `y` are erased. -> `anf`.
-	instruction = MConfigurations{
+	instruction = []MConfiguration{
 		{"inst", []string{"*", " "}, []string{}, "g(l(inst1), u)"},
 		{"inst1", []string{"L"}, []string{"R", "E"}, "ce5(ov, v, y, x, u, w)"},
 		{"inst1", []string{"R"}, []string{"R", "E"}, "ce5(ov, v, x, u, y, w)"},
@@ -257,7 +257,7 @@ var (
 
 func NewUniversalMachine(sd StandardDescription, symbolMap SymbolMap) *UniversalMachine {
 	// Helper MFunctions
-	mConfigurations := MConfigurations{}
+	mConfigurations := []MConfiguration{}
 	mConfigurations = append(mConfigurations, findLeftMost...)
 	mConfigurations = append(mConfigurations, erase...)
 	mConfigurations = append(mConfigurations, printAtTheEnd...)
@@ -308,8 +308,8 @@ func NewUniversalMachine(sd StandardDescription, symbolMap SymbolMap) *Universal
 	}
 }
 
-func getEnhancedShow(symbolMap SymbolMap) MConfigurations {
-	enhancedShow := MConfigurations{}
+func getEnhancedShow(symbolMap SymbolMap) []MConfiguration {
+	enhancedShow := []MConfiguration{}
 
 	// First four `show` MConfigurations are valid
 	enhancedShow = append(enhancedShow, show[0:4]...)
@@ -339,7 +339,7 @@ func getEnhancedShow(symbolMap SymbolMap) MConfigurations {
 		// The `CondensedTapeString` will remove this prepended underscore.
 		printSymbol := fmt.Sprintf("pe2(inst, _%s, :)", symbolValue)
 
-		enhancedShow = append(enhancedShow, MConfigurations{
+		enhancedShow = append(enhancedShow, []MConfiguration{
 			{showName, []string{"C"}, []string{"R", "R"}, nextShowName},
 			{showName, []string{"!C", " "}, []string{}, printSymbol},
 		}...)
