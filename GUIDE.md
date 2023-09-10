@@ -24,7 +24,7 @@ Turing explains that his paper will be about [computable numbers](https://en.wik
 
 The real numbers are all numbers which are not imaginary. When he says "expressions as a decimal", he is simply saying that he wants to deal with strings of digits ($0.333...$ rather than $\tfrac{1}{3}$) and in fact he will further limit his numbers to just binary digits ($0.010101...$).
 
-By "calculable by finite means" he means that there must be some rule to arrive at the number without just infintely listing every digit. For example, we can describe $0.0101010101...$ finitely by saying you can repeat $01$ infinitely.
+By "finite means" he means that there must be some rule to arrive at the number without just infintely listing every digit. For example, we can describe $0.0101010101...$ finitely by saying you can repeat $01$ infinitely.
 
 Of course, there are infinitely *random* real numbers. Whether or not we can calculate these numbers by finite means is a major area of the paper.
 
@@ -76,7 +76,47 @@ Apparently within the same couple of months, [Alonzo Chuch](https://en.wikipedia
 
 ## Section 1 - Computing machines
 
-TODO
+### Finite Means
+
+Turing begins this section with a preamble that says he won't attempt to justify the given definition of a computable number (one whose digits are calculable by finite means) until [section 9](./GUIDE.md#section-9---the-extent-of-computable-numbers).
+
+He says this though:
+
+> For the present I shall only say that the justification
+lies in the fact that the human memory is necessarily limited.
+
+A "computer" during Turing's time was an actual human performing calculations on pen and paper.
+
+This is quite philosophical but Turing is essentially just saying that the human mind is limited to finiteness in terms of the *means* of arriving at a number, for example:
+
+| | Finite Means | Infinite Means |
+|-| ------------ | -------------- |
+| Finite Number | $0.1$ | *Not possible* |
+| Infinite Number | $0.010101...$ | *Infinitely random* |
+
+### The "Machine"
+
+Turing spends the remainder of the section giving a textual description of his "machines". This is of course the famous [Turing Machine](https://en.wikipedia.org/wiki/Turing_machine). I think his description is quite readable, so I won't try to explain it here. I will instead provide the type structure of the machine below (it can also be found at the top of [machine.go](./machine.go)).
+
+```go
+type (
+    Machine struct {
+        MConfigurations
+        Tape
+    }
+
+    MConfigurations []MConfiguration
+
+	MConfiguration struct {
+		Name                string
+		Symbols             []string
+		Operations          []string
+		FinalMConfiguration string
+	}
+
+	Tape []string
+)
+```
 
 ## Section 2 - Definitions
 
