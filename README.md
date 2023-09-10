@@ -9,7 +9,7 @@ An open source implementation of Alan Turing's famous paper, [On Computable Numb
 I wanted to read Turing's paper, and found it too difficult to understand. I couldn't find a complete and easily-readable reference implementation, so I decided to make my own.
 
 ## How to use this repository
-***Disclaimer**: I still don't understand large swaths of the paper (mainly the logic parts of sections 8 through 11). If you have a good resource to help a non-mathematician understand these sections, please reach out!*
+***Disclaimer**: There are still large swaths of the paper (mainly the logic parts of sections 8 through 11) that I don't understand well enough to explain to others. If you have a good resource to help a non-mathematician understand these sections, please reach out!*
 
 I highly recommend [The Annotated Turing](https://www.amazon.com/Annotated-Turing-Through-Historic-Computability/dp/0470229055) by Charles Petzold, which made this project possible.
 
@@ -17,11 +17,11 @@ For those who intend to actually read the paper I recommend starting with The An
 
 For those who want to use the implementation, here is how to get started:
 
-```
+```shell
 go get github.com/planetlambert/turing@latest
 ```
 
-```
+```go
 import (
     "fmt"
 
@@ -43,7 +43,7 @@ func main() {
 ```
 
 ## Progress
-- [X] Section 0 - Introduction
+- [X] Introduction
 - [X] Section 1 - Computing machines
 - [X] Section 2 - Definitions
 - [X] Section 3 - Examples of computing machines
@@ -61,4 +61,4 @@ func main() {
 - Why Go?
   - I like Go, and it is the most readable language for me currently.
 - How is the performance?
-  - My goal for this repository is to be a learning resource, when possible I biased towards readability.
+  - My goal for this repository is to be a learning resource, so when possible I bias towards readability.
