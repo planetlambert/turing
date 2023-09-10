@@ -10,16 +10,16 @@ Turing explains that his paper will be about [computable numbers](https://en.wik
 
 > The "computable" numbers may be described briefly as the real numbers whose expressions as a decimal are calculable by finite means.
 
-#### Number Theory 101:
+#### Number Theory 101
 
 - $\mathbb{N}$ ([naturals](https://en.wikipedia.org/wiki/Natural_number)): $0$, $1$, $2$, ...
 - $\mathbb{Z}$ ([integers](https://en.wikipedia.org/wiki/Integer)): $-2$, $-1$, $0$, $1$, $2$, ...
 - $\mathbb{Q}$ ([rationals](https://en.wikipedia.org/wiki/Rational_number)): $1$, $\tfrac{1}{2}$, $\tfrac{7}{44}$, ...
 - $\mathbb{R}$ ([reals](https://en.wikipedia.org/wiki/Real_number)): 1, ${\sqrt {2}}$, $\pi$, ...
 
-The real numbers are all numbers which are not imaginary. When he says "expressions as a decimal", he is simply saying that he wants to deal with strings of numbers ($0.333...$ rather than $\tfrac{1}{3}$) and in fact he will further limit this to binary ($0.010101...$).
+The real numbers are all numbers which are not imaginary. When he says "expressions as a decimal", he is simply saying that he wants to deal with strings of digits ($0.333...$ rather than $\tfrac{1}{3}$) and in fact he will further limit his numbers to just binary digits ($0.010101...$).
 
-By "calculable by finite means" he means that there must be some rule to arrive at the number without simply just infintely listing every digit. For example, we can describe $0.0101010101...$ finitely by saying you can repeat $01$ infinitely.
+By "calculable by finite means" he means that there must be some rule to arrive at the number without just infintely listing every digit. For example, we can describe $0.0101010101...$ finitely by saying you can repeat $01$ infinitely.
 
 Of course, there are infinitely *random* real numbers. Whether or not we can calculate these numbers by finite means is a major area of the paper.
 
@@ -34,7 +34,7 @@ He goes on to say he will prove that large classes of the reals are computable. 
 all definable numbers, and an example is given of a definable number
 which is not computable.
 
-Which essentially says he will give an example of a real number his machine cannot compute.
+Turing is saying he will give an example of a real number his machine cannot compute.
 
 ### Enumerabililty
 
@@ -49,14 +49,14 @@ By enumerable Turing means [countable](https://en.wikipedia.org/wiki/Countable_s
 > By the correct application of one of these arguments, conclusions are
 reached which are superficially similar to those of Gödel.
 
-Turing is referring to the [diagonalization](https://en.wikipedia.org/wiki/Diagonal_lemma) used in [Gödel's incompleteness theorems](https://en.wikipedia.org/wiki/G%C3%B6del%27s_incompleteness_theorems) which we will talk about later.
+Turing is referring to the [diagonalization](https://en.wikipedia.org/wiki/Diagonal_lemma) used in [Gödel's incompleteness theorems](https://en.wikipedia.org/wiki/G%C3%B6del%27s_incompleteness_theorems) which we will talk about in [section 8](./GUIDE.md#section-8---application-of-the-diagonal-process).
 
 ### The Entscheidungsproblem
 
 > These results have valuable applications. In particular, it can be shown (§11) that the
 Hilbertian Entscheidungsproblem can have no solution.
 
-**The point of the paper**. All of this work is to serve the purpose of giving a result to [the Entscheidungsproblem](https://en.wikipedia.org/wiki/Entscheidungsproblem) (in English the *decision* problem). We will talk in depth about the Entscheidungsproblem later, but here is a short description for now:
+**The point of the paper**. All of this work is to serve the purpose of giving a result to [the Entscheidungsproblem](https://en.wikipedia.org/wiki/Entscheidungsproblem) (in English "the *decision* problem"). We will talk in depth about the Entscheidungsproblem later in [section 11](./GUIDE.md#section-11---application-to-the-entscheidungsproblem), but here is a short description for now:
 
 The decision problem asks if it is possible for there to be an algorithm that decides if a logic statement is **provable** from a set of axioms, for every possible statement. Again, a description of the algorithm:
 
@@ -67,7 +67,7 @@ Turing's answer to whether such an algorithm exists: *No*.
 
 ### Effective Calculability vs Computability
 
-Apparently within the same couple of months, [Alonzo Chuch](https://en.wikipedia.org/wiki/Alonzo_Church) also came to the conclusion that there is no solution to the decision problem, and published his paper first. Turing added an Appendix that explains how Church's paper compares to his own, and gives the reader a heads up here in the introduction. Read on to the Appendix if this interests you.
+Apparently within the same couple of months, [Alonzo Chuch](https://en.wikipedia.org/wiki/Alonzo_Church) also came to the conclusion that there is no solution to the decision problem, and published his paper first. Turing added an Appendix that explains how Church's paper compares to his own, and gives the reader a heads up here in the introduction. Read on to the [Appendix](./GUIDE.md#appendix---computability-and-effective-calculability) if this interests you.
 
 ## Section 1 - Computing machines
 
