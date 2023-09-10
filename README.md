@@ -29,15 +29,15 @@ import (
 )
 
 func main() {
-    	m := &Machine{
-		MConfigurations: []MConfiguration{
-			{Name: "b", Symbols: []string{" "}, Operations: []string{"P0", "R"}, FinalMConfiguration: "c"},
-			{Name: "c", Symbols: []string{" "}, Operations: []string{"R"},       FinalMConfiguration: "e"},
-			{Name: "e", Symbols: []string{" "}, Operations: []string{"P1", "R"}, FinalMConfiguration: "k"},
-			{Name: "k", Symbols: []string{" "}, Operations: []string{"R"},       FinalMConfiguration: "b"},
-		},
-	}
-	m.MoveN(50)
+    m := &Machine{
+        MConfigurations: []MConfiguration{
+            {Name: "b", Symbols: []string{" "}, Operations: []string{"P0", "R"}, FinalMConfiguration: "c"},
+            {Name: "c", Symbols: []string{" "}, Operations: []string{"R"},       FinalMConfiguration: "e"},
+            {Name: "e", Symbols: []string{" "}, Operations: []string{"P1", "R"}, FinalMConfiguration: "k"},
+            {Name: "k", Symbols: []string{" "}, Operations: []string{"R"},       FinalMConfiguration: "b"},
+        },
+    }
+    m.MoveN(50)
     fmt.Println(m.TapeString()) // Prints "0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0"
 }
 ```
@@ -62,11 +62,3 @@ func main() {
   - I like Go, and it is the most readable language for me currently.
 - How is the performance?
   - My goal for this repository is to be a learning resource, when possible I biased towards readability.
-
-## Todo
-
-- Make sure interfaces (for UniversalMachine in particular) look right
-    - AbbreviatedTable shouldn't be able to Move, etc.
-    - Check pointers, etc.
-    - All of `standard.go` should be analyzed, etc.
-    - Documentation first?
