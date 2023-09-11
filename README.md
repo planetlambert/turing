@@ -41,19 +41,19 @@ func main() {
 [Full Documentation here.](https://pkg.go.dev/github.com/planetlambert/turing)
 
 ## Progress
-- [X] [Introduction](./GUIDE.md#introduction)
-- [X] [Section 1 - Computing machines](./GUIDE.md#section-1---computing-machines)
-- [X] [Section 2 - Definitions](./GUIDE.md#section-2---definitions)
-- [X] [Section 3 - Examples of computing machines](./GUIDE.md#section-3---examples-of-computing-machines)
-- [X] [Section 4 - Abbreviated tables](./GUIDE.md#section-4---abbreviated-tables)
-- [X] [Section 5 - Enumeration of computable sequences](./GUIDE.md#section-5---enumeration-of-computable-sequences)
-- [X] [Section 6 - The universal computing machine](./GUIDE.md#section-6---the-universal-computing-machine)
-- [X] [Section 7 - Detailed description of the universal machine](./GUIDE.md#section-7---detailed-description-of-the-universal-machine)
-- [ ] Section 8 - Application of the diagonal process
-- [ ] Section 9 - The extent of computable numbers
-- [ ] Section 10 - Examples of large classes of numbers which are computable
-- [ ] Section 11 - Application to the Entscheidungsproblem
-- [ ] Appendix - Computability and effective calculability
+- [X] [**Introduction**](./GUIDE.md#introduction)
+- [X] [**Section 1** - Computing machines](./GUIDE.md#section-1---computing-machines)
+- [X] [**Section 2** - Definitions](./GUIDE.md#section-2---definitions)
+- [X] [**Section 3** - Examples of computing machines](./GUIDE.md#section-3---examples-of-computing-machines)
+- [X] [**Section 4** - Abbreviated tables](./GUIDE.md#section-4---abbreviated-tables)
+- [X] [**Section 5** - Enumeration of computable sequences](./GUIDE.md#section-5---enumeration-of-computable-sequences)
+- [X] [**Section 6** - The universal computing machine](./GUIDE.md#section-6---the-universal-computing-machine)
+- [X] [**Section 7** - Detailed description of the universal machine](./GUIDE.md#section-7---detailed-description-of-the-universal-machine)
+- [ ] **Section 8** - Application of the diagonal process
+- [ ] **Section 9** - The extent of computable numbers
+- [ ] **Section 10** - Examples of large classes of numbers which are computable
+- [ ] **Section 11** - Application to the Entscheidungsproblem
+- [ ] **Appendix** - Computability and effective calculability
 
 ## FAQ
 - Why Go?

@@ -116,7 +116,22 @@ type (
 
 ## Section 2 - Definitions
 
-TODO
+Turing provides a list of definitions he will rely on later. This section is also very readable, so I'll just provide a quick reference and not belabor the details:
+
+- **Automatic machines (a-machines)** - Machines where humans are not in the loop.
+- **Computing machines** - Machines that print $0$ and $1$ as "figures", and also print other characters that help with computation.
+- **Sequence computed by the machine** - The sequence of "figures" (only $0$ and $1$) computed (i.e. $010101...$).
+- **Number computed by the machine** - The real number obtained by prepending a decimal place to the sequence (i.e. $0.010101...$).
+- **Complete configuration** - These three things which describe the full state of the machine:
+  - The full tape up to this point
+  - The number of the currently scanned square
+  - The name of the current m-configuration
+- **Moves** - Changes of the machine and tape between successive complete
+configurations.
+- **Circular machine** - Machines that halt or do not print "figures" ($0$'s or $1$'s) infinitely.
+- **Circle-free machine** - Must print "figures" ($0$'s or $1$'s) infinitely.
+- **Computable sequence** - A sequence of "figures" that can be computed by a circle-free machine.
+- **Computable number** - A number that can be derived from a computable sequence.
 
 ## Section 3 - Examples of computing machines
 
