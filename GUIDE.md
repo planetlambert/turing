@@ -172,9 +172,9 @@ Examples:
 
 ```go
 // Visually how to think about E-squares and F-squares
-eeFEFEFEFE ...
+"eeFEFEFEFE ..."
 // How it will look in practice
-ee0 1 0 1x1x0 ...
+"ee0 1 0 1x1x0 ..."
 ```
 
 ## Section 4 - Abbreviated tables
