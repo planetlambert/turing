@@ -5,24 +5,6 @@ import (
 	"testing"
 )
 
-func checkTape(t *testing.T, tape string, expectedStart string) {
-	if !strings.HasPrefix(tape, expectedStart) {
-		var actual string
-		if len(expectedStart)+10 <= len(tape) {
-			actual = tape[0 : len(expectedStart)+10]
-		} else {
-			actual = tape
-		}
-		t.Errorf("got %s, want %s", actual, expectedStart)
-	}
-}
-
-func checkCompleteConfiguration(t *testing.T, actual string, expected string) {
-	if actual != expected {
-		t.Errorf("got %s, want %s", actual, expected)
-	}
-}
-
 func TestMachineExample1(t *testing.T) {
 	m := &Machine{
 		MConfigurations: []MConfiguration{
@@ -78,4 +60,22 @@ func TestMachineExample2(t *testing.T) {
 
 	m.MoveN(200)
 	checkTape(t, m.TapeString(), "ee0 0 1 0 1 1 0 1 1 1 0 1 1 1 1")
+}
+
+func checkTape(t *testing.T, tape string, expectedStart string) {
+	if !strings.HasPrefix(tape, expectedStart) {
+		var actual string
+		if len(expectedStart)+10 <= len(tape) {
+			actual = tape[0 : len(expectedStart)+10]
+		} else {
+			actual = tape
+		}
+		t.Errorf("got %s, want %s", actual, expectedStart)
+	}
+}
+
+func checkCompleteConfiguration(t *testing.T, actual string, expected string) {
+	if actual != expected {
+		t.Errorf("got %s, want %s", actual, expected)
+	}
 }

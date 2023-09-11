@@ -12,16 +12,6 @@ var (
 	printToRightAndHalt = MConfiguration{"prh(b)", []string{"*", " "}, []string{"R", "Pb"}, "halt"}
 )
 
-func checkParseMFunction(t *testing.T, mFunction string, expectedName string, expectedParams []string) {
-	actualName, actualParams := parseMFunction(mFunction)
-	if actualName != expectedName {
-		t.Errorf("got %s, want %s", actualName, expectedName)
-	}
-	if !reflect.DeepEqual(actualParams, expectedParams) {
-		t.Errorf("got %s, want %s", actualParams, expectedParams)
-	}
-}
-
 func TestParseMFunctionRecursiveFirst(t *testing.T) {
 	checkParseMFunction(t, "f(x(y, z), a, b)", "f", []string{"x(y, z)", "a", "b"})
 }
@@ -44,6 +34,16 @@ func TestParseMFunctionBlank(t *testing.T) {
 
 func TestParseMFunctionNoFunction(t *testing.T) {
 	checkParseMFunction(t, "f", "f", []string{})
+}
+
+func checkParseMFunction(t *testing.T, mFunction string, expectedName string, expectedParams []string) {
+	actualName, actualParams := parseMFunction(mFunction)
+	if actualName != expectedName {
+		t.Errorf("got %s, want %s", actualName, expectedName)
+	}
+	if !reflect.DeepEqual(actualParams, expectedParams) {
+		t.Errorf("got %s, want %s", actualParams, expectedParams)
+	}
 }
 
 func TestFindLeftMost(t *testing.T) {

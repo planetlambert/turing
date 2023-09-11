@@ -4,18 +4,6 @@ import (
 	"testing"
 )
 
-func checkStandardDescription(t *testing.T, actual StandardDescription, expected string) {
-	if string(actual) != expected {
-		t.Errorf("got %s, want %s", actual, expected)
-	}
-}
-
-func checkDescriptionNumber(t *testing.T, actual DescriptionNumber, expected string) {
-	if string(actual) != expected {
-		t.Errorf("got %s, want %s", actual, expected)
-	}
-}
-
 func TestStandardMachineExample1(t *testing.T) {
 	m := &Machine{
 		MConfigurations: []MConfiguration{
@@ -70,4 +58,16 @@ func TestStandardMachineExample2(t *testing.T) {
 	st.Machine.MoveN(1000)
 	checkTape(t, st.TranslateTape(st.Machine.Tape), "ee0 0 1 0 1 1 0 1 1 1 0 1 1 1 1")
 	// No StandardDescription or DescriptionNumner given
+}
+
+func checkStandardDescription(t *testing.T, actual StandardDescription, expected string) {
+	if string(actual) != expected {
+		t.Errorf("got %s, want %s", actual, expected)
+	}
+}
+
+func checkDescriptionNumber(t *testing.T, actual DescriptionNumber, expected string) {
+	if string(actual) != expected {
+		t.Errorf("got %s, want %s", actual, expected)
+	}
 }

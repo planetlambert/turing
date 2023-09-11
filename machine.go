@@ -9,7 +9,6 @@ import (
 type (
 	// We may compare a man in the process of computing a real number to a machine...
 	Machine struct {
-
 		// ...which is only capable of a finite number of conditions q1, q2, ..., qR which
 		// will be called "m-configurations".
 		MConfigurations []MConfiguration
@@ -59,7 +58,6 @@ type (
 
 	// An m-configuration contains four components
 	MConfiguration struct {
-
 		// The possible behaviour of the machine at any moment is determined by the m-configuration qn ...
 		Name string
 
