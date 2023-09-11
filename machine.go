@@ -58,10 +58,10 @@ type (
 
 	// An m-configuration contains four components
 	MConfiguration struct {
-		// The possible behaviour of the machine at any moment is determined by the m-configuration qn ...
+		// The possible behaviour of the machine at any moment is determined by the m-configuration qn...
 		Name string
 
-		// ... and the scanned symbol S(r)
+		// ...and the scanned symbol S(r)
 		Symbols []string
 
 		// In some of the configurations in which the scanned square is blank (i.e. bears no symbol)

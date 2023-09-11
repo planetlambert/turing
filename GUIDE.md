@@ -139,6 +139,8 @@ In this section Turing gives simple and concrete examples for his machines.
 
 A full implementation can be found in [machine.go](./machine.go) and [machine_test.go](./machine_test.go).
 
+**Note**: In this guide and throughout the codebase I use English letters only. Turing makes use of lowercase Greek letters (`ə`, for example), and I will always use the English version. 
+
 [machine.go](./machine.go) contains the machine's functionality:
 
 ```go
@@ -159,6 +161,21 @@ fmt.Println(m.CompleteConfiguration())
 ```
 
 [machine_test.go](./machine_test.go) contains Turing's three machine examples, which we test to ensure our implementation works as expected.
+
+The final paragraph documents some conventions that Turing will always use with his machines, I'll repeat them here (along with others that he doesn't explicitly call out):
+1. Begin the tape with [`e`, `e`] so the machine can always find the start of the tape.
+2. The square directly after [`e`, `e`] is the first `F`-square (for figures). Only our sequence figures (`0` or `1`) will be printed on `F`-squares. `F`-squares will by-convention never be erased.
+3. After every `F` square is an `E`-square (for erasable). In these squares Turing prints temporary characters to help with keeping track of things during computation. Otherwise they are always blank. After each `E`-square is another `F`-square.
+4. We "mark" an `F`-square by placing a character directly to the right (that is, the `E`-square on the right). Turing uses "marking" extensively.
+
+Examples:
+
+```go
+// Visually how to think about E-squares and F-squares
+eeFEFEFEFE ...
+// How it will look in practice
+ee0 1 0 1x1x0 ...
+```
 
 ## Section 4 - Abbreviated tables
 
