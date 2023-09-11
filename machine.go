@@ -89,12 +89,9 @@ const (
 	None string = " "
 	Not  string = "!"
 	Any  string = "*"
-
-	mConfigurationNamePrefix   string = "q"
-	mConfigurationSymbolPrefix string = "S"
 )
 
-// Moves the Machine n times
+// Moves the machine n times
 func (m *Machine) MoveN(n int) {
 	for i := 1; i <= n; i++ {
 		m.Move()
@@ -104,7 +101,7 @@ func (m *Machine) MoveN(n int) {
 	}
 }
 
-// Moves the Machine once
+// Moves the machine once
 func (m *Machine) Move() {
 	if m.halted {
 		return
@@ -113,13 +110,13 @@ func (m *Machine) Move() {
 	// Initialize
 	m.init()
 
-	// Scan Symbol from the Tape
+	// Scan symbol from the tape
 	symbol := m.scan()
 
-	// Find MConfiguration
+	// Find the the correct m-configuration depending on the scanned synbol
 	mConfiguration, shouldHalt := m.findMConfiguration(m.currentMConfigurationName, symbol)
 
-	// An MConfiguration could not be found
+	// If an m-configuration could not be found, halt the machine
 	if shouldHalt {
 		m.halted = true
 		return
@@ -131,10 +128,10 @@ func (m *Machine) Move() {
 	}
 
 	if m.Debug {
-		m.printCompleteConfiguration()
+		m.printCompleteConfigurationForDebug()
 	}
 
-	// Move to specified final MConfiguration
+	// Move to specified final-m-configuration
 	m.currentMConfigurationName = mConfiguration.FinalMConfiguration
 }
 
@@ -143,32 +140,26 @@ func (m *Machine) TapeString() string {
 	return strings.Join([]string(m.Tape), "")
 }
 
-func (m *Machine) printMConfigurations() {
-	for _, mConfiguration := range m.MConfigurations {
-		fmt.Printf("%s %v %v %s\n", mConfiguration.Name, mConfiguration.Symbols, mConfiguration.Operations, mConfiguration.FinalMConfiguration)
-	}
-}
-
-// Prints the complete configuration for the Machine
-func (m *Machine) printCompleteConfiguration() {
-	for _, square := range m.Tape {
-		fmt.Print(strings.Repeat("-", len(square)))
-	}
-	fmt.Println("-")
-	fmt.Println(m.TapeString())
+// Returns the machine's Complete Configuration of the single-line form
+func (m *Machine) CompleteConfiguration() string {
+	var completeConfiguration strings.Builder
 	for i, square := range m.Tape {
-		if i >= m.scannedSquare {
-			break
+		if i == m.scannedSquare {
+			completeConfiguration.WriteString(m.currentMConfigurationName)
 		}
-		fmt.Print(strings.Repeat(" ", len(square)))
+		completeConfiguration.WriteString(square)
 	}
-	fmt.Println(m.currentMConfigurationName)
+	if m.scannedSquare == len(m.Tape) {
+		completeConfiguration.WriteString(m.currentMConfigurationName)
+	}
+	return completeConfiguration.String()
 }
 
+// Initializes the machine
 func (m *Machine) init() {
 	if len(m.currentMConfigurationName) == 0 {
 		if m.Debug {
-			m.printMConfigurations()
+			m.printMConfigurationsForDebug()
 		}
 		if len(m.StartingMConfiguration) == 0 {
 			m.currentMConfigurationName = m.MConfigurations[0].Name
@@ -184,14 +175,14 @@ func (m *Machine) init() {
 	}
 }
 
-// Scan the Tape
+// Scans the tape for the scanned symbol
 func (m *Machine) scan() string {
-	m.extendTape()
+	m.extendTapeIfNeeded()
 	return m.Tape[m.scannedSquare]
 }
 
 // The Machine's Tape is infinite, so we extend it as-needed
-func (m *Machine) extendTape() {
+func (m *Machine) extendTapeIfNeeded() {
 	if m.scannedSquare >= len(m.Tape) {
 		m.Tape = append(m.Tape, m.NoneSymbol)
 	}
@@ -201,16 +192,17 @@ func (m *Machine) extendTape() {
 	}
 }
 
-// Find the appropriate full MConfiguration given the current MConfiguration and the scanned symbol
+// Find the appropriate full m-configuration given the current m-configuration name and the scanned symbol
 func (m *Machine) findMConfiguration(mConfigurationName string, symbol string) (MConfiguration, bool) {
 	for _, mConfiguration := range m.MConfigurations {
 		if mConfiguration.Name == mConfigurationName {
-			// Scenario 1: The provided symbol is contained exactly in the MConfiguration
+			// Scenario 1: The provided symbol is contained exactly in the m-configuration
 			if slices.Contains(mConfiguration.Symbols, symbol) {
 				return mConfiguration, false
 			}
+
 			if symbol != m.NoneSymbol {
-				// Scenario 3: The MConfiguration contains `*`
+				// Scenario 2: The m-configuration contains `*`
 				// Note that `*` does not include ` ` (None), which must be specified manually
 				if slices.Contains(mConfiguration.Symbols, Any) {
 					return mConfiguration, false
@@ -219,6 +211,7 @@ func (m *Machine) findMConfiguration(mConfigurationName string, symbol string) (
 				// Scenario 3: The MConfiguration contains `!x` where `x` is not the provided symbol
 				// Note that `!` does not include ` ` (None), which must be specified manually
 				notSymbols := []string{}
+				// First loop is required in the scenario we have multiple (`!x` and `!y`)
 				for _, mConfigurationSymbol := range mConfiguration.Symbols {
 					if strings.Contains(mConfigurationSymbol, Not) {
 						notSymbols = append(notSymbols, mConfigurationSymbol[1:])
@@ -233,9 +226,9 @@ func (m *Machine) findMConfiguration(mConfigurationName string, symbol string) (
 	return MConfiguration{}, true
 }
 
-// Successively perform each operation
+// Perform an operation
 func (m *Machine) performOperation(operation string) {
-	m.extendTape()
+	m.extendTapeIfNeeded()
 	switch operationCode(operation[0]) {
 	case Right:
 		m.scannedSquare++
@@ -246,4 +239,27 @@ func (m *Machine) performOperation(operation string) {
 	case Print:
 		m.Tape[m.scannedSquare] = string(operation[1:])
 	}
+}
+
+// Prints the m-configurations of the machine nicely for debugging
+func (m *Machine) printMConfigurationsForDebug() {
+	for _, mConfiguration := range m.MConfigurations {
+		fmt.Printf("%s %v %v %s\n", mConfiguration.Name, mConfiguration.Symbols, mConfiguration.Operations, mConfiguration.FinalMConfiguration)
+	}
+}
+
+// Prints the complete configuration for the machine nicely for debugging
+func (m *Machine) printCompleteConfigurationForDebug() {
+	for _, square := range m.Tape {
+		fmt.Print(strings.Repeat("-", len(square)))
+	}
+	fmt.Println("-")
+	fmt.Println(m.TapeString())
+	for i, square := range m.Tape {
+		if i >= m.scannedSquare {
+			break
+		}
+		fmt.Print(strings.Repeat(" ", len(square)))
+	}
+	fmt.Println(m.currentMConfigurationName)
 }

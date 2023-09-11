@@ -17,6 +17,12 @@ func checkTape(t *testing.T, tape string, expectedStart string) {
 	}
 }
 
+func checkCompleteConfiguration(t *testing.T, actual string, expected string) {
+	if actual != expected {
+		t.Errorf("got %s, want %s", actual, expected)
+	}
+}
+
 func TestMachineExample1(t *testing.T) {
 	m := &Machine{
 		MConfigurations: []MConfiguration{
@@ -57,6 +63,19 @@ func TestMachineExample2(t *testing.T) {
 			{"f", []string{" "}, []string{"P0", "L", "L"}, "o"},
 		},
 	}
+
+	m.Move()
+	checkCompleteConfiguration(t, m.CompleteConfiguration(), "eeo0 0")
+	m.Move()
+	checkCompleteConfiguration(t, m.CompleteConfiguration(), "eeq0 0")
+	m.Move()
+	checkCompleteConfiguration(t, m.CompleteConfiguration(), "ee0 q0")
+	m.Move()
+	checkCompleteConfiguration(t, m.CompleteConfiguration(), "ee0 0 q")
+	m.Move()
+	checkCompleteConfiguration(t, m.CompleteConfiguration(), "ee0 0p 1")
+	// ...
+
 	m.MoveN(200)
 	checkTape(t, m.TapeString(), "ee0 0 1 0 1 1 0 1 1 1 0 1 1 1 1")
 }

@@ -23,6 +23,9 @@ type (
 )
 
 const (
+	mConfigurationNamePrefix   string = "q"
+	mConfigurationSymbolPrefix string = "S"
+
 	A         byte = 'A'
 	C         byte = 'C'
 	D         byte = 'D'

@@ -135,7 +135,30 @@ configurations.
 
 ## Section 3 - Examples of computing machines
 
-TODO
+In this section Turing gives simple and concrete examples for his machines.
+
+A full implementation can be found in [machine.go](./machine.go) and [machine_test.go](./machine_test.go).
+
+[machine.go](./machine.go) contains the machine's functionality:
+
+```go
+// Creates a machine
+m := Machine{ ... }
+
+// Moves the machine once
+m.Move()
+
+// Moves the machine 10 times
+m.MoveN(10)
+
+// Prints the Tape (as a string)
+fmt.Println(m.TapeString())
+
+// Print's the machine's complete configuration
+fmt.Println(m.CompleteConfiguration())
+```
+
+[machine_test.go](./machine_test.go) contains Turing's three machine examples, which we test to ensure our implementation works as expected.
 
 ## Section 4 - Abbreviated tables
 
