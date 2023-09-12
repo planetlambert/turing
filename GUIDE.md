@@ -1,8 +1,8 @@
 # Guide
 
-This guide and codebase can be thought of as a companion resource for those reading [On Computable Numbers, with an Application to the Entscheidungsproblem](https://www.cs.virginia.edu/~robins/Turing_Paper_1936.pdf) by Alan Turing.
+This guide and codebase is a companion resource for those reading [On Computable Numbers, with an Application to the Entscheidungsproblem](https://www.cs.virginia.edu/~robins/Turing_Paper_1936.pdf) by Alan Turing.
 
-I can't recommend [The Annotated Turing](https://www.amazon.com/Annotated-Turing-Through-Historic-Computability/dp/0470229055) enough, this project would not have been possible without it.
+I can't recommend Charles Petzold's [The Annotated Turing](https://www.amazon.com/Annotated-Turing-Through-Historic-Computability/dp/0470229055) enough, this project would not have been possible without it.
 
 The guide annotates the paper section-by-section. I only quote directly from the paper when there is something to call out explicitly. When possible I bias towards a fully working implementation in code that the reader can use themselves.
 
@@ -20,11 +20,11 @@ Turing explains that his paper will be about [computable numbers](https://en.wik
 - $\mathbb{Z}$ ([integers](https://en.wikipedia.org/wiki/Integer)): $-2$, $-1$, $0$, $1$, $2$, ...
 - $\mathbb{Q}$ ([rationals](https://en.wikipedia.org/wiki/Rational_number)): $-1$, $1$, $\tfrac{1}{2}$, $\tfrac{7}{44}$, ...
 - $\mathbb{R}$ ([reals](https://en.wikipedia.org/wiki/Real_number)): $-1$, $1$, ${\sqrt {2}}$, $\pi$, ...
-- $\mathbb{C}$ ([complex](https://en.wikipedia.org/wiki/Real_number)): $-1$, $1$, ${\sqrt {2}}$, $\pi$, $i$, $2i+3$, ...
+- $\mathbb{C}$ ([complex](https://en.wikipedia.org/wiki/Complex_number)): $-1$, $1$, ${\sqrt {2}}$, $\pi$, $i$, $2i+3$, ...
 
-The real numbers are all numbers which are not imaginary. When he says "expressions as a decimal", he is simply saying that he wants to deal with strings of digits ($0.333...$ rather than $\tfrac{1}{3}$) and in fact he will further limit his numbers to just binary digits ($0.010101...$).
+The real numbers are all numbers which are not imaginary, and our "computable" numbers are a subset of the reals. When he says "expressions as a decimal", he is simply saying that he wants to deal with strings of digits ($0.333...$ rather than $\tfrac{1}{3}$) and in fact he will further limit his numbers to just binary digits ($0.010101...$).
 
-By "finite means" he means that there must be some rule to arrive at the number without just infintely listing every digit. For example, we can describe $0.0101010101...$ finitely by saying you can repeat $01$ infinitely.
+By "finite means" Turing means that there must be some rule to arrive at the number without just infintely listing every digit. For example, we can describe $0.0101010101...$ finitely by saying you can repeat $01$ infinitely.
 
 Of course, there are infinitely *random* real numbers. Whether or not we can calculate these numbers by finite means is a major area of the paper.
 
@@ -61,9 +61,9 @@ Turing is referring to the [diagonalization](https://en.wikipedia.org/wiki/Diago
 > These results have valuable applications. In particular, it can be shown (§11) that the
 Hilbertian Entscheidungsproblem can have no solution.
 
-**The point of the paper**. All of this work is to serve the purpose of giving a result to [the Entscheidungsproblem](https://en.wikipedia.org/wiki/Entscheidungsproblem) (in English "the *decision* problem"). We will talk in depth about the Entscheidungsproblem later in [section 11](./GUIDE.md#section-11---application-to-the-entscheidungsproblem), but here is a short description for now:
+Here Turing reveals **the point of the paper**. All of this work is to serve the purpose of giving a result to [the Entscheidungsproblem](https://en.wikipedia.org/wiki/Entscheidungsproblem) (in English "the *decision* problem"). We will talk in depth about the Entscheidungsproblem later in [section 11](./GUIDE.md#section-11---application-to-the-entscheidungsproblem), but here is a short description for now:
 
-The decision problem asks if it is possible for there to be an algorithm that decides if a logic statement is **provable** from a set of axioms, for every possible statement. Again, a description of the algorithm:
+The decision problem asks if it is possible for there to be an algorithm that decides if a logic statement is **provable** from a set of axioms, for every possible statement. Again, a shortened description of the algorithm:
 
 - Input: A logic statement, and a set of axioms
 - Output: A proof of the statement's truth (or falsity) based on the set of axioms
@@ -139,7 +139,7 @@ In this section Turing gives simple and concrete examples for his machines.
 
 A full implementation can be found in [machine.go](./machine.go) and [machine_test.go](./machine_test.go).
 
-**Note**: In this guide and throughout the codebase I use English letters only. Turing makes use of lowercase Greek letters (`ə`, for example), and I will always use the English version. 
+**Note**: In this guide and throughout the codebase I use English letters only. Turing makes use of lowercase Greek, upper and lowercase German letters (`ə`, for example), and I will always use the English version.
 
 [machine.go](./machine.go) contains the machine's functionality:
 
@@ -163,8 +163,8 @@ fmt.Println(m.CompleteConfiguration())
 [machine_test.go](./machine_test.go) contains Turing's three machine examples, which we test to ensure our implementation works as expected.
 
 The final paragraph documents some conventions that Turing will always use with his machines, I'll repeat them here (along with others that he doesn't explicitly call out):
-1. Begin the tape with [`e`, `e`] so the machine can always find the start of the tape.
-2. The square directly after [`e`, `e`] is the first `F`-square (for figures). Only our sequence figures (`0` or `1`) will be printed on `F`-squares. `F`-squares will by-convention never be erased.
+1. Begin the tape with `ee` so the machine can always find the start of the tape.
+2. The square directly after `ee` is the first `F`-square (for figures). Only our sequence figures (`0` or `1`) will be printed on `F`-squares. `F`-squares will by-convention never be erased.
 3. After every `F` square is an `E`-square (for erasable). In these squares Turing prints temporary characters to help with keeping track of things during computation. Otherwise they are always blank. After each `E`-square is another `F`-square.
 4. We "mark" an `F`-square by placing a character directly to the right (that is, the `E`-square on the right). Turing uses "marking" extensively.
 
