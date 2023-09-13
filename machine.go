@@ -90,14 +90,14 @@ type (
 )
 
 const (
-	Right operationCode = 'R'
-	Left  operationCode = 'L'
-	Erase operationCode = 'E'
-	Print operationCode = 'P'
+	rightOp operationCode = 'R'
+	leftOp  operationCode = 'L'
+	eraseOp operationCode = 'E'
+	printOp operationCode = 'P'
 
-	None string = " "
-	Not  string = "!"
-	Any  string = "*"
+	none string = " "
+	not  string = "!"
+	any  string = "*"
 )
 
 // Returns a new Machine
@@ -116,7 +116,7 @@ func NewMachine(input MachineInput) *Machine {
 
 	// Use default None character if not specified
 	if len(input.NoneSymbol) == 0 {
-		m.noneSymbol = None
+		m.noneSymbol = none
 	} else {
 		m.noneSymbol = input.NoneSymbol
 	}
@@ -229,7 +229,7 @@ func (m *Machine) findMConfiguration(mConfigurationName string, symbol string) (
 			if symbol != m.noneSymbol {
 				// Scenario 2: The m-configuration contains `*`
 				// Note that `*` does not include ` ` (None), which must be specified manually
-				if slices.Contains(mConfiguration.Symbols, Any) {
+				if slices.Contains(mConfiguration.Symbols, any) {
 					return mConfiguration, false
 				}
 
@@ -238,7 +238,7 @@ func (m *Machine) findMConfiguration(mConfigurationName string, symbol string) (
 				notSymbols := []string{}
 				// First loop is required in the scenario we have multiple (`!x` and `!y`)
 				for _, mConfigurationSymbol := range mConfiguration.Symbols {
-					if strings.Contains(mConfigurationSymbol, Not) {
+					if strings.Contains(mConfigurationSymbol, not) {
 						notSymbols = append(notSymbols, mConfigurationSymbol[1:])
 					}
 				}
@@ -255,13 +255,13 @@ func (m *Machine) findMConfiguration(mConfigurationName string, symbol string) (
 func (m *Machine) performOperation(operation string) {
 	m.extendTapeIfNeeded()
 	switch operationCode(operation[0]) {
-	case Right:
+	case rightOp:
 		m.scannedSquare++
-	case Left:
+	case leftOp:
 		m.scannedSquare--
-	case Erase:
+	case eraseOp:
 		m.tape[m.scannedSquare] = m.noneSymbol
-	case Print:
+	case printOp:
 		m.tape[m.scannedSquare] = string(operation[1:])
 	}
 }

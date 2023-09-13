@@ -38,24 +38,24 @@ const (
 	mConfigurationNamePrefix   string = "q"
 	mConfigurationSymbolPrefix string = "S"
 
-	A         byte = 'A'
-	C         byte = 'C'
-	D         byte = 'D'
-	L         byte = 'L'
-	R         byte = 'R'
-	N         byte = 'N'
-	Semicolon byte = ';'
+	a         byte = 'A'
+	c         byte = 'C'
+	d         byte = 'D'
+	l         byte = 'L'
+	r         byte = 'R'
+	n         byte = 'N'
+	semicolon byte = ';'
 )
 
 var (
 	sDCharToDNInt = map[byte]int{
-		A:         1,
-		C:         2,
-		D:         3,
-		L:         4,
-		R:         5,
-		N:         6,
-		Semicolon: 7,
+		a:         1,
+		c:         2,
+		d:         3,
+		l:         4,
+		r:         5,
+		n:         6,
+		semicolon: 7,
 	}
 )
 
@@ -77,7 +77,7 @@ func (st *StandardTable) standardize() {
 
 	// Turing prefers a format where ` ` (None) is S0, `0` is S1, `1` is S2 and so on
 	// This ensures ` ` (None) comes first
-	st.newMConfigurationSymbol(None)
+	st.newMConfigurationSymbol(none)
 
 	// Every MConfiguration will be rewritten and potentially introduce further MConfigurations
 	for _, mConfiguration := range st.input.MConfigurations {
@@ -131,7 +131,7 @@ func (st *StandardTable) standardize() {
 				} else {
 					// When we are in hidden states, we get to the FinalMConfiguration no matter what
 					// This means we need to account for all symbols
-					for _, calculatedSymbol := range append(st.input.PossibleSymbols, None) {
+					for _, calculatedSymbol := range append(st.input.PossibleSymbols, none) {
 						// If we intend to print a 'Noop', just use the current symbol
 						calculatedPrintOperation := st.calculateStandardPrintOperation(printOperations[i], st.newMConfigurationSymbol(calculatedSymbol))
 
@@ -152,7 +152,7 @@ func (st *StandardTable) standardize() {
 		Tape:                   st.newTape(),
 		StartingMConfiguration: st.newStartingMConfiguration(),
 		PossibleSymbols:        st.newMConfigurationSymbols(),
-		NoneSymbol:             st.newMConfigurationSymbol(None),
+		NoneSymbol:             st.newMConfigurationSymbol(none),
 	}
 	st.SymbolMap = st.reverseMConfigurationSymbols()
 	st.StandardDescription = toStandardDescription(st.MachineInput)
@@ -163,7 +163,7 @@ func (st *StandardTable) expandStandardSymbols(mConfiguration MConfiguration) []
 	// First loop required for multiple Not scenario
 	notSymbols := []string{}
 	for _, symbol := range mConfiguration.Symbols {
-		if strings.Contains(symbol, Not) {
+		if strings.Contains(symbol, not) {
 			notSymbols = append(notSymbols, symbol[1:])
 		}
 	}
@@ -171,13 +171,13 @@ func (st *StandardTable) expandStandardSymbols(mConfiguration MConfiguration) []
 	symbols := []string{}
 	for _, symbol := range mConfiguration.Symbols {
 		// To support `!` (Not), `*` (Any), etc. we may need multiple MConfigurations for this one particular row
-		if strings.Contains(symbol, Not) {
+		if strings.Contains(symbol, not) {
 			for _, possibleSymbol := range st.input.PossibleSymbols {
 				if !slices.Contains(notSymbols, possibleSymbol) && !slices.Contains(symbols, possibleSymbol) {
 					symbols = append(symbols, st.newMConfigurationSymbol(possibleSymbol))
 				}
 			}
-		} else if symbol == Any {
+		} else if symbol == any {
 			for _, possibleSymbol := range st.input.PossibleSymbols {
 				symbols = append(symbols, st.newMConfigurationSymbol(possibleSymbol))
 			}
@@ -192,45 +192,45 @@ func (st *StandardTable) expandStandardOperations(mConfiguration MConfiguration)
 	printOperations := []string{}
 	moveOperations := []string{}
 	if len(mConfiguration.Operations) == 0 {
-		printOperations = append(printOperations, string(Print))
-		moveOperations = append(moveOperations, string(N))
+		printOperations = append(printOperations, string(printOp))
+		moveOperations = append(moveOperations, string(n))
 	} else {
 		lookingForPrint := true
 		for i, operation := range mConfiguration.Operations {
 			operationCode := operationCode(operation[0])
 			if lookingForPrint {
-				if operationCode == Print {
+				if operationCode == printOp {
 					symbol := string(operation[1:])
 					var printOperation strings.Builder
-					printOperation.WriteByte(byte(Print))
+					printOperation.WriteByte(byte(printOp))
 					printOperation.WriteString(st.newMConfigurationSymbol(symbol))
 					printOperations = append(printOperations, printOperation.String())
 					lookingForPrint = false
 					if i == len(mConfiguration.Operations)-1 {
-						moveOperations = append(moveOperations, string(N))
+						moveOperations = append(moveOperations, string(n))
 					}
-				} else if operationCode == Erase {
+				} else if operationCode == eraseOp {
 					var printOperation strings.Builder
-					printOperation.WriteByte(byte(Print))
-					printOperation.WriteString(st.newMConfigurationSymbol(None))
+					printOperation.WriteByte(byte(printOp))
+					printOperation.WriteString(st.newMConfigurationSymbol(none))
 					printOperations = append(printOperations, printOperation.String())
 					lookingForPrint = false
 					if i == len(mConfiguration.Operations)-1 {
-						moveOperations = append(moveOperations, string(N))
+						moveOperations = append(moveOperations, string(n))
 					}
 				} else {
 					var printOperation strings.Builder
-					printOperation.WriteByte(byte(Print))
+					printOperation.WriteByte(byte(printOp))
 					// Printing the current symbol is essentially a Print noop
 					// We encode this by just including `P` with no symbol
 					printOperations = append(printOperations, printOperation.String())
 					moveOperations = append(moveOperations, string(operationCode))
 				}
 			} else {
-				if operationCode == Left || operationCode == Right {
+				if operationCode == leftOp || operationCode == rightOp {
 					moveOperations = append(moveOperations, string(operationCode))
 				} else {
-					moveOperations = append(moveOperations, string(N))
+					moveOperations = append(moveOperations, string(n))
 				}
 				lookingForPrint = true
 			}
@@ -241,9 +241,9 @@ func (st *StandardTable) expandStandardOperations(mConfiguration MConfiguration)
 
 func (st *StandardTable) calculateStandardPrintOperation(printOperation string, currentSymbol string) string {
 	var calculatedPrintOperation string
-	if printOperation == string(Print) {
+	if printOperation == string(printOp) {
 		var calculatedPrintOperationBuilder strings.Builder
-		calculatedPrintOperationBuilder.WriteByte(byte(Print))
+		calculatedPrintOperationBuilder.WriteByte(byte(printOp))
 		calculatedPrintOperationBuilder.WriteString(currentSymbol)
 		calculatedPrintOperation = calculatedPrintOperationBuilder.String()
 	} else {
@@ -336,34 +336,34 @@ func toStandardDescription(input MachineInput) StandardDescription {
 	for _, standardMConfiguration := range input.MConfigurations {
 		// TODO: Bug in original paper, each Standard Description should begin with
 		// a semi-colon.
-		standardDescription.WriteByte(Semicolon)
+		standardDescription.WriteByte(semicolon)
 
 		// Name is `DAAA`
-		standardDescription.WriteByte(D)
+		standardDescription.WriteByte(d)
 		nameSuffix := standardMConfiguration.Name[1:]
 		nameNum, _ := strconv.Atoi(nameSuffix)
-		standardDescription.Write(bytes.Repeat([]byte{A}, nameNum))
+		standardDescription.Write(bytes.Repeat([]byte{a}, nameNum))
 
 		// Symbol is `DCCC`
-		standardDescription.WriteByte(D)
+		standardDescription.WriteByte(d)
 		symbolSuffix := standardMConfiguration.Symbols[0][1:]
 		symbolNum, _ := strconv.Atoi(symbolSuffix)
-		standardDescription.Write(bytes.Repeat([]byte{C}, symbolNum))
+		standardDescription.Write(bytes.Repeat([]byte{c}, symbolNum))
 
 		// Print is also is `DCCC`
-		standardDescription.WriteByte(D)
+		standardDescription.WriteByte(d)
 		printOperationSuffix := standardMConfiguration.Operations[0][2:]
 		printOperationNum, _ := strconv.Atoi(printOperationSuffix)
-		standardDescription.Write(bytes.Repeat([]byte{C}, printOperationNum))
+		standardDescription.Write(bytes.Repeat([]byte{c}, printOperationNum))
 
 		// Move Operations is `L`, `R`, or `N`
 		standardDescription.WriteString(standardMConfiguration.Operations[1])
 
 		// Final Configuration is also `DAAA`
-		standardDescription.WriteByte(D)
+		standardDescription.WriteByte(d)
 		finalMConfigurationSuffix := standardMConfiguration.FinalMConfiguration[1:]
 		finalMConfigurationNum, _ := strconv.Atoi(finalMConfigurationSuffix)
-		standardDescription.Write(bytes.Repeat([]byte{A}, finalMConfigurationNum))
+		standardDescription.Write(bytes.Repeat([]byte{a}, finalMConfigurationNum))
 	}
 
 	return StandardDescription(standardDescription.String())

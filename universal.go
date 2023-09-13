@@ -158,7 +158,7 @@ func NewUniversalMachine(input UniversalMachineInput) MachineInput {
 	tapeFromStandardDescription := []string{"e", "e"}
 	for _, char := range input.StandardDescription {
 		tapeFromStandardDescription = append(tapeFromStandardDescription, string(char))
-		tapeFromStandardDescription = append(tapeFromStandardDescription, None)
+		tapeFromStandardDescription = append(tapeFromStandardDescription, none)
 	}
 	tapeFromStandardDescription = append(tapeFromStandardDescription, "::")
 
@@ -210,7 +210,7 @@ func getEnhancedShow(symbolMap SymbolMap) []MConfiguration {
 	return enhancedShow
 }
 
-func ConvertUniversalMachineTape(tape Tape) string {
+func TapeStringFromUniversalMachineTape(tape Tape) string {
 	var tapeString strings.Builder
 
 	// We essentially need to find only the symbols between two colons
@@ -232,7 +232,7 @@ func ConvertUniversalMachineTape(tape Tape) string {
 		}
 		if squareMinusTwo == ":" && square == ":" {
 			if squareMinusOne == "_" {
-				tapeString.WriteString(None)
+				tapeString.WriteString(none)
 			} else {
 				tapeString.WriteString(strings.TrimPrefix(squareMinusOne, "_"))
 			}

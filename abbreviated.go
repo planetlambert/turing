@@ -211,7 +211,7 @@ func (at *abbreviatedTable) interpretMFunction(name string, params []string) str
 		symbolValues := []string{}
 		symbolParam, isSymbolParam := at.isSymbolParam(mFunction.Symbols, mFunctionParams)
 		if isSymbolParam {
-			for _, possibleSymbol := range append(at.input.PossibleSymbols, None) {
+			for _, possibleSymbol := range append(at.input.PossibleSymbols, none) {
 				symbolValues = append(symbolValues, possibleSymbol)
 			}
 		} else {
@@ -276,10 +276,10 @@ func (at *abbreviatedTable) isSymbolParam(symbols []string, mFunctionParams []st
 		return "", false
 	}
 	symbol := symbols[0]
-	if strings.Contains(symbol, Not) || strings.Contains(symbol, Any) {
+	if strings.Contains(symbol, not) || strings.Contains(symbol, any) {
 		return "", false
 	}
-	notAPossibleSymbol := !slices.Contains(append(at.input.PossibleSymbols, None), symbol)
+	notAPossibleSymbol := !slices.Contains(append(at.input.PossibleSymbols, none), symbol)
 	notAMFunctionParam := !slices.Contains(mFunctionParams, symbol)
 	if notAPossibleSymbol && notAMFunctionParam {
 		return symbol, true
@@ -291,9 +291,9 @@ func (at *abbreviatedTable) isSymbolParam(symbols []string, mFunctionParams []st
 func (at *abbreviatedTable) substituteSymbols(mFunctionSymbols []string, substitutions map[string]string) []string {
 	substitutedSymbols := []string{}
 	for _, mFunctionSymbol := range mFunctionSymbols {
-		if strings.Contains(mFunctionSymbol, Not) {
+		if strings.Contains(mFunctionSymbol, not) {
 			if substitutedSymbol, ok := substitutions[mFunctionSymbol[1:]]; ok {
-				substitutedSymbols = append(substitutedSymbols, Not+substitutedSymbol)
+				substitutedSymbols = append(substitutedSymbols, not+substitutedSymbol)
 			} else {
 				substitutedSymbols = append(substitutedSymbols, mFunctionSymbol)
 			}
@@ -313,13 +313,13 @@ func (at *abbreviatedTable) substituteOperations(mFunctionOperations []string, s
 	substitutedOperations := []string{}
 	for _, mFunctionOperation := range mFunctionOperations {
 		switch operationCode(mFunctionOperation[0]) {
-		case Print:
+		case printOp:
 			mFunctionOperationSymbol := string(mFunctionOperation[1])
 			if substitutedOperation, ok := substitutions[mFunctionOperationSymbol]; ok {
-				substitutedOperations = append(substitutedOperations, string(Print)+substitutedOperation)
+				substitutedOperations = append(substitutedOperations, string(printOp)+substitutedOperation)
 
 			} else {
-				substitutedOperations = append(substitutedOperations, string(Print)+mFunctionOperationSymbol)
+				substitutedOperations = append(substitutedOperations, string(printOp)+mFunctionOperationSymbol)
 			}
 		default:
 			substitutedOperations = append(substitutedOperations, mFunctionOperation)
@@ -427,7 +427,7 @@ func parseMFunction(mFunction string) (string, []string) {
 	var recursiveCount int
 	for _, char := range mFunction[open+1 : len(mFunction)-1] {
 		charAsString := string(char)
-		if recursiveCount > 0 || (charAsString != None && charAsString != functionParamDelimiter) {
+		if recursiveCount > 0 || (charAsString != none && charAsString != functionParamDelimiter) {
 			currentParam.WriteRune(char)
 		}
 		if charAsString == functionOpen {
@@ -439,7 +439,7 @@ func parseMFunction(mFunction string) (string, []string) {
 		if recursiveCount == 0 && charAsString == functionParamDelimiter {
 			// Handles the scenario where we want to use ` ` (None) as a parameter
 			if currentParam.Len() == 0 {
-				currentParam.WriteString(None)
+				currentParam.WriteString(none)
 			}
 			params = append(params, currentParam.String())
 			currentParam.Reset()
@@ -448,7 +448,7 @@ func parseMFunction(mFunction string) (string, []string) {
 
 	// Handles the scenario where we want to use ` ` (None) as a parameter
 	if currentParam.Len() == 0 {
-		currentParam.WriteString(None)
+		currentParam.WriteString(none)
 	}
 	params = append(params, currentParam.String())
 
