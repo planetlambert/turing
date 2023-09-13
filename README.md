@@ -25,14 +25,14 @@ import (
 )
 
 func main() {
-    m := &turing.Machine{
+    m := turing.NewMachine(turing.MachineInput{
         MConfigurations: turing.MConfigurations{
             {Name: "b", Symbols: []string{" "}, Operations: []string{"P0", "R"}, FinalMConfiguration: "c"},
             {Name: "c", Symbols: []string{" "}, Operations: []string{"R"},       FinalMConfiguration: "e"},
             {Name: "e", Symbols: []string{" "}, Operations: []string{"P1", "R"}, FinalMConfiguration: "k"},
             {Name: "k", Symbols: []string{" "}, Operations: []string{"R"},       FinalMConfiguration: "b"},
         },
-    }
+    })
     m.MoveN(50)
     fmt.Println(m.TapeString()) // Prints "0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0"
 }

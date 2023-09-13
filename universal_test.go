@@ -5,7 +5,7 @@ import (
 )
 
 func TestUniversalMachineExample1(t *testing.T) {
-	m := &Machine{
+	input := MachineInput{
 		MConfigurations: []MConfiguration{
 			{"b", []string{" "}, []string{"P0", "R"}, "c"},
 			{"c", []string{" "}, []string{"R"}, "e"},
@@ -13,8 +13,9 @@ func TestUniversalMachineExample1(t *testing.T) {
 			{"k", []string{" "}, []string{"R"}, "b"},
 		},
 	}
-	st := m.ToStandardTable()
-	sd := st.ToStandardDescription()
+
+	m := NewMachine(input)
+	st := NewStandardTable(input)
 
 	expected := "0 1 0 1 0 1"
 
@@ -23,7 +24,10 @@ func TestUniversalMachineExample1(t *testing.T) {
 	checkTape(t, m.TapeString(), expected)
 
 	// Check Universal Machine Tape
-	um := NewUniversalMachine(sd, st.SymbolMap)
+	um := NewMachine(NewUniversalMachine(UniversalMachineInput{
+		StandardDescription: st.StandardDescription,
+		SymbolMap:           st.SymbolMap,
+	}))
 	um.MoveN(500000)
-	checkTape(t, um.CondensedTapeString(), expected)
+	checkTape(t, ConvertUniversalMachineTape(um.Tape()), expected)
 }

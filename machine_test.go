@@ -6,32 +6,32 @@ import (
 )
 
 func TestMachineExample1(t *testing.T) {
-	m := &Machine{
+	m := NewMachine(MachineInput{
 		MConfigurations: []MConfiguration{
 			{"b", []string{" "}, []string{"P0", "R"}, "c"},
 			{"c", []string{" "}, []string{"R"}, "e"},
 			{"e", []string{" "}, []string{"P1", "R"}, "k"},
 			{"k", []string{" "}, []string{"R"}, "b"},
 		},
-	}
+	})
 	m.MoveN(50)
 	checkTape(t, m.TapeString(), "0 1 0 1 0 1 0 1 0 1 0 1")
 }
 
 func TestMachineExample1Short(t *testing.T) {
-	m := &Machine{
+	m := NewMachine(MachineInput{
 		MConfigurations: []MConfiguration{
 			{"b", []string{" "}, []string{"P0"}, "b"},
 			{"b", []string{"0"}, []string{"R", "R", "P1"}, "b"},
 			{"b", []string{"1"}, []string{"R", "R", "P0"}, "b"},
 		},
-	}
+	})
 	m.MoveN(50)
 	checkTape(t, m.TapeString(), "0 1 0 1 0 1 0 1 0 1 0 1")
 }
 
 func TestMachineExample2(t *testing.T) {
-	m := &Machine{
+	m := NewMachine(MachineInput{
 		MConfigurations: []MConfiguration{
 			{"b", []string{"*", " "}, []string{"Pe", "R", "Pe", "R", "P0", "R", "R", "P0", "L", "L"}, "o"},
 			{"o", []string{"1"}, []string{"R", "Px", "L", "L", "L"}, "o"},
@@ -44,7 +44,7 @@ func TestMachineExample2(t *testing.T) {
 			{"f", []string{"*"}, []string{"R", "R"}, "f"},
 			{"f", []string{" "}, []string{"P0", "L", "L"}, "o"},
 		},
-	}
+	})
 
 	m.Move()
 	checkCompleteConfiguration(t, m.CompleteConfiguration(), "eeo0 0")

@@ -6,16 +6,6 @@ import (
 	"strings"
 )
 
-type UniversalMachine struct {
-	Machine
-}
-
-const (
-	Colon       string = ":"
-	DoubleColon string = "::"
-	Underscore  string = "_"
-)
-
 var (
 	// The possible symbols for the universal machine
 	possibleSymbolsForUniversalMachine = []string{
@@ -27,135 +17,6 @@ var (
 	// parameters and symbols overlap (in the paper Turing uses capital German letters
 	// for MFunction variables, but I chose to keep english.) In this case I also use
 	// prefix the variable with an underscore.
-
-	// From the MConfiguration `f` the machine finds the
-	// symbol of form `a` which is farthest to the left (the "first a")
-	// and the MConfiguration then becomes `C`. If there is no `a`
-	// then the MConfiguration becomes `B`.
-	findLeftMost = []MConfiguration{
-		{"f(C, B, a)", []string{"e"}, []string{"L"}, "f1(C, B, a)"},
-		{"f(C, B, a)", []string{"!e", " "}, []string{"L"}, "f(C, B, a)"},
-		{"f1(C, B, a)", []string{"a"}, []string{}, "C"},
-		{"f1(C, B, a)", []string{"!a"}, []string{"R"}, "f1(C, B, a)"},
-		{"f1(C, B, a)", []string{" "}, []string{"R"}, "f2(C, B, a)"},
-		{"f2(C, B, a)", []string{"a"}, []string{}, "C"},
-		{"f2(C, B, a)", []string{"!a"}, []string{"R"}, "f1(C, B, a)"},
-		{"f2(C, B, a)", []string{" "}, []string{"R"}, "B"},
-	}
-
-	// From `e(C, B, a)` the first `a` is erased and -> `C`.
-	// If there is no `a` -> `B`.
-	// From `e(B, a)` all letters `a` are erased and -> `B`.
-	erase = []MConfiguration{
-		{"e(C, B, a)", []string{"*", " "}, []string{}, "f(e1(C, B, a), B, a)"},
-		{"e1(C, B, a)", []string{"*", " "}, []string{"E"}, "C"},
-		{"e(B, a)", []string{"*", " "}, []string{}, "e(e(B, a), B, a)"},
-	}
-
-	// From `pe(C, b)` the machine prints `b` at the end of the sequence
-	// of symbols and -> `C`
-	printAtTheEnd = []MConfiguration{
-		{"pe(C, b)", []string{"*", " "}, []string{}, "f(pe1(C, b), C, e)"},
-		{"pe1(C, b)", []string{"*"}, []string{"R", "R"}, "pe1(C, b)"},
-		{"pe1(C, b)", []string{" "}, []string{"Pb"}, "C"},
-	}
-
-	// From `fl(C, B, a)` it does the same as for `f(C, B, a)`,
-	// but moves to the left before -> `C`
-	findLeft = []MConfiguration{
-		{"l(C)", []string{"*", " "}, []string{"L"}, "C"},
-		{"fl(C, B, a)", []string{"*", " "}, []string{}, "f(l(C), B, a)"},
-	}
-
-	// From `fr(C, B, a)` it does the same as for `f(C, B, a)`,
-	// but moves to the right before -> `C`
-	findRight = []MConfiguration{
-		{"r(C)", []string{"*", " "}, []string{"R"}, "C"},
-		{"fr(C, B, a)", []string{"*", " "}, []string{}, "f(r(C), B, a)"},
-	}
-
-	// `c(C, B, a)`. The machine writes at the end the first symbol
-	// marked `a` and -> `C`
-	copy = []MConfiguration{
-		{"c(C, B, a)", []string{"*", " "}, []string{}, "fl(c1(C), B, a)"},
-		{"c1(C)", []string{"_b"}, []string{}, "pe(C, _b)"},
-	}
-
-	// `ce(B, a)`. The machine copies down in order at the end
-	// all symbols marked `a` and erases the letters `a` -> `B`
-	copyAndErase = []MConfiguration{
-		{"ce(C, B, a)", []string{"*", " "}, []string{}, "c(e(C, B, a), B, a)"},
-		{"ce(B, a)", []string{"*", " "}, []string{}, "ce(ce(B, a), B, a)"},
-	}
-
-	// `re(C, B, a, b)`. The machine replaces the first `a` by `b` and
-	// -> `C` (-> `B` if there is no `a`).
-	// `re(B, a, b)`. The machine replaces all letters `a` by `b` -> `B`
-	replace = []MConfiguration{
-		{"re(C, B, a, b)", []string{"*", " "}, []string{}, "f(re1(C, B, a, b), b, a)"},
-		{"re1(C, B, a, b)", []string{"*", " "}, []string{"E", "Pb"}, "C"},
-		{"re(B, a, b)", []string{"*", " "}, []string{}, "re(re(B, a, b), B, a, b)"},
-	}
-
-	// `cr(B, a)` differs from `ce(B, a)` only in that the letters `a` are not erased.
-	// The MConfiguration `cr(B, a)` is taken up when no letters `b` are on the tape.
-	copyAndReplace = []MConfiguration{
-		{"cr(C, B, a, b)", []string{"*", " "}, []string{}, "c(re(C, B, a, b), B, a)"},
-		{"cr(B, a, b)", []string{"*", " "}, []string{}, "cr(cr(B, a, b), re(B, a, b), a, b)"},
-	}
-
-	// The first symbol marked `a` and the first marked `b` are compared.
-	// If there is neither `a` nor `b` -> E. If there are both and the symbols are alike,
-	// -> `C`. Otherwise -> `A`.
-	compare = []MConfiguration{
-		{"cp(C, A, E, a, b)", []string{"*", " "}, []string{}, "fl(cp1(C, A, b), f(A, E, b), a)"},
-		{"cp1(C, A, b)", []string{"_y"}, []string{}, "fl(cp2(C, A, _y), A, b)"},
-		{"cp2(C, A, y)", []string{"y"}, []string{}, "C"},
-		{"cp2(C, A, y)", []string{"!y", " "}, []string{}, "A"},
-	}
-
-	// `cpe(C, A, E, a, b)` differs from `cp(C, A, E, a, b)` in that in the case when there is
-	// a similarity the first `a` and `b` are erased.
-	// `cpe(A, E, a, b)`. The sequence of symbols marked `a` is compared with the sequence
-	// marked `b`. -> `C` if they are similar. Otherwise -> `A`. Some of the symbols `a` and `b` are erased.
-	compareAndErase = []MConfiguration{
-		{"cpe(C, A, E, a, b)", []string{"*", " "}, []string{}, "cp(e(e(C, C, b), C, a), A, E, a, b)"},
-		{"cpe(A, E, a, b)", []string{"*", " "}, []string{}, "cpe(cpe(A, E, a, b), A, E, a, b)"},
-	}
-
-	// `g(C, a)`. The machine finds the last symbol of form `a` -> `C`.
-	findRightMost = []MConfiguration{
-		{"g(C)", []string{"*"}, []string{"R"}, "g(C)"},
-		{"g(C)", []string{" "}, []string{"R"}, "g1(C)"},
-		{"g1(C)", []string{"*"}, []string{"R"}, "g(C)"},
-		{"g1(C)", []string{" "}, []string{}, "C"},
-		{"g(C, a)", []string{"*", " "}, []string{}, "g(g1(C, a))"},
-		{"g1(C, a)", []string{"a"}, []string{}, "C"},
-		{"g1(C, a)", []string{"!a", " "}, []string{"L"}, "g1(C, a)"},
-	}
-
-	// `pe2(C, a, b)`. The machine prints `a b` at the end.
-	printAtTheEnd2 = []MConfiguration{
-		{"pe2(C, a, b)", []string{"*", " "}, []string{}, "pe(pe(C, b), a)"},
-	}
-
-	// `ce3(B, a, b, y)`. The machine copies down at the end first the symbols
-	// marked `a` then those marked `b`, and finally those marked `y`.
-	// It erases the symbols `a`, `b`, `y`.
-	copyAndErase2 = []MConfiguration{
-		{"ce2(B, a, b)", []string{"*", " "}, []string{}, "ce(ce(B, b), a)"},
-		{"ce3(B, a, b, y)", []string{"*", " "}, []string{}, "ce(ce2(B, b, y), a)"},
-		{"ce4(B, a, b, y, z)", []string{"*", " "}, []string{}, "ce(ce3(B, b, y, z), a)"},
-		{"ce5(B, a, b, y, z, w)", []string{"*", " "}, []string{}, "ce(ce4(B, b, y, z, w), a)"},
-	}
-
-	// From `e(C)` the marks are erased from all marked symbols -> `C`
-	eraseAll = []MConfiguration{
-		{"e(C)", []string{"e"}, []string{"R"}, "e1(C)"},
-		{"e(C)", []string{"!e", " "}, []string{"L"}, "e(C)"},
-		{"e1(C)", []string{"*"}, []string{"R", "E", "R"}, "e1(C)"},
-		{"e1(C)", []string{" "}, []string{}, "C"},
-	}
 
 	// `con(C, a)`. Starting from an F-square, S say, the sequence C of symbols describing
 	// a configuration closest on the right of S is marked out with letters a. -> `C`
@@ -255,7 +116,14 @@ var (
 	}
 )
 
-func NewUniversalMachine(sd StandardDescription, symbolMap SymbolMap) *UniversalMachine {
+type (
+	UniversalMachineInput struct {
+		StandardDescription
+		SymbolMap
+	}
+)
+
+func NewUniversalMachine(input UniversalMachineInput) MachineInput {
 	// Helper MFunctions
 	mConfigurations := []MConfiguration{}
 	mConfigurations = append(mConfigurations, findLeftMost...)
@@ -283,29 +151,23 @@ func NewUniversalMachine(sd StandardDescription, symbolMap SymbolMap) *Universal
 	mConfigurations = append(mConfigurations, kmp...)
 	mConfigurations = append(mConfigurations, similar...)
 	mConfigurations = append(mConfigurations, mark...)
-	mConfigurations = append(mConfigurations, getEnhancedShow(symbolMap)...)
+	mConfigurations = append(mConfigurations, getEnhancedShow(input.SymbolMap)...)
 	mConfigurations = append(mConfigurations, instruction...)
 
 	// Construct tape
 	tapeFromStandardDescription := []string{"e", "e"}
-	for _, char := range sd {
+	for _, char := range input.StandardDescription {
 		tapeFromStandardDescription = append(tapeFromStandardDescription, string(char))
 		tapeFromStandardDescription = append(tapeFromStandardDescription, None)
 	}
 	tapeFromStandardDescription = append(tapeFromStandardDescription, "::")
 
-	at := AbbreviatedTable{
-		Machine: Machine{
-			MConfigurations:        mConfigurations,
-			Tape:                   tapeFromStandardDescription,
-			StartingMConfiguration: "b",
-			PossibleSymbols:        possibleSymbolsForUniversalMachine,
-		},
-	}
-
-	return &UniversalMachine{
-		Machine: *at.ToMachine(),
-	}
+	return NewAbbreviatedTable(AbbreviatedTableInput{
+		MConfigurations:        mConfigurations,
+		Tape:                   tapeFromStandardDescription,
+		StartingMConfiguration: "b",
+		PossibleSymbols:        possibleSymbolsForUniversalMachine,
+	})
 }
 
 func getEnhancedShow(symbolMap SymbolMap) []MConfiguration {
@@ -348,7 +210,7 @@ func getEnhancedShow(symbolMap SymbolMap) []MConfiguration {
 	return enhancedShow
 }
 
-func (um *UniversalMachine) CondensedTapeString() string {
+func ConvertUniversalMachineTape(tape Tape) string {
 	var tapeString strings.Builder
 
 	// We essentially need to find only the symbols between two colons
@@ -356,9 +218,9 @@ func (um *UniversalMachine) CondensedTapeString() string {
 	var skip bool
 	var squareMinusTwo string
 	var squareMinusOne string
-	for _, square := range um.Tape {
+	for _, square := range tape {
 		if !started {
-			if square == DoubleColon {
+			if square == "::" {
 				started = true
 				skip = true
 			}
@@ -368,11 +230,11 @@ func (um *UniversalMachine) CondensedTapeString() string {
 			skip = !skip
 			continue
 		}
-		if squareMinusTwo == Colon && square == Colon {
-			if squareMinusOne == Underscore {
+		if squareMinusTwo == ":" && square == ":" {
+			if squareMinusOne == "_" {
 				tapeString.WriteString(None)
 			} else {
-				tapeString.WriteString(strings.TrimPrefix(squareMinusOne, Underscore))
+				tapeString.WriteString(strings.TrimPrefix(squareMinusOne, "_"))
 			}
 		}
 		squareMinusTwo = squareMinusOne

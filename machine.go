@@ -8,15 +8,14 @@ import (
 
 type (
 	// We may compare a man in the process of computing a real number to a machine...
-	Machine struct {
+	MachineInput struct {
 		// ...which is only capable of a finite number of conditions q1, q2, ..., qR which
 		// will be called "m-configurations".
 		MConfigurations []MConfiguration
 
 		// The machine is supplied with a "tape" (the analogue of paper) running through it,
 		// and divided into sections (called "squares") each capable of bearing a "symbol".
-		// Our "tape" is a slice of strings because squares can contain multiple characters
-		Tape []string
+		Tape Tape
 
 		// The m-configuration that the machine should start with. If empty the first m-configuration
 		// in the list is chosen.
@@ -32,6 +31,24 @@ type (
 
 		// If `true`, the machine's complete configurations are printed at the end of each move.
 		Debug bool
+	}
+
+	// Turing's Machine
+	Machine struct {
+		// See corresponding input field
+		mConfigurations []MConfiguration
+
+		// See corresponding input field
+		tape []string
+
+		// See corresponding input field
+		possibleSymbols []string
+
+		// See corresponding input field
+		noneSymbol string
+
+		// See corresponding input field
+		debug bool
 
 		// At any moment there is just one square, say the r-th, bearing the symbol S(r)
 		// which is "in the machine". We may call this square the "scanned square".
@@ -45,15 +62,6 @@ type (
 		// Stores whether the machine has "halted" or not. A machine only halts if it cannot
 		// find an m-configuration.
 		halted bool
-
-		// For use when converting to StandardTable
-		mConfigurationNames map[string]string
-		// For use when converting to StandardTable
-		nameCount int
-		// For use when converting to StandardTable
-		mConfigurationSymbols map[string]string
-		// For use when converting to StandardTable
-		symbolCount int
 	}
 
 	// An m-configuration contains four components
@@ -74,6 +82,9 @@ type (
 		FinalMConfiguration string
 	}
 
+	// Our "tape" is a slice of strings because squares can contain multiple characters
+	Tape []string
+
 	// Well-known single-character codes used in an m-configuration's operations.
 	operationCode byte
 )
@@ -88,6 +99,41 @@ const (
 	Not  string = "!"
 	Any  string = "*"
 )
+
+// Returns a new Machine
+func NewMachine(input MachineInput) *Machine {
+	m := &Machine{
+		mConfigurations: input.MConfigurations,
+		debug:           input.Debug,
+	}
+
+	// Use first m-configuration if starting m-configuration not specified
+	if len(input.StartingMConfiguration) == 0 {
+		m.currentMConfigurationName = input.MConfigurations[0].Name
+	} else {
+		m.currentMConfigurationName = input.StartingMConfiguration
+	}
+
+	// Use default None character if not specified
+	if len(input.NoneSymbol) == 0 {
+		m.noneSymbol = None
+	} else {
+		m.noneSymbol = input.NoneSymbol
+	}
+
+	// Initialize tape if nil
+	if input.Tape == nil {
+		m.tape = []string{}
+	} else {
+		m.tape = input.Tape
+	}
+
+	if m.debug {
+		m.printMConfigurationsForDebug()
+	}
+
+	return m
+}
 
 // Moves the machine n times
 func (m *Machine) MoveN(n int) {
@@ -104,9 +150,6 @@ func (m *Machine) Move() {
 	if m.halted {
 		return
 	}
-
-	// Initialize
-	m.init()
 
 	// Scan symbol from the tape
 	symbol := m.scan()
@@ -125,7 +168,7 @@ func (m *Machine) Move() {
 		m.performOperation(operation)
 	}
 
-	if m.Debug {
+	if m.debug {
 		m.printCompleteConfigurationForDebug()
 	}
 
@@ -133,73 +176,57 @@ func (m *Machine) Move() {
 	m.currentMConfigurationName = mConfiguration.FinalMConfiguration
 }
 
+func (m *Machine) Tape() Tape {
+	return m.tape
+}
+
 // Return the Tape represented as a string
 func (m *Machine) TapeString() string {
-	return strings.Join([]string(m.Tape), "")
+	return strings.Join([]string(m.tape), "")
 }
 
 // Returns the machine's Complete Configuration of the single-line form
 func (m *Machine) CompleteConfiguration() string {
 	var completeConfiguration strings.Builder
-	for i, square := range m.Tape {
+	for i, square := range m.tape {
 		if i == m.scannedSquare {
 			completeConfiguration.WriteString(m.currentMConfigurationName)
 		}
 		completeConfiguration.WriteString(square)
 	}
-	if m.scannedSquare == len(m.Tape) {
+	if m.scannedSquare == len(m.tape) {
 		completeConfiguration.WriteString(m.currentMConfigurationName)
 	}
 	return completeConfiguration.String()
 }
 
-// Initializes the machine
-func (m *Machine) init() {
-	if len(m.currentMConfigurationName) == 0 {
-		if m.Debug {
-			m.printMConfigurationsForDebug()
-		}
-		if len(m.StartingMConfiguration) == 0 {
-			m.currentMConfigurationName = m.MConfigurations[0].Name
-		} else {
-			m.currentMConfigurationName = m.StartingMConfiguration
-		}
-	}
-	if len(m.NoneSymbol) == 0 {
-		m.NoneSymbol = None
-	}
-	if m.Tape == nil {
-		m.Tape = []string{}
-	}
-}
-
 // Scans the tape for the scanned symbol
 func (m *Machine) scan() string {
 	m.extendTapeIfNeeded()
-	return m.Tape[m.scannedSquare]
+	return m.tape[m.scannedSquare]
 }
 
 // The Machine's Tape is infinite, so we extend it as-needed
 func (m *Machine) extendTapeIfNeeded() {
-	if m.scannedSquare >= len(m.Tape) {
-		m.Tape = append(m.Tape, m.NoneSymbol)
+	if m.scannedSquare >= len(m.tape) {
+		m.tape = append(m.tape, m.noneSymbol)
 	}
 	if m.scannedSquare < 0 {
-		m.Tape = append([]string{m.NoneSymbol}, m.Tape...)
+		m.tape = append([]string{m.noneSymbol}, m.tape...)
 		m.scannedSquare++
 	}
 }
 
 // Find the appropriate full m-configuration given the current m-configuration name and the scanned symbol
 func (m *Machine) findMConfiguration(mConfigurationName string, symbol string) (MConfiguration, bool) {
-	for _, mConfiguration := range m.MConfigurations {
+	for _, mConfiguration := range m.mConfigurations {
 		if mConfiguration.Name == mConfigurationName {
 			// Scenario 1: The provided symbol is contained exactly in the m-configuration
 			if slices.Contains(mConfiguration.Symbols, symbol) {
 				return mConfiguration, false
 			}
 
-			if symbol != m.NoneSymbol {
+			if symbol != m.noneSymbol {
 				// Scenario 2: The m-configuration contains `*`
 				// Note that `*` does not include ` ` (None), which must be specified manually
 				if slices.Contains(mConfiguration.Symbols, Any) {
@@ -233,27 +260,27 @@ func (m *Machine) performOperation(operation string) {
 	case Left:
 		m.scannedSquare--
 	case Erase:
-		m.Tape[m.scannedSquare] = m.NoneSymbol
+		m.tape[m.scannedSquare] = m.noneSymbol
 	case Print:
-		m.Tape[m.scannedSquare] = string(operation[1:])
+		m.tape[m.scannedSquare] = string(operation[1:])
 	}
 }
 
 // Prints the m-configurations of the machine nicely for debugging
 func (m *Machine) printMConfigurationsForDebug() {
-	for _, mConfiguration := range m.MConfigurations {
+	for _, mConfiguration := range m.mConfigurations {
 		fmt.Printf("%s %v %v %s\n", mConfiguration.Name, mConfiguration.Symbols, mConfiguration.Operations, mConfiguration.FinalMConfiguration)
 	}
 }
 
 // Prints the complete configuration for the machine nicely for debugging
 func (m *Machine) printCompleteConfigurationForDebug() {
-	for _, square := range m.Tape {
+	for _, square := range m.tape {
 		fmt.Print(strings.Repeat("-", len(square)))
 	}
 	fmt.Println("-")
 	fmt.Println(m.TapeString())
-	for i, square := range m.Tape {
+	for i, square := range m.tape {
 		if i >= m.scannedSquare {
 			break
 		}

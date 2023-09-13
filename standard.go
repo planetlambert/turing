@@ -11,8 +11,20 @@ import (
 
 type (
 	StandardTable struct {
-		Machine
-		SymbolMap
+		MachineInput        MachineInput
+		SymbolMap           SymbolMap
+		StandardDescription StandardDescription
+		DescriptionNumber   DescriptionNumber
+
+		input MachineInput
+		// For use when converting to StandardTable
+		mConfigurationNames map[string]string
+		// For use when converting to StandardTable
+		nameCount int
+		// For use when converting to StandardTable
+		mConfigurationSymbols map[string]string
+		// For use when converting to StandardTable
+		symbolCount int
 	}
 
 	SymbolMap map[string]string
@@ -47,29 +59,40 @@ var (
 	}
 )
 
+// Standardizes MachineInput so it conforms to Turing's standard form.
+func NewStandardTable(input MachineInput) StandardTable {
+	st := &StandardTable{
+		input: input,
+	}
+
+	st.standardize()
+
+	return *st
+}
+
 // Converts a Machine to a Machine that conforms to Turing's standard form.
-func (m *Machine) ToStandardTable() *StandardTable {
+func (st *StandardTable) standardize() {
 	// The new MConfigurations of the machine
 	standardMConfigurations := []MConfiguration{}
 
 	// Turing prefers a format where ` ` (None) is S0, `0` is S1, `1` is S2 and so on
 	// This ensures ` ` (None) comes first
-	m.newMConfigurationSymbol(None)
+	st.newMConfigurationSymbol(None)
 
 	// Every MConfiguration will be rewritten and potentially introduce further MConfigurations
-	for _, mConfiguration := range m.MConfigurations {
+	for _, mConfiguration := range st.input.MConfigurations {
 		// Enumerate all symbols for the MConfiguration in standard form
-		symbols := m.expandStandardSymbols(mConfiguration)
+		symbols := st.expandStandardSymbols(mConfiguration)
 
 		// Split out the operations so they satisfy Turing's acceptable forms:
 		// (E), (E, R), (E, L), (Pa), (Pa, R), (Pa, L), (R), (L), (<Nothing>)
-		printOperations, moveOperations := m.expandStandardOperations(mConfiguration)
+		printOperations, moveOperations := st.expandStandardOperations(mConfiguration)
 
 		// Standardize MConfiguration Name
-		name := m.newMConfigurationName(mConfiguration.Name)
+		name := st.newMConfigurationName(mConfiguration.Name)
 
 		// Standardize FinalMConfiguration
-		finalMConfiguration := m.newMConfigurationName(mConfiguration.FinalMConfiguration)
+		finalMConfiguration := st.newMConfigurationName(mConfiguration.FinalMConfiguration)
 
 		// For each symbol, make identical MConfigurations
 		for _, currentSymbol := range symbols {
@@ -90,12 +113,12 @@ func (m *Machine) ToStandardTable() *StandardTable {
 				if i == len(printOperations)-1 {
 					calculatedFinalMConfiguration = finalMConfiguration
 				} else {
-					nextName = m.newHiddenMConfigurationName()
+					nextName = st.newHiddenMConfigurationName()
 					calculatedFinalMConfiguration = nextName
 				}
 
 				// If we intend to print a 'Noop', just use the current symbol
-				calculatedPrintOperation := m.calculateStandardPrintOperation(printOperations[i], currentSymbol)
+				calculatedPrintOperation := st.calculateStandardPrintOperation(printOperations[i], currentSymbol)
 
 				if i == 0 {
 					// Only one MConfiguration needed
@@ -108,13 +131,13 @@ func (m *Machine) ToStandardTable() *StandardTable {
 				} else {
 					// When we are in hidden states, we get to the FinalMConfiguration no matter what
 					// This means we need to account for all symbols
-					for _, calculatedSymbol := range append(m.PossibleSymbols, None) {
+					for _, calculatedSymbol := range append(st.input.PossibleSymbols, None) {
 						// If we intend to print a 'Noop', just use the current symbol
-						calculatedPrintOperation := m.calculateStandardPrintOperation(printOperations[i], m.newMConfigurationSymbol(calculatedSymbol))
+						calculatedPrintOperation := st.calculateStandardPrintOperation(printOperations[i], st.newMConfigurationSymbol(calculatedSymbol))
 
 						standardMConfigurations = append(standardMConfigurations, MConfiguration{
 							Name:                calculatedName,
-							Symbols:             []string{m.newMConfigurationSymbol(calculatedSymbol)},
+							Symbols:             []string{st.newMConfigurationSymbol(calculatedSymbol)},
 							Operations:          []string{calculatedPrintOperation, moveOperations[i]},
 							FinalMConfiguration: calculatedFinalMConfiguration,
 						})
@@ -124,19 +147,19 @@ func (m *Machine) ToStandardTable() *StandardTable {
 		}
 	}
 
-	return &StandardTable{
-		Machine: Machine{
-			MConfigurations:        standardMConfigurations,
-			Tape:                   m.newTape(),
-			StartingMConfiguration: m.newStartingMConfiguration(),
-			PossibleSymbols:        m.newMConfigurationSymbols(),
-			NoneSymbol:             m.newMConfigurationSymbol(None),
-		},
-		SymbolMap: m.reverseMConfigurationSymbols(),
+	st.MachineInput = MachineInput{
+		MConfigurations:        standardMConfigurations,
+		Tape:                   st.newTape(),
+		StartingMConfiguration: st.newStartingMConfiguration(),
+		PossibleSymbols:        st.newMConfigurationSymbols(),
+		NoneSymbol:             st.newMConfigurationSymbol(None),
 	}
+	st.SymbolMap = st.reverseMConfigurationSymbols()
+	st.StandardDescription = toStandardDescription(st.MachineInput)
+	st.DescriptionNumber = toDescriptionNumber(st.StandardDescription)
 }
 
-func (m *Machine) expandStandardSymbols(mConfiguration MConfiguration) []string {
+func (st *StandardTable) expandStandardSymbols(mConfiguration MConfiguration) []string {
 	// First loop required for multiple Not scenario
 	notSymbols := []string{}
 	for _, symbol := range mConfiguration.Symbols {
@@ -149,23 +172,23 @@ func (m *Machine) expandStandardSymbols(mConfiguration MConfiguration) []string 
 	for _, symbol := range mConfiguration.Symbols {
 		// To support `!` (Not), `*` (Any), etc. we may need multiple MConfigurations for this one particular row
 		if strings.Contains(symbol, Not) {
-			for _, possibleSymbol := range m.PossibleSymbols {
+			for _, possibleSymbol := range st.input.PossibleSymbols {
 				if !slices.Contains(notSymbols, possibleSymbol) && !slices.Contains(symbols, possibleSymbol) {
-					symbols = append(symbols, m.newMConfigurationSymbol(possibleSymbol))
+					symbols = append(symbols, st.newMConfigurationSymbol(possibleSymbol))
 				}
 			}
 		} else if symbol == Any {
-			for _, possibleSymbol := range m.PossibleSymbols {
-				symbols = append(symbols, m.newMConfigurationSymbol(possibleSymbol))
+			for _, possibleSymbol := range st.input.PossibleSymbols {
+				symbols = append(symbols, st.newMConfigurationSymbol(possibleSymbol))
 			}
 		} else {
-			symbols = append(symbols, m.newMConfigurationSymbol(symbol))
+			symbols = append(symbols, st.newMConfigurationSymbol(symbol))
 		}
 	}
 	return symbols
 }
 
-func (m *Machine) expandStandardOperations(mConfiguration MConfiguration) ([]string, []string) {
+func (st *StandardTable) expandStandardOperations(mConfiguration MConfiguration) ([]string, []string) {
 	printOperations := []string{}
 	moveOperations := []string{}
 	if len(mConfiguration.Operations) == 0 {
@@ -180,7 +203,7 @@ func (m *Machine) expandStandardOperations(mConfiguration MConfiguration) ([]str
 					symbol := string(operation[1:])
 					var printOperation strings.Builder
 					printOperation.WriteByte(byte(Print))
-					printOperation.WriteString(m.newMConfigurationSymbol(symbol))
+					printOperation.WriteString(st.newMConfigurationSymbol(symbol))
 					printOperations = append(printOperations, printOperation.String())
 					lookingForPrint = false
 					if i == len(mConfiguration.Operations)-1 {
@@ -189,7 +212,7 @@ func (m *Machine) expandStandardOperations(mConfiguration MConfiguration) ([]str
 				} else if operationCode == Erase {
 					var printOperation strings.Builder
 					printOperation.WriteByte(byte(Print))
-					printOperation.WriteString(m.newMConfigurationSymbol(None))
+					printOperation.WriteString(st.newMConfigurationSymbol(None))
 					printOperations = append(printOperations, printOperation.String())
 					lookingForPrint = false
 					if i == len(mConfiguration.Operations)-1 {
@@ -216,7 +239,7 @@ func (m *Machine) expandStandardOperations(mConfiguration MConfiguration) ([]str
 	return printOperations, moveOperations
 }
 
-func (m *Machine) calculateStandardPrintOperation(printOperation string, currentSymbol string) string {
+func (st *StandardTable) calculateStandardPrintOperation(printOperation string, currentSymbol string) string {
 	var calculatedPrintOperation string
 	if printOperation == string(Print) {
 		var calculatedPrintOperationBuilder strings.Builder
@@ -229,77 +252,77 @@ func (m *Machine) calculateStandardPrintOperation(printOperation string, current
 	return calculatedPrintOperation
 }
 
-func (m *Machine) newMConfigurationName(name string) string {
-	if m.mConfigurationNames == nil {
-		m.mConfigurationNames = map[string]string{}
-		m.nameCount++
+func (st *StandardTable) newMConfigurationName(name string) string {
+	if st.mConfigurationNames == nil {
+		st.mConfigurationNames = map[string]string{}
+		st.nameCount++
 	}
-	newName, ok := m.mConfigurationNames[name]
+	newName, ok := st.mConfigurationNames[name]
 	if !ok {
-		newName = mConfigurationNamePrefix + strconv.Itoa(m.nameCount)
-		m.nameCount++
-		m.mConfigurationNames[name] = newName
+		newName = mConfigurationNamePrefix + strconv.Itoa(st.nameCount)
+		st.nameCount++
+		st.mConfigurationNames[name] = newName
 	}
 	return newName
 }
 
-func (m *Machine) newHiddenMConfigurationName() string {
-	if m.mConfigurationNames == nil {
-		m.mConfigurationNames = map[string]string{}
-		m.nameCount++
+func (st *StandardTable) newHiddenMConfigurationName() string {
+	if st.mConfigurationNames == nil {
+		st.mConfigurationNames = map[string]string{}
+		st.nameCount++
 	}
-	newName := mConfigurationNamePrefix + strconv.Itoa(m.nameCount)
-	m.nameCount++
+	newName := mConfigurationNamePrefix + strconv.Itoa(st.nameCount)
+	st.nameCount++
 	return newName
 }
 
-func (m *Machine) newMConfigurationSymbol(symbol string) string {
-	if m.mConfigurationSymbols == nil {
-		m.mConfigurationSymbols = map[string]string{}
+func (st *StandardTable) newMConfigurationSymbol(symbol string) string {
+	if st.mConfigurationSymbols == nil {
+		st.mConfigurationSymbols = map[string]string{}
 	}
-	newSymbol, ok := m.mConfigurationSymbols[symbol]
+	newSymbol, ok := st.mConfigurationSymbols[symbol]
 	if !ok {
-		newSymbol = mConfigurationSymbolPrefix + strconv.Itoa(m.symbolCount)
-		m.symbolCount++
-		m.mConfigurationSymbols[symbol] = newSymbol
+		newSymbol = mConfigurationSymbolPrefix + strconv.Itoa(st.symbolCount)
+		st.symbolCount++
+		st.mConfigurationSymbols[symbol] = newSymbol
 	}
 	return newSymbol
 }
 
-func (m *Machine) newMConfigurationSymbols() []string {
+func (st *StandardTable) newMConfigurationSymbols() []string {
 	symbols := []string{}
-	for _, v := range m.mConfigurationSymbols {
+	for _, v := range st.mConfigurationSymbols {
 		symbols = append(symbols, v)
 	}
 	return symbols
 }
 
-func (m *Machine) reverseMConfigurationSymbols() SymbolMap {
+func (st *StandardTable) reverseMConfigurationSymbols() SymbolMap {
 	mConfigurationSymbols := SymbolMap{}
-	for k, v := range m.mConfigurationSymbols {
+	for k, v := range st.mConfigurationSymbols {
 		mConfigurationSymbols[v] = k
 	}
 	return mConfigurationSymbols
 }
 
-func (m *Machine) newStartingMConfiguration() string {
-	if len(m.StartingMConfiguration) == 0 {
+func (st *StandardTable) newStartingMConfiguration() string {
+	if len(st.input.StartingMConfiguration) == 0 {
 		return ""
 	} else {
-		return m.newMConfigurationName(m.StartingMConfiguration)
+		return st.newMConfigurationName(st.input.StartingMConfiguration)
 	}
 }
 
-func (m *Machine) newTape() []string {
+func (st *StandardTable) newTape() []string {
 	newTape := []string{}
-	for _, square := range m.Tape {
-		newTape = append(newTape, m.mConfigurationSymbols[square])
+	for _, square := range st.input.Tape {
+		newTape = append(newTape, st.mConfigurationSymbols[square])
 	}
 	return newTape
 }
 
 // Translates a tape
-func (sm SymbolMap) TranslateTape(tape []string) string {
+func (sm SymbolMap) TranslateTape(tape Tape) string {
 	var translatedTape strings.Builder
 	for _, square := range tape {
 		translatedTape.WriteString(sm[square])
@@ -308,9 +331,9 @@ func (sm SymbolMap) TranslateTape(tape []string) string {
 }
 
 // Converts a StandardTable to its StandardDescription (S.D.)
-func (st *StandardTable) ToStandardDescription() StandardDescription {
+func toStandardDescription(input MachineInput) StandardDescription {
 	var standardDescription strings.Builder
-	for _, standardMConfiguration := range st.Machine.MConfigurations {
+	for _, standardMConfiguration := range input.MConfigurations {
 		// TODO: Bug in original paper, each Standard Description should begin with
 		// a semi-colon.
 		standardDescription.WriteByte(Semicolon)
@@ -347,7 +370,7 @@ func (st *StandardTable) ToStandardDescription() StandardDescription {
 }
 
 // Conversts a S.D. to a D.N.
-func (sd StandardDescription) ToDescriptionNumber() DescriptionNumber {
+func toDescriptionNumber(sd StandardDescription) DescriptionNumber {
 	var descriptionNumber strings.Builder
 	for _, char := range []byte(sd) {
 		descriptionNumber.WriteString(strconv.Itoa(sDCharToDNInt[char]))

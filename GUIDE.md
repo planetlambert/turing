@@ -101,8 +101,8 @@ Turing spends the remainder of the section giving a textual description of his "
 ```go
 type (
     Machine struct {
-        MConfigurations []MConfiguration
-        Tape            []string
+        mConfigurations []MConfiguration
+        tape            Tape
     }
 
     MConfiguration struct {
@@ -111,6 +111,8 @@ type (
         Operations          []string
         FinalMConfiguration string
     }
+
+    Tape []string
 )
 ```
 
@@ -139,13 +141,13 @@ In this section Turing gives simple and concrete examples for his machines.
 
 A full implementation can be found in [machine.go](./machine.go) and [machine_test.go](./machine_test.go).
 
-**Note**: In this guide and throughout the codebase I use English letters only. Turing makes use of lowercase Greek, upper and lowercase German letters (`ə`, for example), and I will always use the English version.
+**Note**: In this guide and throughout the codebase I use English letters only. Turing makes use of lowercase Greek, upper and lowercase German letters (`ə`, for example), and I will always use the English version, as its easier for me to type them. At some point I may replace all letters in the repository with Turing's original Greek/German characters. 
 
 [machine.go](./machine.go) contains the machine's functionality:
 
 ```go
 // Creates a machine
-m := Machine{ ... }
+m := NewMachine(MachineInput{ ... })
 
 // Moves the machine once
 m.Move()
@@ -177,9 +179,156 @@ Examples:
 "ee0 1 0 1x1x0 ..."
 ```
 
+Here are some implementation details to note for our `Machine`:
+
+- Our m-configuration rows are stored in one giant list (rather than grouping each m-configuration of the same name in some structure). I found the independent m-configuration rows easier to implement.
+- For the `Symbols` m-configuration field, I require that ` ` (None) be provided in addition to `*` (Any), or `!x` (Not `x`) if the m-configuration should match the blank square. This is because exactly what is meant by None, Any, Not in Turing's machine is dependent on the other m-configurations of the same name. Our implementation depends on all m-configuration rows being independent from one another, as stated above.
+- Some optional fields are provided (and used by our implementation) to make things cleaner. These are `StartingMConfiguration`, `PossibleSymbols`, `NoneSymbol`, and `Debug`. These should be self-explanatory, and it should be clear by [section 7](./GUIDE.md#section-7---detailed-description-of-the-universal-machine) why they are necessary.
+- You may find that I ocassionaly use `halt` as a final-m-configuration, and I never define the actual m-configuration. This is because in Turing's machines, the only way for the machine to stop (or halt) is if we are unable to find the next m-configuration after a "move". By convention, whenever I want to configure a machine to stop at some point, I will use the undefined m-configuration `halt`.
+
 ## Section 4 - Abbreviated tables
 
+I got super tripped up by this section. Turing explains his "abbreviated tables" briefly and then piles them on hard. It is only with Petzold's help that I was able to figure out some of the nuances here. I'll try to start with simple example so we can work our way up (Turing starts with a complex one.)
+
+The full implementation for this section can be found in [abbreviated.go](./abbreviated.go) and [abbreviated_tests.go](./abbreviated_test.go). It works like this:
+
+```go
+m := NewMachine(NewAbbreviatedTable(AbbreviatedTableInput{
+    MConfigurations: { ... }
+}))
+```
+
+### Example 1 - Substituting symbols in `Operations`
+```go
+// This table prints `a` and repeats
+MConfigurations{
+    {
+        Name: "b",
+        Symbols: []string{"*"},
+        Operations: []string{},
+        FinalMConfiguration: "f(0)",
+    },
+    {
+        Name: "f(a)",
+        Symbols: []string{"*"},
+        // We are printing whatever is passed to `f`
+        Operations: []string{"Pa"}, 
+        FinalMConfiguration: "b",
+    },
+}
+
+// compiles to
+
+MConfigurations{
+    {
+        Name: "b",
+        Symbols: []string{"*"},
+        Operations: []string{},
+        FinalMConfiguration: "c",
+    },
+    {
+        Name: "c",
+        Symbols: []string{"*"},
+         // Note that we substituted `a` with `0` here
+        Operations: []string{"P0"},
+        FinalMConfiguration: "b",
+    },
+}
+
+// We have taken the liberty of choosing `c` as the m-configuration name
+// for our compiled m-function. Turing will just use `q1`, `q2`, `q3`, ...
+// during compilation, so our m-configuration should really look like
+
+MConfigurations{
+    {
+        Name: "q1",
+        Symbols: []string{"*"},
+        Operations: []string{},
+        FinalMConfiguration: "q2",
+    },
+    {
+        Name: "q2",
+        Symbols: []string{"*"},
+        Operations: []string{"P0"},
+        FinalMConfiguration: "q1",
+    },
+}
+```
+
+So our m-functions have names and parameters. They will be called by other m-configurations in the final-m-configuration column.
+
+### Example 2 - Substituting a `FinalMConfiguration`:
+
+```go
+MConfigurations{
+    {
+        Name: "b",
+        Symbols: []string{"*"},
+        Operations: []string{},
+        FinalMConfiguration: "f(c)",
+    },
+    {
+        Name: "f(A)",
+        Symbols: []string{"*"},
+        Operations: []string{"P0"},
+        // We move to whatever m-configuration was passed as a parameter to `f`
+        FinalMConfiguration: "A",
+    },
+}
+
+// compiles to
+
+MConfigurations{
+    {
+        Name: "q1",
+        Symbols: []string{"*"},
+        Operations: []string{},
+        FinalMConfiguration: "q2",
+    },
+    {
+        Name: "q2",
+        Symbols: []string{"*"},
+        Operations: []string{"P0"},
+        // The parameter (`c`) was compiled to q3
+        FinalMConfiguration: "q3",
+    },
+}
+```
+What is `c` in this example? We never defined it so the machine will just halt when it gets to `q3`.
+
+Note that in Turing's first example (`f`), there are a bunch of `f` rows, and then `f1` rows and `f2` rows. When he does this, he is saying that `f` is the m-function others will call, and anything with a number after it is just a helper for the main bit. He groups all of these together under one letter to show that they work together to offer some functionality. Its sort of like saying:
+
+```go
+// Exposed functionality
+func F(a, b, c) {
+    f1(a, b, c)
+    f2(a, b, c)
+}
+
+// private helper
+func f1(a, b, c) {
+    // ...
+}
+
+// private helper
+func f2(a, b, c) {
+    // ...
+}
+```
+
+In the paper `f` specifically stands for "find". It will go to the first `e` in the tape (the beginning of the tape), and then begin to move rightward. If it finds the desired character (`a`), it moves to the m-configuration `C`. If it cannot find `a` before it hits two blank squares in a row it will move to m-configuration `B`. Our implementation of `f` can be found at the top of [abbreviated.go](./abbreviated.go).
+
+### Example 3 - Functions within functions
 TODO
+```
+
+```
+
+### Example 4 - Symbol parameters
+TODO
+```
+
+```
 
 ## Section 5 - Enumeration of computable sequences
 

@@ -57,29 +57,23 @@ func TestFindLeftMost(t *testing.T) {
 	possibleSymbols := []string{"e", "x", "y", "0", "1"}
 
 	t.Run("FindFirstZero", func(t *testing.T) {
-		at := &AbbreviatedTable{
-			Machine: Machine{
-				MConfigurations:        mConfigurations,
-				Tape:                   []string{"e", "e", "1", " ", "1", " ", "0", " ", "0"},
-				PossibleSymbols:        possibleSymbols,
-				StartingMConfiguration: "b",
-			},
-		}
-		m := at.ToMachine()
+		m := NewMachine(NewAbbreviatedTable(AbbreviatedTableInput{
+			MConfigurations:        mConfigurations,
+			Tape:                   []string{"e", "e", "1", " ", "1", " ", "0", " ", "0"},
+			PossibleSymbols:        possibleSymbols,
+			StartingMConfiguration: "b",
+		}))
 		m.MoveN(20)
 		checkTape(t, m.TapeString(), "ee1 1 x 0")
 	})
 
 	t.Run("NoZero", func(t *testing.T) {
-		at := &AbbreviatedTable{
-			Machine: Machine{
-				MConfigurations:        mConfigurations,
-				Tape:                   []string{"e", "e", "1", " ", "1"},
-				PossibleSymbols:        possibleSymbols,
-				StartingMConfiguration: "b",
-			},
-		}
-		m := at.ToMachine()
+		m := NewMachine(NewAbbreviatedTable(AbbreviatedTableInput{
+			MConfigurations:        mConfigurations,
+			Tape:                   []string{"e", "e", "1", " ", "1"},
+			PossibleSymbols:        possibleSymbols,
+			StartingMConfiguration: "b",
+		}))
 		m.MoveN(20)
 		checkTape(t, m.TapeString(), "ee1 1  y")
 	})
@@ -99,45 +93,36 @@ func TestErase(t *testing.T) {
 
 	t.Run("EraseX", func(t *testing.T) {
 		mConfigurations := append(mConfigurations, eraseOnceTest)
-		at := &AbbreviatedTable{
-			Machine: Machine{
-				MConfigurations:        mConfigurations,
-				Tape:                   []string{"e", "e", "0", "z", "0", "z"},
-				PossibleSymbols:        possibleSymbols,
-				StartingMConfiguration: "b",
-			},
-		}
-		m := at.ToMachine()
+		m := NewMachine(NewAbbreviatedTable(AbbreviatedTableInput{
+			MConfigurations:        mConfigurations,
+			Tape:                   []string{"e", "e", "0", "z", "0", "z"},
+			PossibleSymbols:        possibleSymbols,
+			StartingMConfiguration: "b",
+		}))
 		m.MoveN(20)
 		checkTape(t, m.TapeString(), "ee0x0z")
 	})
 
 	t.Run("EraseXDoesNotExist", func(t *testing.T) {
 		mConfigurations := append(mConfigurations, eraseOnceTest)
-		at := &AbbreviatedTable{
-			Machine: Machine{
-				MConfigurations:        mConfigurations,
-				Tape:                   []string{"e", "e"},
-				PossibleSymbols:        possibleSymbols,
-				StartingMConfiguration: "b",
-			},
-		}
-		m := at.ToMachine()
+		m := NewMachine(NewAbbreviatedTable(AbbreviatedTableInput{
+			MConfigurations:        mConfigurations,
+			Tape:                   []string{"e", "e"},
+			PossibleSymbols:        possibleSymbols,
+			StartingMConfiguration: "b",
+		}))
 		m.MoveN(20)
 		checkTape(t, m.TapeString(), "ee  y")
 	})
 
 	t.Run("EraseAll", func(t *testing.T) {
 		mConfigurations := append(mConfigurations, eraseAllTest)
-		at := &AbbreviatedTable{
-			Machine: Machine{
-				MConfigurations:        mConfigurations,
-				Tape:                   []string{"e", "e", "", "z", " ", "z"},
-				PossibleSymbols:        possibleSymbols,
-				StartingMConfiguration: "b",
-			},
-		}
-		m := at.ToMachine()
+		m := NewMachine(NewAbbreviatedTable(AbbreviatedTableInput{
+			MConfigurations:        mConfigurations,
+			Tape:                   []string{"e", "e", "", "z", " ", "z"},
+			PossibleSymbols:        possibleSymbols,
+			StartingMConfiguration: "b",
+		}))
 		m.MoveN(30)
 		checkTape(t, m.TapeString(), "ee  x")
 	})
@@ -154,15 +139,12 @@ func TestPrintAtTheEnd(t *testing.T) {
 	possibleSymbols := []string{"e", "0", "x"}
 
 	t.Run("PrintAtTheEnd", func(t *testing.T) {
-		at := &AbbreviatedTable{
-			Machine: Machine{
-				MConfigurations:        mConfigurations,
-				Tape:                   []string{"e", "e", "0", " ", "0"},
-				PossibleSymbols:        possibleSymbols,
-				StartingMConfiguration: "b",
-			},
-		}
-		m := at.ToMachine()
+		m := NewMachine(NewAbbreviatedTable(AbbreviatedTableInput{
+			MConfigurations:        mConfigurations,
+			Tape:                   []string{"e", "e", "0", " ", "0"},
+			PossibleSymbols:        possibleSymbols,
+			StartingMConfiguration: "b",
+		}))
 		m.MoveN(20)
 		checkTape(t, m.TapeString(), "ee0 0 x")
 	})
@@ -182,30 +164,24 @@ func TestFindLeft(t *testing.T) {
 
 	t.Run("Left", func(t *testing.T) {
 		mConfigurations := append(mConfigurations, leftTest)
-		at := &AbbreviatedTable{
-			Machine: Machine{
-				MConfigurations:        mConfigurations,
-				Tape:                   []string{"e", "e"},
-				PossibleSymbols:        possibleSymbols,
-				StartingMConfiguration: "b",
-			},
-		}
-		m := at.ToMachine()
+		m := NewMachine(NewAbbreviatedTable(AbbreviatedTableInput{
+			MConfigurations:        mConfigurations,
+			Tape:                   []string{"e", "e"},
+			PossibleSymbols:        possibleSymbols,
+			StartingMConfiguration: "b",
+		}))
 		m.MoveN(20)
 		checkTape(t, m.TapeString(), "ee0")
 	})
 
 	t.Run("FindLeft", func(t *testing.T) {
 		mConfigurations := append(mConfigurations, findLeftTest)
-		at := &AbbreviatedTable{
-			Machine: Machine{
-				MConfigurations:        mConfigurations,
-				Tape:                   []string{"e", "e", "1", " ", "1", " ", "0", " ", "0"},
-				PossibleSymbols:        possibleSymbols,
-				StartingMConfiguration: "b",
-			},
-		}
-		m := at.ToMachine()
+		m := NewMachine(NewAbbreviatedTable(AbbreviatedTableInput{
+			MConfigurations:        mConfigurations,
+			Tape:                   []string{"e", "e", "1", " ", "1", " ", "0", " ", "0"},
+			PossibleSymbols:        possibleSymbols,
+			StartingMConfiguration: "b",
+		}))
 		m.MoveN(20)
 		checkTape(t, m.TapeString(), "ee1 1x0 0")
 	})
@@ -225,30 +201,24 @@ func TestFindRight(t *testing.T) {
 
 	t.Run("Right", func(t *testing.T) {
 		mConfigurations := append(mConfigurations, rightTest)
-		at := &AbbreviatedTable{
-			Machine: Machine{
-				MConfigurations:        mConfigurations,
-				Tape:                   []string{"e", "e", "0"},
-				PossibleSymbols:        possibleSymbols,
-				StartingMConfiguration: "b",
-			},
-		}
-		m := at.ToMachine()
+		m := NewMachine(NewAbbreviatedTable(AbbreviatedTableInput{
+			MConfigurations:        mConfigurations,
+			Tape:                   []string{"e", "e", "0"},
+			PossibleSymbols:        possibleSymbols,
+			StartingMConfiguration: "b",
+		}))
 		m.MoveN(20)
 		checkTape(t, m.TapeString(), "ee0x")
 	})
 
 	t.Run("FindRight", func(t *testing.T) {
 		mConfigurations := append(mConfigurations, findRightTest)
-		at := &AbbreviatedTable{
-			Machine: Machine{
-				MConfigurations:        mConfigurations,
-				Tape:                   []string{"e", "e", "1", " ", "1", " ", "0", " ", "0"},
-				PossibleSymbols:        possibleSymbols,
-				StartingMConfiguration: "b",
-			},
-		}
-		m := at.ToMachine()
+		m := NewMachine(NewAbbreviatedTable(AbbreviatedTableInput{
+			MConfigurations:        mConfigurations,
+			Tape:                   []string{"e", "e", "1", " ", "1", " ", "0", " ", "0"},
+			PossibleSymbols:        possibleSymbols,
+			StartingMConfiguration: "b",
+		}))
 		m.MoveN(20)
 		checkTape(t, m.TapeString(), "ee1 1 0x0")
 	})
@@ -267,15 +237,12 @@ func TestCopy(t *testing.T) {
 
 	t.Run("Copy", func(t *testing.T) {
 		mConfigurations := append(mConfigurations, copyTest)
-		at := &AbbreviatedTable{
-			Machine: Machine{
-				MConfigurations:        mConfigurations,
-				Tape:                   []string{"e", "e", "0", " ", "0", "x"},
-				PossibleSymbols:        possibleSymbols,
-				StartingMConfiguration: "b",
-			},
-		}
-		m := at.ToMachine()
+		m := NewMachine(NewAbbreviatedTable(AbbreviatedTableInput{
+			MConfigurations:        mConfigurations,
+			Tape:                   []string{"e", "e", "0", " ", "0", "x"},
+			PossibleSymbols:        possibleSymbols,
+			StartingMConfiguration: "b",
+		}))
 		m.MoveN(30)
 		checkTape(t, m.TapeString(), "ee0 0x0")
 	})
@@ -298,30 +265,24 @@ func TestCopyAndErase(t *testing.T) {
 
 	t.Run("CopyAndEraseOnce", func(t *testing.T) {
 		mConfigurations := append(mConfigurations, copyAndEraseOnceTest)
-		at := &AbbreviatedTable{
-			Machine: Machine{
-				MConfigurations:        mConfigurations,
-				Tape:                   []string{"e", "e", "0", " ", "0", "x"},
-				PossibleSymbols:        possibleSymbols,
-				StartingMConfiguration: "b",
-			},
-		}
-		m := at.ToMachine()
+		m := NewMachine(NewAbbreviatedTable(AbbreviatedTableInput{
+			MConfigurations:        mConfigurations,
+			Tape:                   []string{"e", "e", "0", " ", "0", "x"},
+			PossibleSymbols:        possibleSymbols,
+			StartingMConfiguration: "b",
+		}))
 		m.MoveN(50)
 		checkTape(t, m.TapeString(), "ee0 0 0")
 	})
 
 	t.Run("CopyAndEraseAll", func(t *testing.T) {
 		mConfigurations := append(mConfigurations, copyAndEraseAllTest)
-		at := &AbbreviatedTable{
-			Machine: Machine{
-				MConfigurations:        mConfigurations,
-				Tape:                   []string{"e", "e", "0", " ", "1", "x", "0", "x"},
-				PossibleSymbols:        possibleSymbols,
-				StartingMConfiguration: "b",
-			},
-		}
-		m := at.ToMachine()
+		m := NewMachine(NewAbbreviatedTable(AbbreviatedTableInput{
+			MConfigurations:        mConfigurations,
+			Tape:                   []string{"e", "e", "0", " ", "1", "x", "0", "x"},
+			PossibleSymbols:        possibleSymbols,
+			StartingMConfiguration: "b",
+		}))
 		m.MoveN(100)
 		checkTape(t, m.TapeString(), "ee0 1 0 1 0")
 	})
@@ -340,30 +301,24 @@ func TestReplace(t *testing.T) {
 
 	t.Run("ReplaceOnce", func(t *testing.T) {
 		mConfigurations := append(mConfigurations, replaceOnceTest)
-		at := &AbbreviatedTable{
-			Machine: Machine{
-				MConfigurations:        mConfigurations,
-				Tape:                   []string{"e", "e", "0", "x", "0", "x"},
-				PossibleSymbols:        possibleSymbols,
-				StartingMConfiguration: "b",
-			},
-		}
-		m := at.ToMachine()
+		m := NewMachine(NewAbbreviatedTable(AbbreviatedTableInput{
+			MConfigurations:        mConfigurations,
+			Tape:                   []string{"e", "e", "0", "x", "0", "x"},
+			PossibleSymbols:        possibleSymbols,
+			StartingMConfiguration: "b",
+		}))
 		m.MoveN(100)
 		checkTape(t, m.TapeString(), "ee0y0x")
 	})
 
 	t.Run("ReplaceAll", func(t *testing.T) {
 		mConfigurations := append(mConfigurations, replaceAllTest)
-		at := &AbbreviatedTable{
-			Machine: Machine{
-				MConfigurations:        mConfigurations,
-				Tape:                   []string{"e", "e", "0", "x", "0", "x"},
-				PossibleSymbols:        possibleSymbols,
-				StartingMConfiguration: "b",
-			},
-		}
-		m := at.ToMachine()
+		m := NewMachine(NewAbbreviatedTable(AbbreviatedTableInput{
+			MConfigurations:        mConfigurations,
+			Tape:                   []string{"e", "e", "0", "x", "0", "x"},
+			PossibleSymbols:        possibleSymbols,
+			StartingMConfiguration: "b",
+		}))
 		m.MoveN(100)
 		checkTape(t, m.TapeString(), "ee0y0y")
 	})
@@ -388,30 +343,24 @@ func TestCopyAndReplace(t *testing.T) {
 
 	t.Run("CopyAndReplaceOnce", func(t *testing.T) {
 		mConfigurations := append(mConfigurations, copyAndReplaceOnceTest)
-		at := &AbbreviatedTable{
-			Machine: Machine{
-				MConfigurations:        mConfigurations,
-				Tape:                   []string{"e", "e", "0", " ", "0", "x"},
-				PossibleSymbols:        possibleSymbols,
-				StartingMConfiguration: "b",
-			},
-		}
-		m := at.ToMachine()
+		m := NewMachine(NewAbbreviatedTable(AbbreviatedTableInput{
+			MConfigurations:        mConfigurations,
+			Tape:                   []string{"e", "e", "0", " ", "0", "x"},
+			PossibleSymbols:        possibleSymbols,
+			StartingMConfiguration: "b",
+		}))
 		m.MoveN(100)
 		checkTape(t, m.TapeString(), "ee0 0y0")
 	})
 
 	t.Run("CopyAndReplaceAll", func(t *testing.T) {
 		mConfigurations := append(mConfigurations, copyAndReplaceAllTest)
-		at := &AbbreviatedTable{
-			Machine: Machine{
-				MConfigurations:        mConfigurations,
-				Tape:                   []string{"e", "e", "0", " ", "1", "x", "0", "x"},
-				PossibleSymbols:        possibleSymbols,
-				StartingMConfiguration: "b",
-			},
-		}
-		m := at.ToMachine()
+		m := NewMachine(NewAbbreviatedTable(AbbreviatedTableInput{
+			MConfigurations:        mConfigurations,
+			Tape:                   []string{"e", "e", "0", " ", "1", "x", "0", "x"},
+			PossibleSymbols:        possibleSymbols,
+			StartingMConfiguration: "b",
+		}))
 		m.MoveN(100)
 		checkTape(t, m.TapeString(), "ee0 1y0y1 0")
 	})
@@ -434,45 +383,36 @@ func TestCompare(t *testing.T) {
 
 	t.Run("CompareNeitherExist", func(t *testing.T) {
 		mConfigurations := append(mConfigurations, compareNeitherExistTest)
-		at := &AbbreviatedTable{
-			Machine: Machine{
-				MConfigurations:        mConfigurations,
-				Tape:                   []string{"e", "e", "0", " ", "0"},
-				PossibleSymbols:        possibleSymbols,
-				StartingMConfiguration: "b",
-			},
-		}
-		m := at.ToMachine()
+		m := NewMachine(NewAbbreviatedTable(AbbreviatedTableInput{
+			MConfigurations:        mConfigurations,
+			Tape:                   []string{"e", "e", "0", " ", "0"},
+			PossibleSymbols:        possibleSymbols,
+			StartingMConfiguration: "b",
+		}))
 		m.MoveN(100)
 		checkTape(t, m.TapeString(), "ee0 0 z")
 	})
 
 	t.Run("CompareNotEqual", func(t *testing.T) {
 		mConfigurations := append(mConfigurations, compareNotEqualTest)
-		at := &AbbreviatedTable{
-			Machine: Machine{
-				MConfigurations:        mConfigurations,
-				Tape:                   []string{"e", "e", "0", "x", "1", "y"},
-				PossibleSymbols:        possibleSymbols,
-				StartingMConfiguration: "b",
-			},
-		}
-		m := at.ToMachine()
+		m := NewMachine(NewAbbreviatedTable(AbbreviatedTableInput{
+			MConfigurations:        mConfigurations,
+			Tape:                   []string{"e", "e", "0", "x", "1", "y"},
+			PossibleSymbols:        possibleSymbols,
+			StartingMConfiguration: "b",
+		}))
 		m.MoveN(100)
 		checkTape(t, m.TapeString(), "ee0x1yz")
 	})
 
 	t.Run("CompareEqual", func(t *testing.T) {
 		mConfigurations := append(mConfigurations, compareEqualTest)
-		at := &AbbreviatedTable{
-			Machine: Machine{
-				MConfigurations:        mConfigurations,
-				Tape:                   []string{"e", "e", "0", "x", "0", "y"},
-				PossibleSymbols:        possibleSymbols,
-				StartingMConfiguration: "b",
-			},
-		}
-		m := at.ToMachine()
+		m := NewMachine(NewAbbreviatedTable(AbbreviatedTableInput{
+			MConfigurations:        mConfigurations,
+			Tape:                   []string{"e", "e", "0", "x", "0", "y"},
+			PossibleSymbols:        possibleSymbols,
+			StartingMConfiguration: "b",
+		}))
 		m.MoveN(100)
 		checkTape(t, m.TapeString(), "ee0x0yz")
 	})
@@ -495,30 +435,24 @@ func TestCompareAndErase(t *testing.T) {
 
 	t.Run("CompareAndEraseOnce", func(t *testing.T) {
 		mConfigurations := append(mConfigurations, compareAndEraseOnceTest)
-		at := &AbbreviatedTable{
-			Machine: Machine{
-				MConfigurations:        mConfigurations,
-				Tape:                   []string{"e", "e", "0", "x", "0", "y"},
-				PossibleSymbols:        possibleSymbols,
-				StartingMConfiguration: "b",
-			},
-		}
-		m := at.ToMachine()
+		m := NewMachine(NewAbbreviatedTable(AbbreviatedTableInput{
+			MConfigurations:        mConfigurations,
+			Tape:                   []string{"e", "e", "0", "x", "0", "y"},
+			PossibleSymbols:        possibleSymbols,
+			StartingMConfiguration: "b",
+		}))
 		m.MoveN(200)
 		checkTape(t, m.TapeString(), "ee0 0 ")
 	})
 
 	t.Run("CompareAndEraseAll", func(t *testing.T) {
 		mConfigurations := append(mConfigurations, compareAndEraseAllTest)
-		at := &AbbreviatedTable{
-			Machine: Machine{
-				MConfigurations:        mConfigurations,
-				Tape:                   []string{"e", "e", "0", "x", "1", "x", "0", "y", "1", "y"},
-				PossibleSymbols:        possibleSymbols,
-				StartingMConfiguration: "b",
-			},
-		}
-		m := at.ToMachine()
+		m := NewMachine(NewAbbreviatedTable(AbbreviatedTableInput{
+			MConfigurations:        mConfigurations,
+			Tape:                   []string{"e", "e", "0", "x", "1", "x", "0", "y", "1", "y"},
+			PossibleSymbols:        possibleSymbols,
+			StartingMConfiguration: "b",
+		}))
 		m.MoveN(200)
 		checkTape(t, m.TapeString(), "ee0 1 0 1 ")
 	})
@@ -538,30 +472,24 @@ func TestFindRightMost(t *testing.T) {
 
 	t.Run("FindEndOfTape", func(t *testing.T) {
 		mConfigurations := append(mConfigurations, findEndOfTapeTest)
-		at := &AbbreviatedTable{
-			Machine: Machine{
-				MConfigurations:        mConfigurations,
-				Tape:                   []string{"e", "e", "0", " ", "1", " ", "0", " ", "1"},
-				PossibleSymbols:        possibleSymbols,
-				StartingMConfiguration: "b",
-			},
-		}
-		m := at.ToMachine()
+		m := NewMachine(NewAbbreviatedTable(AbbreviatedTableInput{
+			MConfigurations:        mConfigurations,
+			Tape:                   []string{"e", "e", "0", " ", "1", " ", "0", " ", "1"},
+			PossibleSymbols:        possibleSymbols,
+			StartingMConfiguration: "b",
+		}))
 		m.MoveN(20)
 		checkTape(t, m.TapeString(), "ee0 1 0 1 x")
 	})
 
 	t.Run("FindRightMost", func(t *testing.T) {
 		mConfigurations := append(mConfigurations, findRightMostTest)
-		at := &AbbreviatedTable{
-			Machine: Machine{
-				MConfigurations:        mConfigurations,
-				Tape:                   []string{"e", "e", "0", " ", "1", " ", "0", " ", "1"},
-				PossibleSymbols:        possibleSymbols,
-				StartingMConfiguration: "b",
-			},
-		}
-		m := at.ToMachine()
+		m := NewMachine(NewAbbreviatedTable(AbbreviatedTableInput{
+			MConfigurations:        mConfigurations,
+			Tape:                   []string{"e", "e", "0", " ", "1", " ", "0", " ", "1"},
+			PossibleSymbols:        possibleSymbols,
+			StartingMConfiguration: "b",
+		}))
 		m.MoveN(20)
 		checkTape(t, m.TapeString(), "ee0 1 0x1")
 	})
@@ -579,15 +507,12 @@ func TestPrintAtTheEnd2(t *testing.T) {
 	possibleSymbols := []string{"e", "0", "x", "y"}
 
 	t.Run("PrintAtTheEnd2", func(t *testing.T) {
-		at := &AbbreviatedTable{
-			Machine: Machine{
-				MConfigurations:        mConfigurations,
-				Tape:                   []string{"e", "e", "0", " ", "0"},
-				PossibleSymbols:        possibleSymbols,
-				StartingMConfiguration: "b",
-			},
-		}
-		m := at.ToMachine()
+		m := NewMachine(NewAbbreviatedTable(AbbreviatedTableInput{
+			MConfigurations:        mConfigurations,
+			Tape:                   []string{"e", "e", "0", " ", "0"},
+			PossibleSymbols:        possibleSymbols,
+			StartingMConfiguration: "b",
+		}))
 		m.MoveN(30)
 		checkTape(t, m.TapeString(), "ee0 0 x y")
 	})
@@ -609,15 +534,12 @@ func TestCopyAndErase2(t *testing.T) {
 
 	t.Run("CopyAndEraseAll2", func(t *testing.T) {
 		mConfigurations := append(mConfigurations, copyAndEraseAll2Test)
-		at := &AbbreviatedTable{
-			Machine: Machine{
-				MConfigurations:        mConfigurations,
-				Tape:                   []string{"e", "e", "0", "x", "0", "x", "0", "s", "1", "s", "1", "t", "0", "t", "1", "u", "1", "u", "0", "v", "0", "v", "0"},
-				PossibleSymbols:        possibleSymbols,
-				StartingMConfiguration: "b",
-			},
-		}
-		m := at.ToMachine()
+		m := NewMachine(NewAbbreviatedTable(AbbreviatedTableInput{
+			MConfigurations:        mConfigurations,
+			Tape:                   []string{"e", "e", "0", "x", "0", "x", "0", "s", "1", "s", "1", "t", "0", "t", "1", "u", "1", "u", "0", "v", "0", "v", "0"},
+			PossibleSymbols:        possibleSymbols,
+			StartingMConfiguration: "b",
+		}))
 		m.MoveN(1500)
 		checkTape(t, m.TapeString(), "ee0 0 0 1 1 0 1 1 0 0")
 	})
@@ -633,15 +555,12 @@ func TestEraseAll(t *testing.T) {
 
 	t.Run("EraseAll", func(t *testing.T) {
 		mConfigurations := append(mConfigurations, eraseAllTest)
-		at := &AbbreviatedTable{
-			Machine: Machine{
-				MConfigurations:        mConfigurations,
-				Tape:                   []string{"e", "e", "0", "x", "0", " ", "0", "y"},
-				PossibleSymbols:        possibleSymbols,
-				StartingMConfiguration: "b",
-			},
-		}
-		m := at.ToMachine()
+		m := NewMachine(NewAbbreviatedTable(AbbreviatedTableInput{
+			MConfigurations:        mConfigurations,
+			Tape:                   []string{"e", "e", "0", "x", "0", " ", "0", "y"},
+			PossibleSymbols:        possibleSymbols,
+			StartingMConfiguration: "b",
+		}))
 		m.MoveN(100)
 		checkTape(t, m.TapeString(), "ee0 0 0")
 	})
