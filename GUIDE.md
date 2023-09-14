@@ -184,7 +184,7 @@ Here are some implementation details to note for our `Machine`:
 - Our m-configuration rows are stored in one giant list (rather than grouping each m-configuration of the same name in some structure). I found the independent m-configuration rows easier to implement.
 - For the `Symbols` m-configuration field, I require that ` ` (None) be provided in addition to `*` (Any), or `!x` (Not `x`) if the m-configuration should match the blank square. This is because exactly what is meant by None, Any, Not in Turing's machine is dependent on the other m-configurations of the same name. Our implementation depends on all m-configuration rows being independent from one another, as stated above.
 - Some optional fields are provided (and used by our implementation) to make things cleaner. These are `StartingMConfiguration`, `PossibleSymbols`, `NoneSymbol`, and `Debug`. These should be self-explanatory, and it should be clear by [section 7](./GUIDE.md#section-7---detailed-description-of-the-universal-machine) why they are necessary.
-- You may find that I ocassionaly use `halt` as a final-m-configuration, and I never define the actual m-configuration. This is because in Turing's machines, the only way for the machine to stop (or halt) is if we are unable to find the next m-configuration after a "move". By convention, whenever I want to configure a machine to stop at some point, I will use the undefined m-configuration `halt`.
+- You may find that I ocassionaly use `halt` as a final-m-configuration, and I never define the actual m-configuration. This is because in Turing's machines, the only way for the machine to stop (or halt) is if we are unable to find the next m-configuration after a "move". By convention, whenever I want to configure a machine to stop at some point, I will use the undefined m-configuration `halt` (however our machine, like Turing's, halts when it encounters an m-configuration that was never defined).
 
 ## Section 4 - Abbreviated tables
 
@@ -193,14 +193,18 @@ I got super tripped up by this section. Turing explains his "abbreviated tables"
 The full implementation for this section can be found in [abbreviated.go](./abbreviated.go) and [abbreviated_tests.go](./abbreviated_test.go). It works like this:
 
 ```go
+// NewAbbreviatedTable compiles our abbreviated table to normal MachineInput
 m := NewMachine(NewAbbreviatedTable(AbbreviatedTableInput{
     MConfigurations: { ... }
 }))
+
+// Machines "compiled" from abbreviated tables can do anything normal machines can do
+m.Move()
 ```
 
 ### Example 1 - Substituting symbols in `Operations`
 ```go
-// This table prints `a` and repeats
+// This table prints `0` and repeats:
 MConfigurations{
     {
         Name: "b",
@@ -211,13 +215,12 @@ MConfigurations{
     {
         Name: "f(a)",
         Symbols: []string{"*"},
-        // We are printing whatever is passed to `f`
-        Operations: []string{"Pa"}, 
+        Operations: []string{"Pa"}, // We are printing whatever is passed to `f`
         FinalMConfiguration: "b",
     },
 }
 
-// compiles to
+// and compiles to:
 
 MConfigurations{
     {
@@ -229,16 +232,14 @@ MConfigurations{
     {
         Name: "c",
         Symbols: []string{"*"},
-         // Note that we substituted `a` with `0` here
-        Operations: []string{"P0"},
+        Operations: []string{"P0"}, // Note that we substituted `a` with `0` here
         FinalMConfiguration: "b",
     },
 }
 
-// We have taken the liberty of choosing `c` as the m-configuration name
-// for our compiled m-function. Turing will just use `q1`, `q2`, `q3`, ...
-// during compilation, so our m-configuration should really look like
-
+// Above we have taken the liberty of choosing `c` as the "compiled" m-configuration name
+// for our m-function. Turing will just use `q1`, `q2`, `q3`, ... during compilation, so
+// our m-configuration should really look like:
 MConfigurations{
     {
         Name: "q1",
@@ -260,23 +261,18 @@ So our m-functions have names and parameters. They will be called by other m-con
 ### Example 2 - Substituting a `FinalMConfiguration`:
 
 ```go
+// TODO: Figure out
 MConfigurations{
     {
         Name: "b",
         Symbols: []string{"*"},
-        Operations: []string{},
-        FinalMConfiguration: "f(c)",
+        Operations: []string{"R"},
+        FinalMConfiguration: "c",
     },
-    {
-        Name: "f(A)",
-        Symbols: []string{"*"},
-        Operations: []string{"P0"},
-        // We move to whatever m-configuration was passed as a parameter to `f`
-        FinalMConfiguration: "A",
-    },
+   
 }
 
-// compiles to
+// compiles to:
 
 MConfigurations{
     {
@@ -285,16 +281,9 @@ MConfigurations{
         Operations: []string{},
         FinalMConfiguration: "q2",
     },
-    {
-        Name: "q2",
-        Symbols: []string{"*"},
-        Operations: []string{"P0"},
-        // The parameter (`c`) was compiled to q3
-        FinalMConfiguration: "q3",
-    },
 }
 ```
-What is `c` in this example? We never defined it so the machine will just halt when it gets to `q3`.
+TODO: Small followup.
 
 Note that in Turing's first example (`f`), there are a bunch of `f` rows, and then `f1` rows and `f2` rows. When he does this, he is saying that `f` is the m-function others will call, and anything with a number after it is just a helper for the main bit. He groups all of these together under one letter to show that they work together to offer some functionality. Its sort of like saying:
 
@@ -329,6 +318,8 @@ TODO
 ```
 
 ```
+
+TODO: Make sure docs for abbreviated.go are good
 
 ## Section 5 - Enumeration of computable sequences
 

@@ -176,6 +176,7 @@ func (m *Machine) Move() {
 	m.currentMConfigurationName = mConfiguration.FinalMConfiguration
 }
 
+// Returns the Machine's Tape
 func (m *Machine) Tape() Tape {
 	return m.tape
 }
