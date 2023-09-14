@@ -188,7 +188,7 @@ Here are some implementation details to note for our `Machine`:
 
 ## Section 4 - Abbreviated tables
 
-I got super tripped up by this section. Turing explains his "abbreviated tables" briefly and then piles them on hard. It is only with Petzold's help that I was able to figure out some of the nuances here. I'll try to start with simple example so we can work our way up (Turing starts with a complex one.)
+I got super tripped up by this section. Turing explains his "abbreviated tables" briefly and then piles them on hard. It is only with Petzold's help that I was able to figure out some of the nuances here. I'll try to start with simple example so we can work our way up (Turing starts with a complex one.) Turing's abbreviated table examples also build upon eachother (most are dependant on others) to accomplish something complex. Our four examples will be independent from one another to keep things as simple as possible.
 
 The full implementation for this section can be found in [abbreviated.go](./abbreviated.go) and [abbreviated_tests.go](./abbreviated_test.go). It works like this:
 
@@ -204,12 +204,12 @@ m.Move()
 
 ### Example 1 - Substituting symbols in `Operations`
 ```go
-// This table prints `0` and repeats:
+// This table moves to the right, prints `0` and repeats:
 MConfigurations{
     {
         Name: "b",
         Symbols: []string{"*"},
-        Operations: []string{},
+        Operations: []string{"R"},
         FinalMConfiguration: "f(0)",
     },
     {
@@ -261,15 +261,20 @@ So our m-functions have names and parameters. They will be called by other m-con
 ### Example 2 - Substituting a `FinalMConfiguration`:
 
 ```go
-// TODO: Figure out
+// This table also moves to the right, prints `0` and repeats.
 MConfigurations{
     {
         Name: "b",
         Symbols: []string{"*"},
         Operations: []string{"R"},
-        FinalMConfiguration: "c",
+        FinalMConfiguration: "f(b)", // Pass the name of an m-configuration to `f`
     },
-   
+    {
+        Name: "f(A)", // Receive the m-configuration name as parameter `A`
+        Symbols: []string{"*"},
+        Operations: []string{"P0"},
+        FinalMConfiguration: "A", // Move to `A` (which is really `b`)
+    },
 }
 
 // compiles to:
@@ -278,12 +283,18 @@ MConfigurations{
     {
         Name: "q1",
         Symbols: []string{"*"},
-        Operations: []string{},
+        Operations: []string{"R"},
         FinalMConfiguration: "q2",
+    },
+    {
+        Name: "q2",
+        Symbols: []string{"*"},
+        Operations: []string{"P0"},
+        FinalMConfiguration: "q1", // Move back to `b` (the first m-configuration)
     },
 }
 ```
-TODO: Small followup.
+Turing's convention with parameters is that symbols are lowercase (his are Greek, ours English) and m-configurations are uppercase (his are German, ours English).
 
 Note that in Turing's first example (`f`), there are a bunch of `f` rows, and then `f1` rows and `f2` rows. When he does this, he is saying that `f` is the m-function others will call, and anything with a number after it is just a helper for the main bit. He groups all of these together under one letter to show that they work together to offer some functionality. Its sort of like saying:
 
@@ -308,18 +319,102 @@ func f2(a, b, c) {
 In the paper `f` specifically stands for "find". It will go to the first `e` in the tape (the beginning of the tape), and then begin to move rightward. If it finds the desired character (`a`), it moves to the m-configuration `C`. If it cannot find `a` before it hits two blank squares in a row it will move to m-configuration `B`. Our implementation of `f` can be found at the top of [abbreviated.go](./abbreviated.go).
 
 ### Example 3 - Functions within functions
-TODO
-```
+```go
+// This table moves to the right, printing 0 twice in a row, and continuing on infinitely.
+// Example: " 00 00 00"
+MConfigurations{
+    {
+        Name: "b",
+        Symbols: []string{"*"},
+        Operations: []string{"R"},
+        // Take note here, the first move to `f` will have params `f(b, 0)`, and `0`.
+        // The second move to `f` will have params `b` and `0`.
+        FinalMConfiguration: "f(f(b, 0), 0)",
+    },
+    {
+        Name: "f(A, a)",
+        Symbols: []string{"*"},
+        Operations: []string{"Pa", "R"}, // Prints `a`, and moves to the right
+        FinalMConfiguration: "A", // Moves to the m-configuration provided as parameter `A`
+    },
+}
 
+// compiles to:
+
+MConfigurations{
+    {
+        Name: "q1",
+        Symbols: []string{"*"},
+        Operations: []string{"R"},
+        FinalMConfiguration: "q2", // First move to `f`
+    },
+    {
+        Name: "q2",
+        Symbols: []string{"*"},
+        Operations: []string{"P0", "R"},
+        FinalMConfiguration: "q3", // Second move to `f` 
+    },
+        {
+        Name: "q3",
+        Symbols: []string{"*"},
+        Operations: []string{"P0", "R"},
+        FinalMConfiguration: "q1", // Moves back to `b`
+    },
+}
 ```
 
 ### Example 4 - Symbol parameters
-TODO
+This one was fun. If there is a symbol (in the Symbol column) of our abbreviated table, but it is not a symbol the machine prints and also not a parameter of our m-function, it is a "symbol parameter". We basically "read" the symbol, and pass whatever it was as a parameter. By convention I will always prepend symbol parameters with an underscore (`_`) for clarity.
+
+```go
+// This table moves to the right, copying the symbol it was just looking at (infinitely).
+// Assume the table is only capable of printing `0`` and `1`.
+MConfigurations{
+    {
+        Name: "b",
+        Symbols: []string{"_y"}, // Our "symbol parameter"
+        Operations: []string{"R"},
+        FinalMConfiguration: "f(_y)", // Pass the symbol parameter to `f`
+    },
+    {
+        Name: "f(a)",
+        Symbols: []string{"*"},
+        Operations: []string{"Pa", "R"}, // where it is simply printed
+        FinalMConfiguration: "b",
+    },
+}
+
+// compiles to:
+
+MConfigurations{
+    {
+        Name: "q1",
+        Symbols: []string{"0"}, // We must enumerate this m-function once for each possible symbol
+        Operations: []string{"R"},
+        FinalMConfiguration: "q2",
+    },
+    {
+        Name: "q1",
+        Symbols: []string{"1"}, // Here is the other possible symbol
+        Operations: []string{"R"},
+        FinalMConfiguration: "q2",
+    },
+    {
+        Name: "q2",
+        Symbols: []string{"*"},
+        Operations: []string{"P0"}, // The version of `f` that prints `0`
+        FinalMConfiguration: "q1",
+    },
+        {
+        Name: "q2",
+        Symbols: []string{"*"},
+        Operations: []string{"P1"}, // The version of `f` that prints `0`
+        FinalMConfiguration: "q1",
+    },
+}
 ```
 
-```
-
-TODO: Make sure docs for abbreviated.go are good
+Throughout the rest of the section, Turing gives a bunch of m-functions which he will use later in [section 7](./GUIDE.md#section-7---detailed-description-of-the-universal-machine). These are enumerated with comments at the top of [abbreviated.go](./abbreviated.go) and are tested in [abbreviated_tests.go](./abbreviated_test.go). Most of them are helpers for copying, erasing, printing, etc.
 
 ## Section 5 - Enumeration of computable sequences
 

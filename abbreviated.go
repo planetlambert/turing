@@ -139,9 +139,10 @@ var (
 	}
 )
 
+// Input for an Abbreviated Table
 type AbbreviatedTableInput MachineInput
 
-// Returns a new Abbreviated Table
+// Gives MachineInput for the abbreviated table. This requires "compiling" the abbreviated table.
 func NewAbbreviatedTable(input AbbreviatedTableInput) MachineInput {
 	at := &abbreviatedTable{
 		input: input,
@@ -150,6 +151,7 @@ func NewAbbreviatedTable(input AbbreviatedTableInput) MachineInput {
 	return at.toMachineInput()
 }
 
+// Helper struct to compile the abbreviated table
 type abbreviatedTable struct {
 	input                    AbbreviatedTableInput
 	mConfigurationCount      int
@@ -158,6 +160,7 @@ type abbreviatedTable struct {
 	newMConfigurations       []MConfiguration
 }
 
+// Used when parsing m-functions
 const (
 	functionOpen           string = "("
 	functionClose          string = ")"
@@ -166,7 +169,7 @@ const (
 
 // Converts an AbbreviatedTable to a valid Machine, which will contain no skeleton tables
 func (at *abbreviatedTable) toMachineInput() MachineInput {
-	// For each MConfiguration that is not an m-function, begin interpreting
+	// For each m-configuration that is not an m-function, begin interpreting
 	for _, mConfiguration := range at.input.MConfigurations {
 		if !strings.Contains(mConfiguration.Name, functionOpen) {
 			at.interpretMFunction(mConfiguration.Name, []string{})
