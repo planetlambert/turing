@@ -7,9 +7,11 @@ An open source implementation of Alan Turing's famous paper, [On Computable Numb
 I wanted to read Turing's paper, and found it too difficult to understand. I couldn't find a complete and easily-readable reference implementation, so I decided to make my own.
 
 ## How to use this repository
-***Disclaimer**: There are still large swaths of the paper (mainly the logic parts of sections 8 through 11) that are in progress as I don't understand well enough to explain to others. If you have a good resource to help a non-mathematician understand these sections, please reach out!*
+***Disclaimer**: There are still large swaths of the paper (mainly the logic parts of sections 8 through 11) that are in progress as I don't understand them well enough to explain to others. If you have a good resource to help a non-mathematician understand these sections, please reach out!*
 
-For those who intend to read the paper I recommend starting with [The Annotated Turing](https://www.amazon.com/Annotated-Turing-Through-Historic-Computability/dp/0470229055) by Charles Petzold (which explains the paper line-by-line with annotations), alongside this repository's [GUIDE.md](./GUIDE.md) which will guide you through the paper and codebase section-by-section.
+For those who intend to read the paper I recommend starting with [The Annotated Turing](https://www.amazon.com/Annotated-Turing-Through-Historic-Computability/dp/0470229055) by Charles Petzold (which explains the paper line-by-line with annotations).
+
+I wrote a guide ([GUIDE.md](./GUIDE.md)) for those who want to dive into the paper and codebase section-by-section. My hope is that the combination of a reference implementation and walkthrough helps others get value from the paper like I did.
 
 For those who want to use the implementation, here is how to get started:
 
