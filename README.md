@@ -25,16 +25,39 @@ import (
 )
 
 func main() {
-    m := turing.NewMachine(turing.MachineInput{
+    // Input for Turing Machine that prints 0 and 1 infinitely
+    machineInput := turing.MachineInput{
         MConfigurations: turing.MConfigurations{
             {Name: "b", Symbols: []string{" "}, Operations: []string{"P0", "R"}, FinalMConfiguration: "c"},
             {Name: "c", Symbols: []string{" "}, Operations: []string{"R"},       FinalMConfiguration: "e"},
             {Name: "e", Symbols: []string{" "}, Operations: []string{"P1", "R"}, FinalMConfiguration: "k"},
             {Name: "k", Symbols: []string{" "}, Operations: []string{"R"},       FinalMConfiguration: "b"},
         },
-    })
-    m.MoveN(50)
-    fmt.Println(m.TapeString()) // Prints "0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0"
+    }
+
+    // Construct the Turing Machine and move 50 times
+    machine := turing.NewMachine(machineInput)
+    machine.MoveN(50)
+    
+    fmt.Println(machine.TapeString()) // Prints "0 1 0 1 0 1 ..."
+
+    // Convert the same Machine input to Turing's "standard" forms
+    standardTable := turing.NewStandardTable(machineInput)
+    standardMachineInput := standardTable.MachineInput // MachineInput in standard form (one Print and one Move operation)
+    symbolMap := standardDescription.SymbolMap // Maps the new Symbols to the original Symbols
+    standardDescription := standardTable.StandardDescription // ";DADDCRDAA;DAADDRDAAA;DAAADDCCRDAAAA;DAAAADDRDA"
+    descriptionNumber := standardTable.DescriptionNumber // "73133253117311335311173111332253111173111133531"
+
+    // Construct Turing's Universal Machine using the original Machine's Standard Description (S.D.)
+    universalMachine := turing.NewMachine(turing.NewUniversalMachine(turing.UniversalMachineInput{
+        StandardDescription: standardDescription,
+        SymbolMap:           symbolMap,
+    }))
+
+    // Turing's Universal Machine is quite complex and has to undergo quite a few moves to achieve the same Tape
+    universalMachine.Move(500000)
+
+    fmt.Println(universalMachine.TapeStringFromUniversalMachine()) // Prints "0 1 0 1 0 1 ..."
 }
 ```
 

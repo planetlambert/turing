@@ -210,7 +210,7 @@ func getEnhancedShow(symbolMap SymbolMap) []MConfiguration {
 	return enhancedShow
 }
 
-func TapeStringFromUniversalMachineTape(tape Tape) string {
+func (m *Machine) TapeStringFromUniversalMachine() string {
 	var tapeString strings.Builder
 
 	// We essentially need to find only the symbols between two colons
@@ -218,7 +218,7 @@ func TapeStringFromUniversalMachineTape(tape Tape) string {
 	var skip bool
 	var squareMinusTwo string
 	var squareMinusOne string
-	for _, square := range tape {
+	for _, square := range m.tape {
 		if !started {
 			if square == "::" {
 				started = true

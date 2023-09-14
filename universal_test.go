@@ -29,5 +29,5 @@ func TestUniversalMachineExample1(t *testing.T) {
 		SymbolMap:           st.SymbolMap,
 	}))
 	um.MoveN(500000)
-	checkTape(t, TapeStringFromUniversalMachineTape(um.Tape()), expected)
+	checkTape(t, um.TapeStringFromUniversalMachine(), expected)
 }
