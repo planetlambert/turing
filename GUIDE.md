@@ -418,7 +418,15 @@ Throughout the rest of the section, Turing gives a bunch of m-functions which he
 
 ## Section 5 - Enumeration of computable sequences
 
-TODO
+In this section Turing tells us how to "standardize" his tables. This standardization occurs in three steps:
+
+1. **Standard Table**: Modify the m-configurations (which could include adding new ones) such that there is only one Symbol, one Print operation, and one Move operation.
+2. **Standard Description**: Take these m-configurations, and convert them to one long string.
+3. **Description Number**: Convert our Standard Description string into a number.
+
+Performing these standardizations allow us to do some interesting things. The first is to put the Standard Description on a Tape (the Standard Description is just a string of symbols), which is explored in [section 6](./GUIDE.md#section-6---the-universal-computing-machine). Another is to treat a Description Number just like any other number (which allows to treat Machines like numbers) - this is explored in [section 8](./GUIDE.md#section-8---application-of-the-diagonal-process).
+
+TODO: Continue, explain implementation, explain symbol map, etc.
 
 ## Section 6 - The universal computing machine
 
