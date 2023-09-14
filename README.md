@@ -39,14 +39,26 @@ func main() {
     machine := turing.NewMachine(machineInput)
     machine.MoveN(50)
     
-    fmt.Println(machine.TapeString()) // Prints "0 1 0 1 0 1 ..."
+    // Prints "0 1 0 1 0 1 ..."
+    fmt.Println(machine.TapeString())
 
     // Convert the same Machine input to Turing's "standard" forms
     standardTable := turing.NewStandardTable(machineInput)
-    standardMachineInput := standardTable.MachineInput // MachineInput in standard form (one Print and one Move operation)
-    symbolMap := standardDescription.SymbolMap // Maps the new Symbols to the original Symbols
-    standardDescription := standardTable.StandardDescription // ";DADDCRDAA;DAADDRDAAA;DAAADDCCRDAAAA;DAAAADDRDA"
-    descriptionNumber := standardTable.DescriptionNumber // "73133253117311335311173111332253111173111133531"
+    standardMachineInput := standardTable.MachineInput
+    symbolMap := standardDescription.SymbolMap
+    standardDescription := standardTable.StandardDescription
+    descriptionNumber := standardTable.DescriptionNumber
+
+    // Also prints "0 1 0 1 0 1 ..."
+    standardMachine := turing.NewMachine(standardMachineInput)
+    standardMachine.MoveN(50)
+    fmt.Println(machine.TapeString())
+
+    // Prints ";DADDCRDAA;DAADDRDAAA;DAAADDCCRDAAAA;DAAAADDRDA"
+    fmt.Println(standardDescription)
+
+    // Prints "73133253117311335311173111332253111173111133531"
+    fmt.Println(descriptionNumber)
 
     // Construct Turing's Universal Machine using the original Machine's Standard Description (S.D.)
     universalMachine := turing.NewMachine(turing.NewUniversalMachine(turing.UniversalMachineInput{
@@ -57,7 +69,8 @@ func main() {
     // Turing's Universal Machine is quite complex and has to undergo quite a few moves to achieve the same Tape
     universalMachine.Move(500000)
 
-    fmt.Println(universalMachine.TapeStringFromUniversalMachine()) // Prints "0 1 0 1 0 1 ..."
+    // Prints "0 1 0 1 0 1 ..."
+    fmt.Println(universalMachine.TapeStringFromUniversalMachine())
 }
 ```
 
