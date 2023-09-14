@@ -1,10 +1,10 @@
 # Turing
 
-An open source implementation of Alan Turing's famous paper, [On Computable Numbers, with an Application to the Entscheidungsproblem](https://www.cs.virginia.edu/~robins/Turing_Paper_1936.pdf).
+An open source implementation of Alan Turing's famous paper - [On Computable Numbers, with an Application to the Entscheidungsproblem](https://www.cs.virginia.edu/~robins/Turing_Paper_1936.pdf).
 
 ## Why?
 
-I wanted to read Turing's paper, and found it too difficult to understand. I couldn't find a complete and easily-readable reference implementation, so I decided to make my own.
+I attempted to read Turing's paper, and found it too difficult to understand. I couldn't find a complete and easily-accessible reference implementation, so I decided to write my own.
 
 ## How to use this repository
 ***Disclaimer**: There are still large swaths of the paper (mainly the logic parts of sections 8 through 11) that are in progress as I don't understand them well enough to explain to others. If you have a good resource to help a non-mathematician understand these sections, please reach out!*
