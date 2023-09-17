@@ -107,6 +107,7 @@ var (
 
 	// `inst`. The next complete configuration is written down, carrying out the
 	// marked instructions. The letters `u`, `v`, `w`, `x`, `y` are erased. -> `anf`.
+	// Note that we are using Petzold's recommended inst1 which does not require new machine behavior.
 	instruction = []MConfiguration{
 		{"inst", []string{"*", " "}, []string{}, "g(l(inst1), u)"},
 		{"inst1", []string{"L"}, []string{"R", "E"}, "ce5(ov, v, y, x, u, w)"},
