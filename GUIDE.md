@@ -571,4 +571,4 @@ TODO
 - It felt as if Turing piled three or four genius insights on-top of one another, so while reading I was never able to get comfortable before he took things to the next level.
 - There are a lot of bugs (which makes sense as he was not able to run the machine himself).
 - Attempting to learn this paper as a non-mathematician makes me want to get a deeper understanding of the history of math/logic (probably via [Frege to Gödel](https://www.amazon.com/Frege-Godel-Mathematical-1879-1931-Sciences/dp/0674324498))
-- The appendix is a great segue to Church's Lambda Calculus, which will probably be my next project.
+- The appendix is a great segue to Church's [Lambda Calculus](https://en.wikipedia.org/wiki/Lambda_calculus), which will probably be my next project.
