@@ -6,12 +6,27 @@ An open source implementation of Alan Turing's famous paper - [On Computable Num
 
 I attempted to read Turing's paper, and found it too difficult to understand. I couldn't find a complete and easily-accessible reference implementation, so I decided to write my own.
 
-## How to use this repository
-***Disclaimer**: There are still large swaths of the paper (mainly the logic parts of sections 8 through 11) that are in progress as I don't understand them well enough to explain to others. If you have a good resource to help a non-mathematician understand these sections, please reach out!*
+## Guide
+For those who intend to read the full paper I recommend starting with [The Annotated Turing](https://www.amazon.com/Annotated-Turing-Through-Historic-Computability/dp/0470229055) by Charles Petzold (which explains the paper line-by-line with annotations).
 
-For those who intend to read the paper I recommend starting with [The Annotated Turing](https://www.amazon.com/Annotated-Turing-Through-Historic-Computability/dp/0470229055) by Charles Petzold (which explains the paper line-by-line with annotations).
+I wrote a section-by-section guide ([GUIDE.md](./GUIDE.md)) that explains the paper in the context of this codebase. My hope is that the combination of a reference implementation and walkthrough helps others get value from the paper like I did.
 
-I wrote a guide ([GUIDE.md](./GUIDE.md)) for those who want to dive into the paper and codebase section-by-section. My hope is that the combination of a reference implementation and walkthrough helps others get value from the paper like I did.
+### Progress
+- [X] [**Introduction**](./GUIDE.md#introduction)
+- [X] [**Section 1** - Computing machines](./GUIDE.md#section-1---computing-machines)
+- [X] [**Section 2** - Definitions](./GUIDE.md#section-2---definitions)
+- [X] [**Section 3** - Examples of computing machines](./GUIDE.md#section-3---examples-of-computing-machines)
+- [X] [**Section 4** - Abbreviated tables](./GUIDE.md#section-4---abbreviated-tables)
+- [X] [**Section 5** - Enumeration of computable sequences](./GUIDE.md#section-5---enumeration-of-computable-sequences)
+- [X] [**Section 6** - The universal computing machine](./GUIDE.md#section-6---the-universal-computing-machine)
+- [X] [**Section 7** - Detailed description of the universal machine](./GUIDE.md#section-7---detailed-description-of-the-universal-machine)
+- [ ] **Section 8** - Application of the diagonal process
+- [ ] **Section 9** - The extent of computable numbers
+- [ ] **Section 10** - Examples of large classes of numbers which are computable
+- [ ] **Section 11** - Application to the Entscheidungsproblem
+- [ ] **Appendix** - Computability and effective calculability
+
+## Usage
 
 For those who want to use the implementation, here is how to get started:
 
@@ -76,22 +91,7 @@ func main() {
 }
 ```
 
-[Full Documentation here.](https://pkg.go.dev/github.com/planetlambert/turing)
-
-## Progress
-- [X] [**Introduction**](./GUIDE.md#introduction)
-- [X] [**Section 1** - Computing machines](./GUIDE.md#section-1---computing-machines)
-- [X] [**Section 2** - Definitions](./GUIDE.md#section-2---definitions)
-- [X] [**Section 3** - Examples of computing machines](./GUIDE.md#section-3---examples-of-computing-machines)
-- [X] [**Section 4** - Abbreviated tables](./GUIDE.md#section-4---abbreviated-tables)
-- [X] [**Section 5** - Enumeration of computable sequences](./GUIDE.md#section-5---enumeration-of-computable-sequences)
-- [X] [**Section 6** - The universal computing machine](./GUIDE.md#section-6---the-universal-computing-machine)
-- [X] [**Section 7** - Detailed description of the universal machine](./GUIDE.md#section-7---detailed-description-of-the-universal-machine)
-- [ ] **Section 8** - Application of the diagonal process
-- [ ] **Section 9** - The extent of computable numbers
-- [ ] **Section 10** - Examples of large classes of numbers which are computable
-- [ ] **Section 11** - Application to the Entscheidungsproblem
-- [ ] **Appendix** - Computability and effective calculability
+[Go Package Documentation here.](https://pkg.go.dev/github.com/planetlambert/turing)
 
 ## FAQ
 - Why Go?
