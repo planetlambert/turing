@@ -458,7 +458,23 @@ fmt.Println(standardTable.DescriptionNumber)
 
 ## Section 6 - The universal computing machine
 
-TODO
+This section, and the [next section](./GUIDE.md#section-7---detailed-description-of-the-universal-machine) are dedicated to explaining and implementing Turing's "universal computing machine". Turing explains that `U` is a Machine that is capable of computing the same sequence as any other Machine `M`, provided the Standard Description of `M` is supplied as the Tape of `U`.
+
+### The first programmable machine
+It is worth stopping to think about this for a minute. Turing is saying we can create a table of m-configurations that take a Machine as input and reproduce that same Machine's output. As far as I am aware, this is the first conceptualization of software in the modern sense. With `U`, we no longer have to configure Machines directly via m-configurations any more (analogous to hardward). We simply print out our desired Machine on a Tape and feed it into `U` (in other words, we just "program" `U`).
+
+### Outline of `U`
+
+Turing now gives an overview of how he can achieve `U` by breaking the problem into subparts. The first is to build a machine `M'` that will print the complete configuration of `M` on the `F`-squares. The complete configuration is a full history of the moves of a machine. He suggests that we encode the complete configuration in the same standard form as the Standard Description itself.
+
+Even if we were to accomplish `M'`, we would need to somehow locate `M`'s Tape output somewhere. Turing suggests that this output be interweaved between complete configurations between colons, like this:
+```go
+" ... : 0 : ... : 1 : ... "
+``` 
+
+So we don't actually get the *exact* output of `M` (there will be giant complete configurations between the actual computed sequence), but `U` would indeed "compute" the same sequence as `M`.
+
+What follows in the next section is fascinating - all on paper Turing builds `U`, arguably the first computer.
 
 ## Section 7 - Detailed description of the universal machine
 
