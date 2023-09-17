@@ -478,7 +478,39 @@ What follows in the next section is fascinating - all on paper Turing builds `U`
 
 ## Section 7 - Detailed description of the universal machine
 
-TODO
+Here Turing gives the full table of m-configurations and m-functions for `U`, relying on the helper m-functions he created in [section 4](./GUIDE.md#section-4---abbreviated-tables). Here is an outline of the actual working of `U`:
+
+1. `U` takes a Tape starting with `ee`, and then `M`'s Standard Description on the `F`-squares, and finally a double-colon (`::`).
+2. ... TODO
+
+Note that there are at least 4 small bugs in Turing's original paper in this section. Fortunately, Petzold compiled a list of fixes for them (originally spotted by [Davies](https://en.wikipedia.org/wiki/Donald_Davies) and [Post](https://en.wikipedia.org/wiki/Emil_Leon_Post)).
+
+### Implementation Details
+
+Our implementation is in [universal.go](./universal.go) and tested in [universal_test.go](./universal_test.go). Here is the interface:
+
+```go
+machineInput := MachineInput{
+    MConfigurations: []MConfiguration{
+        {"b", []string{" "}, []string{"P0", "R"}, "c"},
+        {"c", []string{" "}, []string{"R"}, "e"},
+        {"e", []string{" "}, []string{"P1", "R"}, "k"},
+        {"k", []string{" "}, []string{"R"}, "b"},
+    },
+}
+
+standardTable := NewStandardTable(machineInput)
+
+univeralMachineInput := NewUniversalMachine(UniversalMachineInput{
+    StandardDescription: st.StandardDescription,
+    SymbolMap:           st.SymbolMap,
+})
+universalMachine := NewMachine(univeralMachineInput)
+universalMachine.MoveN(500000)
+
+// Should be the same as if we just created a Machine from machineInput
+fmt.Println(universalMachine.TapeStringFromUniversalMachine())
+```
 
 ## Section 8 - Application of the diagonal process
 
