@@ -1,6 +1,6 @@
 # Turing
 
-The first complete open source implementation of Alan Turing's famous paper - [On Computable Numbers, with an Application to the Entscheidungsproblem](https://www.cs.virginia.edu/~robins/Turing_Paper_1936.pdf).
+The first complete and open source implementation of Alan Turing's famous paper - [On Computable Numbers, with an Application to the Entscheidungsproblem](https://www.cs.virginia.edu/~robins/Turing_Paper_1936.pdf).
 
 ## Why?
 
