@@ -117,12 +117,15 @@ var (
 )
 
 type (
+	// Input for the UniversalMachine
 	UniversalMachineInput struct {
 		StandardDescription
 		SymbolMap
 	}
 )
 
+// If `M` is a Machine that computes a sequence, this function takes the Standard Description of `M` and returns
+// MachineInput that will print `M`'s sequence using `U` (the Universal Machine).
 func NewUniversalMachine(input UniversalMachineInput) MachineInput {
 	// Helper MFunctions
 	mConfigurations := []MConfiguration{}
@@ -162,6 +165,7 @@ func NewUniversalMachine(input UniversalMachineInput) MachineInput {
 	}
 	tapeFromStandardDescription = append(tapeFromStandardDescription, "::")
 
+	// Return MachineInput of the compiled abbreviated table of `U`
 	return NewAbbreviatedTable(AbbreviatedTableInput{
 		MConfigurations:        mConfigurations,
 		Tape:                   tapeFromStandardDescription,
@@ -170,6 +174,8 @@ func NewUniversalMachine(input UniversalMachineInput) MachineInput {
 	})
 }
 
+// Rather than using Turing's original `show` m-function, we create our own version
+// that is capable of printing all characters the Machine requires (not just `0` and `1`).
 func getEnhancedShow(symbolMap SymbolMap) []MConfiguration {
 	enhancedShow := []MConfiguration{}
 
@@ -210,6 +216,7 @@ func getEnhancedShow(symbolMap SymbolMap) []MConfiguration {
 	return enhancedShow
 }
 
+// Helper function to isolate the computed sequence between the colons
 func (m *Machine) TapeStringFromUniversalMachine() string {
 	var tapeString strings.Builder
 

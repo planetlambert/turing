@@ -537,5 +537,5 @@ TODO
 - Turing essentially invents (in theory) the computer and the concept of software/programming, all in service to solve a math problem.
 - It felt as if Turing piled three or four genius insights on-top of one another, so while reading I was never able to get comfortable before he took things to the next level.
 - There are a lot of bugs (which makes sense as he was not able to run the machine himself).
-- Attempting to learn this paper as a non-mathematician makes me want to get a deeper understanding of the history of math/logic (probably starting with Hilbert, Gödel, etc.)
+- Attempting to learn this paper as a non-mathematician makes me want to get a deeper understanding of the history of math/logic (probably via [Frege to Gödel](https://www.amazon.com/Frege-Godel-Mathematical-1879-1931-Sciences/dp/0674324498))
 - The appendix is a great segue to Church's Lambda Calculus, which will probably be my next project.
