@@ -1,10 +1,10 @@
 # Turing
 
-An open source implementation of Alan Turing's famous paper - [On Computable Numbers, with an Application to the Entscheidungsproblem](https://www.cs.virginia.edu/~robins/Turing_Paper_1936.pdf).
+The first complete open source implementation of Alan Turing's famous paper - [On Computable Numbers, with an Application to the Entscheidungsproblem](https://www.cs.virginia.edu/~robins/Turing_Paper_1936.pdf).
 
 ## Why?
 
-I attempted to read Turing's paper, and found it too difficult to understand. I couldn't find a complete and easily-accessible reference implementation, so I decided to write my own.
+About a month ago I attempted to read Turing's paper, and found it too difficult to understand. I figured reading a reference implementation (that includes `m-functions`, a working `univeral machine`, etc.) would make things clearer. It was super surprising to find that a full implementation does not exist on the internet, so I decided to write my own.
 
 ## Guide
 For those who intend to read the full paper I recommend starting with [The Annotated Turing](https://www.amazon.com/Annotated-Turing-Through-Historic-Computability/dp/0470229055) by Charles Petzold (which explains the paper line-by-line with annotations).
