@@ -483,38 +483,38 @@ Here Turing gives the full table of m-configurations and m-functions for `U`, re
 1. `U` takes a Tape starting with `ee`, and then `M`'s Standard Description on the `F`-squares, and finally a double-colon (`::`).
 2. `b`: `U` starts by finding `::`, printing `: D A`, and moving to m-configuration `anf`. You can think of `b` as initialization/setup, and `anf` as the start of `U`'s main loop.
 3. `anf`: Find the last complete configuration, and mark out the following:
-  1. The m-configuration name (somewhere within the complete configuration)
-  2. The symbol directly to the right (which is the scanned square).
-  3. This marking is done by printing `y` to the right of these squares.
+    1. The m-configuration name (somewhere within the complete configuration)
+    2. The symbol directly to the right (which is the scanned square).
+    3. This marking is done by printing `y` to the right of these squares.
 4. `kom`: Moving leftwards, find the m-configuration within the Standard Description that matches that marked by `y`. This is done by:
-  1. Finding a semi-colon (representing the start of an m-configuration)
-  2. Marking the first two sections (m-configuration name and symbol) with `x`.
-  3. Comparing all squares marked with `y` with those marked with `x` (using `kmp`).
-  4. If they don't match, mark the semi-colon with `z`, and start again (this time skipping all semi-colons marked `z`).
-  5. If they *do* match, we found our m-configuration, move on to `sim`.
-  6. In both cases all `x`'s and `y`'s are erased.
+    1. Finding a semi-colon (representing the start of an m-configuration)
+    2. Marking the first two sections (m-configuration name and symbol) with `x`.
+    3. Comparing all squares marked with `y` with those marked with `x` (using `kmp`).
+    4. If they don't match, mark the semi-colon with `z`, and start again (this time skipping all semi-colons marked `z`).
+    5. If they *do* match, we found our m-configuration, move on to `sim`.
+    6. In both cases all `x`'s and `y`'s are erased.
 5. `sim`: This step does three things:
-  1. Mark the symbol within the Print operation with `u`.
-  2. Mark the final m-configuration with `y`.
-  3. Move on to `mk`.
+    1. Mark the symbol within the Print operation with `u`.
+    2. Mark the final m-configuration with `y`.
+    3. Move on to `mk`.
 6. `mk`: Returns to the complete configuration, and divides into four sections via markers:
-  1. `x`: The symbol directly to the left of the m-configuration name.
-  2. `v`: Every symbol before `x`.
-  3. ` `: Skip over the m-configuration name, and the scanned symbol.
-  4. `w`: Everything to the right of the scanned symbol.
-  5. Finally, we move onto `sh`
+    1. `x`: The symbol directly to the left of the m-configuration name.
+    2. `v`: Every symbol before `x`.
+    3. ` `: Skip over the m-configuration name, and the scanned symbol.
+    4. `w`: Everything to the right of the scanned symbol.
+    5. Finally, we move onto `sh`
 7. `sh`: This is the section that prints the actual symbol from `M` (if applicable). We do this by:
-  1. Check if the last square scanned (`u`), is blank.
-  2. If it is indeed blank, we are writing a new character in the sequence for `M`. Print that character after the complete configuration between two colons (as described in [section 6](./GUIDE.md#section-6---the-universal-computing-machine)).
-  3. Move on to `inst`
+    1. Check if the last square scanned (`u`), is blank.
+    2. If it is indeed blank, we are writing a new character in the sequence for `M`. Print that character after the complete configuration between two colons (as described in [section 6](./GUIDE.md#section-6---the-universal-computing-machine)).
+    3. Move on to `inst`
 8. `inst`: Finally, write the next complete configuration.
-  1. We already have all of the relevant sections marked out with `v`, `y`, `x`, `u`, and `w`. We just need to stitch them together.
-  2. This is done depending on if our Move operation is `L`, `R`, or `N`.
-    1. All three options below print characters marked by `v` first, and `w` last.
-    2. `L`: `y`, then `x`, then `u`.
-    3. `R`: `x`, then `u`, then `y`.
-    4. `N`: `x`, then `y`, then `u`.
-  3. After we print the complete configuration in the correct order, start again (go back to `anf`, which is out #3.)
+    1. We already have all of the relevant sections marked out with `v`, `y`, `x`, `u`, and `w`. We just need to stitch them together.
+    2. This is done depending on if our Move operation is `L`, `R`, or `N`.
+        1. All three options below print characters marked by `v` first, and `w` last.
+        2. `L`: `y`, then `x`, then `u`.
+        3. `R`: `x`, then `u`, then `y`.
+        4. `N`: `x`, then `y`, then `u`.
+    3. After we print the complete configuration in the correct order, start again (go back to `anf`, which is out #3.)
 
 Note that there are at least 4 small bugs in Turing's original paper in this section. Fortunately, Petzold compiled a list of fixes for them (originally spotted by [Davies](https://en.wikipedia.org/wiki/Donald_Davies) and [Post](https://en.wikipedia.org/wiki/Emil_Leon_Post)).
 
