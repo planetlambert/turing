@@ -547,7 +547,70 @@ fmt.Println(universalMachine.TapeStringFromUniversalMachine())
 
 ## Section 8 - Application of the diagonal process
 
-TODO
+This section returns to the question of whether the computable numbers are enumerable, and the nuances that determine the difference between computable numbers and real numbers.
+
+### Cantor's diagonal argument
+
+This entire section relies on the reader understanding the general idea of [Cantor's diagonal argument](https://en.wikipedia.org/wiki/Cantor%27s_diagonal_argument). The gist of the argument is quite intuitive, and I think after watching a quick video (I recommend [Numberphile's](https://www.youtube.com/watch?v=elvOZm0d4H0)) you should be up-to-speed.
+
+### An incorrect application of the diagonal process
+
+In the first paragraph Turing notes that one may think the computable numbers are not enumerable for the same reason (Cantor's diagonal argument) as the real numbers. The next sentence tripped me up:
+
+> It might, for instance, be thought that the limit of a sequence of computable numbers must be computable. This is clearly only true if the sequence of computable numbers is defined by some rule.
+
+Turing is simply saying that computable numbers have an extra property (they must actually be calculable by finite means), so you wouldn't be able to do necessarily do things that you would do to the real numbers, and expect another computable number to result. You might be able to, but you might need some additional rules on top to ensure you arrive at a computable number.
+
+To show this, Turing now fallaciously applies the diagonal argument to computable numbers. He first assumes the computable sequences are enumerable, and calculates the "sequence on the diagonal" which he calls `b` (he uses the lowercase Greek letter beta). Given that `b` is computable, he uses some math (the actual math doesn't matter) to prove that `b` cannot exist (and therefore computable sequences are not enumerable).
+
+Turing points out that the reason this argument doesn't hold is because of the assumption that `b` is computable. The reason we thought `b` was computable in the first place is because we "computed" it from the enumeration of computable sequences. But referring back to Turing's definiton of computable (calculable by finite means), this would necessarily mean that the process of enumeration would have to be finite. The next few paragraphs are dedicated to proving that this process of enumerating computable sequences cannot be done in a finite number of steps.
+
+### Does `D` exist?
+
+To prove that we can't enumerate computable sequences by finite means, Turing uses a proof by contradition. He assumes we *can* enumerate computable sequences by finite means, and finds a paradox.
+
+I will make a small note here on the phrase `circle-free`. The wording is unclear which is unfortunate, but its worth digging at what Turing is getting at. By `circle`, Turing is referring to some "bug" that prevents a machine from making progress in printing its sequence. A circular machine is one that will never make progress (or may even halt) when attempting to print its sequence. `circle-free` machines *eventually* make progress.
+
+Back to the proof. Turing supposes the existence of two machines `D` and `H`:
+
+- `D` - When supplied with an S.D., it will print `s` (for satisfactory) if the S.D. represents a machine that is circle-free, and `u` (for unsatisfactory) if the S.D. represents a machine is circular. It is assumed that any scratch work of `D` will be erased.
+  - Note that in order to be satisfactory, the machine must also be well-defined (the S.D. actually represents a functioning machine).
+  - `D` is a part of `H`.
+- `H` - Relying on `D` and `U`, `H` will print `b` (the "sequence on the diagonal"). Turing actually wants to print something slightly simpler than `b`, the sequence without each digit changed by $1$, which he calls `b'`. `H` does this by:
+  - Starting at the Description Number $1$, and incrementing ($2$, $3$, ...).
+  - At each step, do the following:
+    -  Provide the S.D. of this D.N. to `D`. If it is satisfactory (`s`), we will say that `R(N)` where `N` is the D.N. is incremented.
+       - For example, if `N` is the first circle-free machine found, then `R(N)` is $1$.
+    - `H` then must find the `R(N)`th digit of the sequence that the machine that that `N`, which is the `R(N)`th digit of `b'`.
+
+Here is an example of the steps of `H` (thank you to Charles Petzold):
+
+| N             | well-defined? | circle-free? | R(N) | `b'` so far | `b` so far | note       |
+| ------------- | ------------- | ------------ | ---- | ----------- | ---------- | --------- |
+| 1             | No            | No           | 0    | N/A         | N/A        |           |
+| 2             | No            | No           | 0    | N/A         | N/A        |           |
+| ...           |               |              |      |             |            |           |
+| 313,325,317   | No            | No           | 1    | 1           | 0          | prints 1s |
+| ...           |               |              |      |             |            |           |
+| 3,133,255,317 | No            | No           | 2    | 10          | 01         | prints 0s |
+| ...           |               |              |      |             |            |           |
+
+
+If that description of `H` is complicated, here is a more intuitive way to think about it: `H` just loops over all natural numbers, converts the number to an S.D., tests if the S.D. is circle-free, and then finds the appropriate digit to add to the sequence on the diagonal. If it is still too complicated, I have implemented `H` (the parts that are possible), in [diagonal.go](./diagonal.go) and [diagonal_test.go](./diagonal_test.go). I think its worth understanding `H` in full before we get to the proof by contradition.
+
+Before he gives the proof, Turing explains that `H` (at least the non-`D` part of `H`) is clearly circle-free (and in fact in [diagonal_test.go](./diagonal_test.go)) we proved this. This is intuitive to understand, it basically just loops over the natural numbers, outsources the hard part to `D`, keeps track of the count of circle-free machines (`R`), grabs the `R`th digit of a sequence and prints it.
+
+Now comes the proof. Turing supposes that over the course of `H` looping over the Description Numbers of all machines, it will have to (at some point) arrive at the Description Number of `H` itself (which he says is `K`). Its fascinating to think of what happens at this step. `D` will have to determine if `H` is satisfactory (circle-free) or unsatisfactory. If `H` is truly circle-free like we have been assuming, then it obviously can't be unsatisfactory. At the same time, it cannot be satisfactory - when trying to calculate the `R(K)`th digit in our diagonal sequence, we must go through the entirety of `H`'s steps once more, and in fact we have to do this recursion infinitely. There is an infinite loop, or in Turing's terms, `H` is circular (but we just assumed it was satisfactory, or circle free). `H` paradoxically cannot be satisfactory or unsatisfactory, so `D` cannot exist.
+
+With this proof, Turing shows:
+1. No machine exists that can determine whether another machine is circle-free
+2. Diagonalization cannot be applied to computable numbers
+3. Computable numbers *are* theoretically enumerable in the sense that we can enumerate the natural numbers, use them to represent machines, and possibly compute a sequence using the machine , **but**...
+4. ...you cannot actually perform this enumeration by finite means!
+
+To answer our original question on enumerability of computable numbers: it depends on your definition of enumerability. My opinion is that to be enumerable, someone must be able to actually perform the enumeration, and therefore they are **not** enumerable.
+
+### Does `E` exist?
 
 ## Section 9 - The extent of computable numbers
 
