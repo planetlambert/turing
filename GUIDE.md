@@ -612,6 +612,8 @@ To answer our original question on enumerability of computable numbers: it depen
 
 ### Does `E` exist?
 
+### There is a general process for determining...
+
 ## Section 9 - The extent of computable numbers
 
 TODO
