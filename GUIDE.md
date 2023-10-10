@@ -620,7 +620,36 @@ To answer our original question on enumerability of computable numbers: it depen
 
 ### Does `E` exist?
 
+Turing now employs a similar proof by contradiction, this time for a machine `E` which he will prove useful later. He explains the goal of the proof:
+
+> there can be no machine E which, when supplied with the S.D of an arbitrary machine M, will determine whether M ever prints a given symbol (0 say).
+
+He first supposes a machine `M1` which prints the same sequence as `M` except for it replaces the first printed 0 with a 0̄. Similarly `M2` replaces the first two printed 0's with 0̄'s. These machines are quite easy to implement and are contained in [diagonal.go](./diagonal.go) and [diagonal_test.go](./diagonal_test.go).
+
+Next comes the machine `F` which prints the S.D. of `M1`, `M2`, ..., etc. successively. Again you can see our implementation of `F`.
+
+Turing now supposes the machine `G` which combines `F` and `E`. It uses `F` to loop over `M1`, `M2`, etc., and then uses `E` to test if 0 is every printed. For each step in the loop, if it is found that a 0 is never printed, then `G` itself will print a 0.
+
+Now Turing turns this in on itself and has `E` test `G`. Because `G` only prints 0 when there is no 0 printed by `M`, we can tell if `M` prints 0 infinitely often by checking if `G` never prints a 0. Now we have a way to determine if 0 is printed infinitely often by `M`. It should be clear that we can similarly determine if 1 is printed infinitely often using the same tactic.
+
+Here is the crux of the proof - the problem is that if we have a way of determining if 0's and 1's are printed infinitely often, then we can tell if a machine is circle-free. We already know that this is impossible from our result in the sub-section above. Therefore, `E` cannot exist.
+
 ### There is a general process for determining...
+
+The final paragraph in this section is a small aside that leads us into the next section, and makes a connection between Turing's machine and mathematical logic. The first part explains that we can't assume that "there is a general process for determining ..." means that "there is a machine for determining ...". We have to prove that our machines can truly do anything that human computers can do first.
+
+He gives us a preview of how he will do this: he says that each of these "general process" problems can be broken down into a mathematical logic problem. The sequence computed by a machine can be the answer to the logic problem "is `G(n)` true or false" where `n` is any integer and `G` is any logical function. For example:
+
+| Computed Sequence | Logical Function          |
+| ----------------- | ------------------------- |
+| `10000000000000...` | `IsZero(n)`             |
+| `01000000000000...` | `IsOne(n)`              |
+| `10101010101010...` | `IsEven(n)`             |
+| `01010101010101...` | `IsOdd(n)`              |
+| `10010010010010...` | `IsDivisibleByThree(n)` |
+| `10010010010010...` | `IsDivisibleByThree(n)` |
+
+Turing uses this connection between his machines and logic for the rest of the paper. With this insight he can now attempt to create a process (as in *decision process*) that computes any logical function.
 
 ## Section 9 - The extent of computable numbers
 

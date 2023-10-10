@@ -5,3 +5,5 @@ package turing
 
 // TODO: Test `W` (test it on the above). If it doesn't take too long, show `313,325,317` is the first well-defined.
 // TODO: Test non-`D` part of `H`
+
+// TODO: Test `M1`, `M2`, etc.
