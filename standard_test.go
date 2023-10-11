@@ -58,6 +58,29 @@ func TestStandardMachineExample2(t *testing.T) {
 	// No StandardDescription or DescriptionNumner given
 }
 
+func TestNewMachineFromDescriptionNumber(t *testing.T) {
+	st := NewStandardTable(MachineInput{
+		MConfigurations: []MConfiguration{
+			{"b", []string{" "}, []string{"P0", "R"}, "c"},
+			{"c", []string{" "}, []string{"R"}, "e"},
+			{"e", []string{" "}, []string{"P1", "R"}, "k"},
+			{"k", []string{" "}, []string{"R"}, "b"},
+		},
+		PossibleSymbols: []string{"0", "1"},
+	})
+	m := NewMachine(st.MachineInput)
+	m.MoveN(100)
+
+	newMachineInput, err := NewMachineFromDescriptionNumber(st.DescriptionNumber)
+	if err != nil {
+		t.Error(err)
+	}
+	newM := NewMachine(newMachineInput)
+	newM.MoveN(100)
+
+	checkTape(t, m.TapeString(), newM.TapeString())
+}
+
 func checkStandardDescription(t *testing.T, actual StandardDescription, expected string) {
 	if string(actual) != expected {
 		t.Errorf("got %s, want %s", actual, expected)

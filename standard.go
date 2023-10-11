@@ -54,7 +54,7 @@ const (
 )
 
 var (
-	sDCharToDNInt = map[byte]int{
+	sdCharToDNInt = map[byte]int{
 		a:         1,
 		c:         2,
 		d:         3,
@@ -62,6 +62,16 @@ var (
 		r:         5,
 		n:         6,
 		semicolon: 7,
+	}
+
+	dnIntToSDChar = map[int]byte{
+		1: a,
+		2: c,
+		3: d,
+		4: l,
+		5: r,
+		6: n,
+		7: semicolon,
 	}
 )
 
@@ -357,8 +367,7 @@ func (sm SymbolMap) TranslateTape(tape Tape) string {
 func toStandardDescription(input MachineInput) StandardDescription {
 	var standardDescription strings.Builder
 	for _, standardMConfiguration := range input.MConfigurations {
-		// TODO: Bug in original paper, each Standard Description should begin with
-		// a semi-colon.
+		// There is a bug in original paper, each m-configuration should begin with a semi-colon.
 		standardDescription.WriteByte(semicolon)
 
 		// Name is `DAAA`
@@ -396,7 +405,63 @@ func toStandardDescription(input MachineInput) StandardDescription {
 func toDescriptionNumber(sd StandardDescription) DescriptionNumber {
 	var descriptionNumber strings.Builder
 	for _, char := range []byte(sd) {
-		descriptionNumber.WriteString(strconv.Itoa(sDCharToDNInt[char]))
+		descriptionNumber.WriteString(strconv.Itoa(sdCharToDNInt[char]))
 	}
 	return DescriptionNumber(descriptionNumber.String())
+}
+
+// Converts a D.N. to a Machine. Returns an error if the D.N. is not well-defined.
+func NewMachineFromDescriptionNumber(dn DescriptionNumber) (MachineInput, error) {
+	var standardDescription strings.Builder
+	for _, char := range []byte(dn) {
+		i, err := strconv.Atoi(string(char))
+		if err != nil {
+			return MachineInput{}, err
+		}
+		standardDescription.WriteString(string(dnIntToSDChar[i]))
+	}
+
+	mConfigurations := []MConfiguration{}
+	for _, section := range strings.Split(standardDescription.String()[1:], string(semicolon)) {
+		subsections := strings.Split(section[1:], string(d))
+		name := mConfigurationNamePrefix + strconv.Itoa(len(subsections[0]))
+		symbol := mConfigurationSymbolPrefix + strconv.Itoa(len(subsections[1]))
+		printOperation := string(printOp) + mConfigurationSymbolPrefix + strconv.Itoa(len(subsections[2])-1)
+		moveOperation := string(subsections[2][len(subsections[2])-1])
+		finalMConfiguration := mConfigurationNamePrefix + strconv.Itoa(len(subsections[len(subsections)-1]))
+
+		mConfigurations = append(mConfigurations, MConfiguration{
+			Name:                name,
+			Symbols:             []string{symbol},
+			Operations:          []string{printOperation, moveOperation},
+			FinalMConfiguration: finalMConfiguration,
+		})
+	}
+
+	possibleSymbols := []string{}
+	for i := 0; i <= maxCharsRepeated([]byte(standardDescription.String()), c); i++ {
+		possibleSymbols = append(possibleSymbols, mConfigurationSymbolPrefix+strconv.Itoa(i))
+	}
+
+	return MachineInput{
+		MConfigurations: mConfigurations,
+		PossibleSymbols: possibleSymbols,
+		NoneSymbol:      mConfigurationSymbolPrefix + strconv.Itoa(0),
+	}, nil
+}
+
+func maxCharsRepeated(s []byte, ch byte) int {
+	var maxCount int
+	var runningCount int
+	for _, b := range s {
+		if b == ch {
+			runningCount += 1
+			if runningCount > maxCount {
+				maxCount = runningCount
+			}
+		} else {
+			runningCount = 0
+		}
+	}
+	return maxCount
 }
