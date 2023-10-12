@@ -2,6 +2,8 @@ package turing
 
 import (
 	"bytes"
+	"errors"
+	"regexp"
 	"slices"
 	"strconv"
 	"strings"
@@ -412,6 +414,11 @@ func toDescriptionNumber(sd StandardDescription) DescriptionNumber {
 
 // Converts a D.N. to a Machine. Returns an error if the D.N. is not well-defined.
 func NewMachineFromDescriptionNumber(dn DescriptionNumber) (MachineInput, error) {
+	matched, _ := regexp.MatchString("^(?:731+32*32*[456]31+)+$", string(dn))
+	if !matched {
+		return MachineInput{}, errors.New("not a well defined Description Number")
+	}
+
 	var standardDescription strings.Builder
 	for _, char := range []byte(dn) {
 		i, err := strconv.Atoi(string(char))
