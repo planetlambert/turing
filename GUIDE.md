@@ -711,7 +711,7 @@ Turing first says that a machine `K` exists that can find all provable formulae 
 
 The axioms are of course the [Peano axioms](https://en.wikipedia.org/wiki/Peano_axioms), which Turing defines as $P$, or:
 
-$$(\exists u)N(u) \;\; \\& \;\; (x)(N(x) → (\exists y)F(x, y)) \;\; \\& \;\; (F(x, y) → N(y))$$
+$$(\exists u)N(u) \\;\\; \\& \\;\\; (x)(N(x) → (\exists y)F(x, y)) \\;\\; \\& \\;\\; (F(x, y) → N(y))$$
 
 where:
 
