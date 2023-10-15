@@ -661,7 +661,7 @@ Turing now will now give some arguments that describe the "extent" of the comput
 
 The secret to understanding section 9 is this: Turing wants to prove that his machine is capable of "computing" anything that a human (or anything else) is capable of "computing". If Turing can convince the reader of this, he can use his machines in proofs related to mathematical logic without the reader worrying that the proofs don't apply universally. Without this section, a reader might object to Turing's proof in the following way:
 
-"Sure, Turing proved *his machines* are incapable of accomplishing X, but that doesn't necessary prove that X is unaccomplishable..." - Someone who skipped section 9
+"Sure, Turing proved *his machines* are incapable of accomplishing X, but that doesn't necessary prove that X is unaccomplishable..." - Someone who skipped section 9.
 
 Turing attempts to convince the reader using three separate arguments. Before diving into the arguments, he gives us a preview of how he will build upon this foundation:
 
@@ -677,9 +677,73 @@ In Turing's time this was not the case, and he went into painstaking detail abou
 
 ### Argument `b` - A proof of the equivalence of two definitions
 
+Turing's second argument is more complex, and will require an understanding of [first-order logic](https://en.wikipedia.org/wiki/First-order_logic), and specifically [Hilbert's calculus](https://en.wikipedia.org/wiki/Hilbert_system). I won't explain these in detail, but here is a crash course, specifically in Hilbert's (and Turing's) notation:
 
+- Propositions are sentences that can be true or false.
+  - Ex: It will snow today
+  - Repesented by capital letters ($X$, $Y$, etc.)
+- $\vee$ represents OR
+  - Ex: $X \vee Y$ is true if $X$ or $Y$ is true
+- $\&$ represents AND
+  - Ex: $X \& Y$ is true if both $X$ and $Y$ is true
+- $-$ represents NOT
+  - Ex: $-X$ means $X$ is not true
+- $→$ represents implication
+  - $X → Y$ is equal to $-X \vee Y$
+- $\sim$ represents equality
+  - $X \sim Y$ is equal to $(X  Y) \& (Y → X)$
+- Parentheses $()$ denote evaluation order
+- Predicate functions over natural numbers that evaluate to a truth value
+  - Ex: $\text{IsPrime}(x)$ where $\text{IsPrime}(4)$ is false and $\text{IsPrime}(5)$ is true
+- $\exists$ represents existential quantification
+  - Ex: $(\exists x)\text{IsPrime}(x)$ means there exists a natural number that is prime.
+- $(x)$ represents universal quantification
+  - Ex: $(x)\text{IsPrime}(x)$ means that all natural numbers are prime (which is of course false)
 
-### Argument `c` - Giving examples of large classes of numbers which are computable
+This argument has the following outline:
+1. Turing's machine is capable of representing Hilbert's calculus (the two definition are "equivalent").
+2. Hilbert's calculus is the conceptual space in which the decision problem is applied.
+3. Therefore, Turing's machine can be directly applied to the decision problem.
+
+Turing shows (1), while (2, 3) are implied. Lets get into the details of the argument.
+
+Turing first says that a machine `K` exists that can find all provable formulae of Hilbert's calculus (from here on just "the calculus"). `K` exists because we can recursively enumerate all formulae from a set of axioms, a consequence of [Godel's completeness theorum](https://en.wikipedia.org/wiki/G%C3%B6del%27s_completeness_theorem).
+
+The axioms are of course the [Peano axioms](https://en.wikipedia.org/wiki/Peano_axioms), which Turing defines as $P$, or:
+
+$$(\exists u)N(u) \;\; \& \;\; (x)(N(x) → (\exists y)F(x, y)) \;\; \& \;\; (F(x, y) → N(y))$$
+
+where:
+
+- $N(x)$ - $x$ is a natural number
+- $F(x, y)$ - The successor function ($y$ is one greater than $x$)
+
+*Aside: Petzold explains Turing is missing some axioms to ensure the uniqueness of zero, uniqueness of the successor, etc., but lets just assume $P$ correctly enumerates the Peano axioms.*
+
+Turing also provides two predicate functions related to a sequence $a$ (which we will attempt to compute):
+
+- $G_a(x)$ - The $x$'th figure of $a$ is $1$
+- $-G_a(x)$ - The $x$'th figure of $a$ is $0$
+
+Using $P$, the $G$ predicate functions, and any other combination of propositions built from the axioms we can define a formula $U$ (Turing uses the Fraktur letter A which is not available in GitHub's LaTeX) which will allow us to compute $a$.
+
+The way we do this is by enumerating over each figure $n$ of the sequence $a$, and writing down on our tape two (large) formulae $A_n$ and $B_n$. The textual description of $A_n$ and $B_n$ follows:
+- $A_n$ is the formula built up from our axioms that implies that the $n$'th figure of $a$ is $1$.
+- $B_n$ is the formula built up from our axioms that implies that the $n$'th figure of $a$ is $0$.
+
+It should be clear that only $A_n$ and $B_n$ can be true.
+
+Now Turing gives the description of a machine $K_a$ that can compute $a$:
+
+- For each section $n$ of $K_a$ the $n$'th figure of $a$ is computed.
+- In each of these sections
+  - Write down $A_n$ and $B_n$ on the tape
+  - Enumerate all theorums deduced from the set of axioms
+  - If we find theorum $A_n$ in this enumeration, print $1$. If we find theorum $B_n$, print $0$.
+
+Turing finishes the argument by stating that any sequence that can be defined in Hilbert's system using a set of axioms is "computable" (and vice versa). Our implementation of $K_a$ can be found in [hilbert.go](./hilbert.go) and [hilbert_test.go](./hilbert_test.go).
+
+In the final section (III) Turing ties arguments `a` and `b` together. Argument `c` is left to [section 10](./GUIDE.md#section-10---examples-of-large-classes-of-numbers-which-are-computable).
 
 ## Section 10 - Examples of large classes of numbers which are computable
 
