@@ -653,7 +653,29 @@ Turing uses this connection between his machines and logic for the rest of the p
 
 ## Section 9 - The extent of computable numbers
 
-TODO
+Until now, Turing has not explained the reasoning behind his definition of "computable". Here is an excerpt from section 1:
+
+> We have said that the computable numbers are those whose decimals are calculable by finite means. This requires rather more explicit definition. No real attempt will be made to justify the definitions given until we reach § 9. For the present I shall only say that the justification lies in the fact that the human memory is necessarily limited.
+
+Turing now will now give some arguments that describe the "extent" of the computable numbers. By being more philosophically rigorous he will be able to build on top of these arguments, which gives him an angle from which to attack the decision problem later.
+
+The secret to understanding section 9 is this: Turing wants to prove that his machine is capable of "computing" anything that a human (or anything else) is capable of "computing". If Turing can convince the reader of this, he can use his machines in proofs related to mathematical logic without the reader worrying that the proofs don't apply universally. Without this section, a reader might object to Turing's proof in the following way:
+
+"Sure, Turing proved *his machines* are incapable of accomplishing X, but that doesn't necessary prove that X is unaccomplishable..."
+
+\- Someone who skipped section 9
+
+Turing attempts to convince the reader using three separate arguments. Before diving into the arguments, he gives us a preview of how he will build upon this foundation:
+
+> Once it is granted that computable numbers are all "computable", several other propositions of the same character follow. In particular, it follows that, if there is a general process for determining whether a formula of the Hilbert function calculus is provable, then the determination can be carried out by a machine.
+
+Here he is simply saying that if the answer to Hilbert's decision problem is `yes` (that there is an algorithm that can decide if a logic statement is **provable** from a set of axioms, for every possible statement), then he will be able to construct a machine that carries out this decision process.
+
+### Argument `a` - A direct appeal to intuition
+
+### Argument `b` - A proof of the equivalence of two definitions
+
+### Argument `c` - Giving examples of large classes of numbers which are computable
 
 ## Section 10 - Examples of large classes of numbers which are computable
 
