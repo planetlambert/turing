@@ -685,13 +685,13 @@ Turing's second argument is more complex, and will require an understanding of [
 - $\vee$ represents OR
   - Ex: $X \vee Y$ is true if $X$ or $Y$ is true
 - $\\&$ represents AND
-  - Ex: $X \& Y$ is true if both $X$ and $Y$ is true
+  - Ex: $X \\& Y$ is true if both $X$ and $Y$ is true
 - $-$ represents NOT
   - Ex: $-X$ means $X$ is not true
 - $→$ represents implication
   - $X → Y$ is equal to $-X \vee Y$
 - $\sim$ represents equality
-  - $X \sim Y$ is equal to $(X  Y) \& (Y → X)$
+  - $X \sim Y$ is equal to $(X  Y) \\& (Y → X)$
 - Parentheses $()$ denote evaluation order
 - Predicate functions over natural numbers that evaluate to a truth value
   - Ex: $\text{IsPrime}(x)$ where $\text{IsPrime}(4)$ is false and $\text{IsPrime}(5)$ is true
@@ -711,7 +711,7 @@ Turing first says that a machine `K` exists that can find all provable formulae 
 
 The axioms are of course the [Peano axioms](https://en.wikipedia.org/wiki/Peano_axioms), which Turing defines as $P$, or:
 
-$$(\exists u)N(u) \;\; \& \;\; (x)(N(x) → (\exists y)F(x, y)) \;\; \& \;\; (F(x, y) → N(y))$$
+$$(\exists u)N(u) \;\; \\& \;\; (x)(N(x) → (\exists y)F(x, y)) \;\; \\& \;\; (F(x, y) → N(y))$$
 
 where:
 
