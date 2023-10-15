@@ -671,7 +671,13 @@ Here he is simply saying that if the answer to Hilbert's decision problem is `ye
 
 ### Argument `a` - A direct appeal to intuition
 
+The first of Turing's arguments should be easy for the modern reader to understand. Turing is essentially convincing the reader that his machines are "[Turing Complete](https://en.wikipedia.org/wiki/Turing_completeness)" (a term Turing did not have access to at the time). For us, it is a long-established fact that there is nothing "special" happening in the human brain (there is nothing in the brain that is not replicatable by a machine that is powerful enough).
+
+In Turing's time this was not the case, and he went into painstaking detail about why this intuitively true. This argument in its entirety is quite readable, so I won't add anything else here except that when Turing mentions "computer" he is referring to a human performing computations.
+
 ### Argument `b` - A proof of the equivalence of two definitions
+
+
 
 ### Argument `c` - Giving examples of large classes of numbers which are computable
 
