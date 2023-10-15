@@ -684,7 +684,7 @@ Turing's second argument is more complex, and will require an understanding of [
   - Repesented by capital letters ($X$, $Y$, etc.)
 - $\vee$ represents OR
   - Ex: $X \vee Y$ is true if $X$ or $Y$ is true
-- $\&$ represents AND
+- $\\&$ represents AND
   - Ex: $X \& Y$ is true if both $X$ and $Y$ is true
 - $-$ represents NOT
   - Ex: $-X$ means $X$ is not true
