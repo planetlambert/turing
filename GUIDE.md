@@ -661,9 +661,7 @@ Turing now will now give some arguments that describe the "extent" of the comput
 
 The secret to understanding section 9 is this: Turing wants to prove that his machine is capable of "computing" anything that a human (or anything else) is capable of "computing". If Turing can convince the reader of this, he can use his machines in proofs related to mathematical logic without the reader worrying that the proofs don't apply universally. Without this section, a reader might object to Turing's proof in the following way:
 
-"Sure, Turing proved *his machines* are incapable of accomplishing X, but that doesn't necessary prove that X is unaccomplishable..."
-
-\- Someone who skipped section 9
+"Sure, Turing proved *his machines* are incapable of accomplishing X, but that doesn't necessary prove that X is unaccomplishable..." - Someone who skipped section 9
 
 Turing attempts to convince the reader using three separate arguments. Before diving into the arguments, he gives us a preview of how he will build upon this foundation:
 
