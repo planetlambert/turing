@@ -24,20 +24,8 @@ func TestFirstCircleFreeDN(t *testing.T) {
 }
 
 func TestWellDefinedness(t *testing.T) {
-	mConfigurations := []MConfiguration{}
-	mConfigurations = append(mConfigurations, wellDefined...)
-	mConfigurations = append(mConfigurations, satisfactory...)
-	mConfigurations = append(mConfigurations, unsatisfactory...)
-	mConfigurations = append(mConfigurations, decide...)
-	mConfigurations = append(mConfigurations, checkSemiColon...)
-	mConfigurations = append(mConfigurations, checkName...)
-	mConfigurations = append(mConfigurations, checkSymbol...)
-	mConfigurations = append(mConfigurations, checkPrintOp...)
-	mConfigurations = append(mConfigurations, checkMoveOp...)
-	mConfigurations = append(mConfigurations, checkFinalMConfig...)
-
 	m := NewMachine(NewAbbreviatedTable(AbbreviatedTableInput{
-		MConfigurations:        mConfigurations,
+		MConfigurations:        wellDefinedMachineMConfigurations,
 		Tape:                   strings.Split("; D A D A D A D", ""),
 		StartingMConfiguration: "b",
 		PossibleSymbols:        possibleSymbolsForWellDefinedMachine,
@@ -49,7 +37,7 @@ func TestWellDefinedness(t *testing.T) {
 	}
 
 	m = NewMachine(NewAbbreviatedTable(AbbreviatedTableInput{
-		MConfigurations:        mConfigurations,
+		MConfigurations:        wellDefinedMachineMConfigurations,
 		Tape:                   strings.Split("; D A D D C R D A", ""),
 		StartingMConfiguration: "b",
 		PossibleSymbols:        possibleSymbolsForWellDefinedMachine,

@@ -679,37 +679,51 @@ In Turing's time this was not the case, and he went into painstaking detail abou
 
 Turing's second argument is more complex, and will require an understanding of [first-order logic](https://en.wikipedia.org/wiki/First-order_logic), and specifically [Hilbert's calculus](https://en.wikipedia.org/wiki/Hilbert_system). I won't explain these in detail, but here is a crash course, specifically in Hilbert's (and Turing's) notation:
 
+#### First-order logic 101
+
 - Propositions are sentences that can be true or false.
   - Ex: It will snow today
   - Repesented by capital letters ($X$, $Y$, etc.)
 - $\vee$ represents OR
   - Ex: $X \vee Y$ is true if $X$ or $Y$ is true
 - $\\&$ represents AND
-  - Ex: $X \\& Y$ is true if both $X$ and $Y$ is true
+  - Ex: $X \\& Y$ is true if both $X$ and $Y$ are true
 - $-$ represents NOT
   - Ex: $-X$ means $X$ is not true
 - $→$ represents implication
   - $X → Y$ is equal to $-X \vee Y$
 - $\sim$ represents equality
-  - $X \sim Y$ is equal to $(X  Y) \\& (Y → X)$
+  - $X \sim Y$ is equal to $(X → Y) \\& (Y → X)$
 - Parentheses $()$ denote evaluation order
-- Predicate functions over natural numbers that evaluate to a truth value
+- Predicates are functions over natural numbers that evaluate to a truth value
   - Ex: $\text{IsPrime}(x)$ where $\text{IsPrime}(4)$ is false and $\text{IsPrime}(5)$ is true
 - $\exists$ represents existential quantification
   - Ex: $(\exists x)\text{IsPrime}(x)$ means there exists a natural number that is prime.
+  - $(\exists x)\text{B}(x)$ is equal to $\text{B}(0) \vee \text{B}(1) \vee \text{B}(2) ...$ if $x$ represents natural numbers
 - $(x)$ represents universal quantification
   - Ex: $(x)\text{IsPrime}(x)$ means that all natural numbers are prime (which is of course false)
+  - $(x)\text{B}(x)$ is equal to $B(0) \\& B(1) \\& B(2) ...$ if $x$ represents natural numbers
 
-This argument has the following outline:
-1. Turing's machine is capable of representing Hilbert's calculus (the two definition are "equivalent").
-2. Hilbert's calculus is the conceptual space in which the decision problem is applied.
-3. Therefore, Turing's machine can be directly applied to the decision problem.
+Turing wants to use a version of Hilbert's calculus that is modified slightly (he wants to use a finite set of natural numbers, etc.). This is just so he can prove that his machine that simulates first-order logic is finite, and therefore whatever is calculated is a "computable number" 
 
-Turing shows (1), while (2, 3) are implied. Lets get into the details of the argument.
+#### Equivalence
 
-Turing first says that a machine `K` exists that can find all provable formulae of Hilbert's calculus (from here on just "the calculus"). `K` exists because we can recursively enumerate all formulae from a set of axioms, a consequence of [Godel's completeness theorum](https://en.wikipedia.org/wiki/G%C3%B6del%27s_completeness_theorem).
+Back to argument `b`. This argument has the following outline:
+1. Turing's machines are capable of representing and simulating Hilbert's calculus (the two definitions are "equivalent").
+2. Numbers defined by Hilbert's calculus in the way Turing describes include *all* computable numbers (just simulate the correct first-order logic formula).
+3. Therefore, Turing's machine can be directly applied to problems relating to Hilbert's calculus (like the decision problem)
 
-The axioms are of course the [Peano axioms](https://en.wikipedia.org/wiki/Peano_axioms), which Turing defines as $P$, or:
+Turing shows (1) and (2), while (3) is implied. Lets get into the details of the argument.
+
+#### `K` exists
+
+Turing first presupposes that a machine `K` exists (it actually does this time...) that can find all provable formulae of Hilbert's calculus. We know that `K` exists because we can recursively enumerate all formulae from a set of axioms, a consequence of [Gödel's completeness theorum](https://en.wikipedia.org/wiki/G%C3%B6del%27s_completeness_theorem).
+
+How does this actually work though? `K` is implemented in [hilbert.go](./hilbert.go) and [hilbert_test.go](./hilbert_test.go) to show you, but the secret is to just brute force every combination of operators and axioms using prefix notation.
+
+#### Peano Axioms
+
+Turing chooses these axioms to be [Peano axioms](https://en.wikipedia.org/wiki/Peano_axioms), which Turing defines as $P$, or:
 
 $$(\exists u)N(u) \\;\\; \\& \\;\\; (x)(N(x) → (\exists y)F(x, y)) \\;\\; \\& \\;\\; (F(x, y) → N(y))$$
 
@@ -720,30 +734,39 @@ where:
 
 *Aside: Petzold explains Turing is missing some axioms to ensure the uniqueness of zero, uniqueness of the successor, etc., but lets just assume $P$ correctly enumerates the Peano axioms.*
 
-Turing also provides two predicate functions related to a sequence $a$ (which we will attempt to compute):
+You can think of Peano's axioms as a way to bootstrap mathematics within first-order logic. Using Peano's axioms you can do things like actually defining $\text{IsPrime}(x)$ using only first-order logic.
+
+#### Computing a sequence
+
+Turing now explains that we will be attempting to compute a sequence $a$, and provides some predicates that will help later:
 
 - $G_a(x)$ - The $x$'th figure of $a$ is $1$
 - $-G_a(x)$ - The $x$'th figure of $a$ is $0$
 
-Using $P$, the $G$ predicate functions, and any other combination of propositions built from the axioms we can define a formula $U$ (Turing uses the Fraktur letter A which is not available in GitHub's LaTeX) which will allow us to compute $a$.
+Using $P$ and any other combination of propositions built from the axioms, we can define a formula $U$ (Turing uses the [Fraktur](https://en.wikipedia.org/wiki/Fraktur) letter A which is not available in GitHub's LaTeX) which give the foundation for computing $a$ using first-order logic. Note that these "other combination of propositions" are what makes $a$ unique.
 
-The way we do this is by enumerating over each figure $n$ of the sequence $a$, and writing down on our tape two (large) formulae $A_n$ and $B_n$. The textual description of $A_n$ and $B_n$ follows:
+Finally we have two formulas are $A_n$ and $B_n$, which represent the following:
+
 - $A_n$ is the formula built up from our axioms that implies that the $n$'th figure of $a$ is $1$.
 - $B_n$ is the formula built up from our axioms that implies that the $n$'th figure of $a$ is $0$.
 
-It should be clear that only $A_n$ and $B_n$ can be true.
+It should be clear that only $A_n$ or $B_n$ can be true. Turing uses more successor functions in $A_n$/$B_n$ to ensure that we are keeping things finite.
 
-Now Turing gives the description of a machine $K_a$ that can compute $a$:
+Now we have everything we need to describe a machine $K_a$ that can compute $a$:
 
-- For each section $n$ of $K_a$ the $n$'th figure of $a$ is computed.
-- In each of these sections
+- For each motion $n$ of $K_a$ the $n$'th figure of $a$ is computed.
+- In motion $n$:
   - Write down $A_n$ and $B_n$ on the tape
-  - Enumerate all theorums deduced from the set of axioms
-  - If we find theorum $A_n$ in this enumeration, print $1$. If we find theorum $B_n$, print $0$.
+  - Enumerate all theorums deduced from the set of axioms using `K`
+  - Eventually we will find either $A_n$ or $B_n$ in this enumeration. If it is $A_n$, print $1$. If it is $B_n$, print $0$.
 
-Turing finishes the argument by stating that any sequence that can be defined in Hilbert's system using a set of axioms is "computable" (and vice versa). Our implementation of $K_a$ can be found in [hilbert.go](./hilbert.go) and [hilbert_test.go](./hilbert_test.go).
+To recap what is happening here: We have created a machine ($K_a$) that computes the sequence $a$ digit-by-digit. It does this by checking if our custom first-order logic formula ($U$) is true or false for a given digit (via brute force) and printing $1$ or $0$ accordingly. Our implementation of $K_a$ can be found in [hilbert.go](./hilbert.go) and [hilbert_test.go](./hilbert_test.go).
 
-In the final section (III) Turing ties arguments `a` and `b` together. Argument `c` is left to [section 10](./GUIDE.md#section-10---examples-of-large-classes-of-numbers-which-are-computable).
+Turing sews the argument up by explaining that all computable numbers can be derived this way (we would just need the correct formula $U$). He then gives a gentle reminder that these computable numbers are not all definable numbers (which we learned in section 8).
+
+In the final subsection (III), Turing relates the axiom system described above with the human argument from subsection (I). It's a bit philosophical, but I believe Turing is dispelling doubts readers may have about the human argument from subsection (I). Instead of having to rely on the muddy "state of mind" concept, we can replace it with a more formulaic one as described in subsection (II).
+
+Argument `c` is left to [section 10](./GUIDE.md#section-10---examples-of-large-classes-of-numbers-which-are-computable).
 
 ## Section 10 - Examples of large classes of numbers which are computable
 
