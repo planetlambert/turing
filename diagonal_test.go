@@ -28,7 +28,7 @@ func TestWellDefinedness(t *testing.T) {
 		MConfigurations:        wellDefinedMachineMConfigurations,
 		Tape:                   strings.Split("; D A D A D A D", ""),
 		StartingMConfiguration: "b",
-		PossibleSymbols:        possibleSymbolsForWellDefinedMachine,
+		PossibleSymbols:        wellDefinedMachinePossibleSymbols,
 	}))
 
 	m.MoveN(100000)
@@ -40,7 +40,7 @@ func TestWellDefinedness(t *testing.T) {
 		MConfigurations:        wellDefinedMachineMConfigurations,
 		Tape:                   strings.Split("; D A D D C R D A", ""),
 		StartingMConfiguration: "b",
-		PossibleSymbols:        possibleSymbolsForWellDefinedMachine,
+		PossibleSymbols:        wellDefinedMachinePossibleSymbols,
 		Debug:                  true,
 	}))
 

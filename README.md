@@ -93,6 +93,12 @@ func main() {
 
 [Go Package Documentation here.](https://pkg.go.dev/github.com/planetlambert/turing)
 
+## Testing
+
+```shell
+go test ./...
+```
+
 ## FAQ
 - Why Go?
   - I like Go, and it is the most readable language for me currently.

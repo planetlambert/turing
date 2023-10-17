@@ -626,9 +626,7 @@ Turing now employs a similar proof by contradiction, this time for a machine `E`
 
 He first supposes a machine `M1` which prints the same sequence as `M` except for it replaces the first printed 0 with a 0̄. Similarly `M2` replaces the first two printed 0's with 0̄'s. These machines are quite easy to implement and are contained in [diagonal.go](./diagonal.go) and [diagonal_test.go](./diagonal_test.go).
 
-Next comes the machine `F` which prints the S.D. of `M1`, `M2`, ..., etc. successively. Again you can see our implementation of `F`.
-
-Turing now supposes the machine `G` which combines `F` and `E`. It uses `F` to loop over `M1`, `M2`, etc., and then uses `E` to test if 0 is every printed. For each step in the loop, if it is found that a 0 is never printed, then `G` itself will print a 0.
+Next comes the machine `F` which prints the S.D. of `M1`, `M2`, ..., etc. successively. Turing now supposes the machine `G` which combines `F` and `E`. It uses `F` to loop over `M1`, `M2`, etc., and then uses `E` to test if 0 is ever printed. For each step in the loop, if it is found that a 0 is never printed, then `G` itself will print a 0.
 
 Now Turing turns this in on itself and has `E` test `G`. Because `G` only prints 0 when there is no 0 printed by `M`, we can tell if `M` prints 0 infinitely often by checking if `G` never prints a 0. Now we have a way to determine if 0 is printed infinitely often by `M`. It should be clear that we can similarly determine if 1 is printed infinitely often using the same tactic.
 
