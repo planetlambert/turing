@@ -139,6 +139,28 @@ var (
 	}
 )
 
+// Returns all helper functions
+func allhelperFunctions() []MConfiguration {
+	helperFunctions := []MConfiguration{}
+	helperFunctions = append(helperFunctions, findLeftMost...)
+	helperFunctions = append(helperFunctions, erase...)
+	helperFunctions = append(helperFunctions, printAtTheEnd...)
+	helperFunctions = append(helperFunctions, findLeft...)
+	helperFunctions = append(helperFunctions, findRight...)
+	helperFunctions = append(helperFunctions, copy...)
+	helperFunctions = append(helperFunctions, copyAndErase...)
+	helperFunctions = append(helperFunctions, replace...)
+	helperFunctions = append(helperFunctions, copyAndReplace...)
+	helperFunctions = append(helperFunctions, compare...)
+	helperFunctions = append(helperFunctions, compareAndErase...)
+	helperFunctions = append(helperFunctions, findRightMost...)
+	helperFunctions = append(helperFunctions, printAtTheEnd2...)
+	helperFunctions = append(helperFunctions, printAtTheEnd2...)
+	helperFunctions = append(helperFunctions, copyAndErase2...)
+	helperFunctions = append(helperFunctions, eraseAll...)
+	return helperFunctions
+}
+
 // Input for an Abbreviated Table
 type AbbreviatedTableInput MachineInput
 

@@ -130,22 +130,7 @@ type (
 func NewUniversalMachine(input UniversalMachineInput) MachineInput {
 	// Helper MFunctions
 	mConfigurations := []MConfiguration{}
-	mConfigurations = append(mConfigurations, findLeftMost...)
-	mConfigurations = append(mConfigurations, erase...)
-	mConfigurations = append(mConfigurations, printAtTheEnd...)
-	mConfigurations = append(mConfigurations, findLeft...)
-	mConfigurations = append(mConfigurations, findRight...)
-	mConfigurations = append(mConfigurations, copy...)
-	mConfigurations = append(mConfigurations, copyAndErase...)
-	mConfigurations = append(mConfigurations, replace...)
-	mConfigurations = append(mConfigurations, copyAndReplace...)
-	mConfigurations = append(mConfigurations, compare...)
-	mConfigurations = append(mConfigurations, compareAndErase...)
-	mConfigurations = append(mConfigurations, findRightMost...)
-	mConfigurations = append(mConfigurations, printAtTheEnd2...)
-	mConfigurations = append(mConfigurations, printAtTheEnd2...)
-	mConfigurations = append(mConfigurations, copyAndErase2...)
-	mConfigurations = append(mConfigurations, eraseAll...)
+	mConfigurations = append(mConfigurations, allhelperFunctions()...)
 
 	// Universal Machine MFunctions
 	mConfigurations = append(mConfigurations, configuration...)

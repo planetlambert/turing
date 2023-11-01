@@ -768,6 +768,20 @@ Argument `c` is left to [section 10](./GUIDE.md#section-10---examples-of-large-c
 
 ## Section 10 - Examples of large classes of numbers which are computable
 
+Now Turing expounds a bit about computable functions. I think the key to understanding this section is getting the concept of a computable function to "click". Note that whenever Turing says "integral number" in this section he is referring to a "natural number". 
+
+For the entire paper we have been talking about computing a number, like $5$, $\tfrac{1}{3}$, $\sqrt{2}$, etc. Turing now wants to think about computing functions with defined input and output types. A simple one to think about is a function $f(x)$ that takes one variable ($x$) which is a natural number, and which returns a natural number. Let's just say (to take Petzold's example) that $f(x) = 2x + 1$. We could codify this function of natural numbers into the following:
+
+$$010111011111011111110...$$
+
+where in between every $0$, is the output of $f(x)$ where $x$ is $0$, $1$, $2$, ..., etc. in $1$'s.
+
+Turing says function whose input and output are natural numbers like this is "a computable function" (in the sense that we can compute the outputs of the function for every possible input). In fact, there can be computable functions with other input types. I'll enumerate them here, and then describe them afterwards:
+
+- $f(x)$ where $x$ is a natural number and a natural number is returned
+- $f(x)$ where $x$ is a computable number and a computable number is returned
+- $f(x, y, ...)$ where $x$, $y$, ... are natural numbers and a natural number is returned
+
 TODO
 
 ## Section 11 - Application to the Entscheidungsproblem
