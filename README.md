@@ -4,7 +4,7 @@ The first complete and open source implementation of Alan Turing's famous 1936 p
 
 ## Why?
 
-About a month ago I attempted to read Turing's paper, and found it too difficult to understand. I figured reading a reference implementation (that includes `m-functions`, a working `univeral machine`, etc.) would make things clearer. It was super surprising to find that a full implementation does not exist on the internet, so I decided to write my own.
+I attempted to read Turing's paper, and found it too difficult to understand. I figured reading a reference implementation (that includes `m-functions`, a working `univeral machine`, etc.) would make things clearer, but was surprised to find that a full implementation does not exist on the internet. I thought it could be fun to try to write my own.
 
 ## Guide
 For those who intend to read the full paper I recommend starting with [The Annotated Turing](https://www.amazon.com/Annotated-Turing-Through-Historic-Computability/dp/0470229055) by Charles Petzold (which explains the paper line-by-line with annotations).
@@ -101,6 +101,6 @@ go test ./...
 
 ## FAQ
 - Why Go?
-  - I like Go, and it is the most readable language for me currently.
+  - I like Go and I think its easy to read.
 - How is the performance?
   - My goal for this repository is to be a learning resource, so when possible I bias towards readability.
