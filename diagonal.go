@@ -75,34 +75,34 @@ var (
 	hMachinePossibleSymbols = []string{}
 
 	hMachineMConfigurations = []MConfiguration{
-		// The start of the machine
-		{"b", []string{"*", " "}, []string{"Pe", "R", "Pe", "R", "P:"}, "TODO"},
+		// TODO: The start of the machine
+		{"beginH", []string{"*", " "}, []string{"Pe", "R", "Pe", "R", "P:::"}, "TODO"},
 
-		// Find the 2nd to last `:` and copy what comes after to the end of the tape.
-		// Increment this number by 1. Afterwards, print `::` and move to `convert`.
+		// TODO: Find the 2nd to last `:` and copy what comes after to the end of the tape,
+		// but increment this number by 1. Afterwards, print `::` and move to `convert`.
 		{"iter", []string{"*", " "}, []string{}, "TODO"},
 
-		// Find the latest `::` and convert the D.N. to the left into a S.D. on the right.
+		// TODO: Find the latest `::` and convert the D.N. to the left into a S.D. on the right.
 		// Afterwards, print `:::` invoke `D`.
 		{"convert", []string{"*", " "}, []string{}, "TODO"},
 
 		// TODO: Fake `D`
 		{"D", []string{"*", " "}, []string{}, "TODO"},
 
-		// Check for `s` or `u`. If `u`, print `:`, and move back to `iter`.
+		// TODO: Check for `s` or `u`. If `u`, print `:`, and move back to `iter`.
 		// If `s`, print `::::`, and move to `R`.
 		{"check", []string{"*", " "}, []string{}, "TODO"},
 
-		// Find the most recent `R` after the 2nd to last `::::` and copy it to the end
+		// TODO: Find the most recent `R` after the 2nd to last `::::` and copy it to the end
 		// of the tape. Add one more symbol to increment. Print `:::::` and move to `simulate`.
 		{"R", []string{"*", " "}, []string{}, "TODO"},
 
-		// Copy the S.D. after the most recent `::` to the end of the tape.
+		// TODO: Copy the S.D. after the most recent `::` to the end of the tape.
 		// Use `U` to simulate the machine, with the modification of only printing
 		// `R` characters. After this has happened, print `::::::` move to `print`.
 		{"simulate", []string{"*", " "}, []string{}, "TODO"},
 
-		// Pluck the `R`'th character from the complete configuration after `:::::`
+		// TODO: Pluck the `R`'th character from the complete configuration after `:::::`
 		// and print it after `::::::`. Now print `:` and move back to `iter`.
 		{"print", []string{"*", " "}, []string{}, "TODO"},
 	}
@@ -114,7 +114,9 @@ var (
 	gMachinePossibleSymbols = []string{}
 
 	gMachineMConfigurations = []MConfiguration{
-		// The start of the machine
+		// TODO: The start of the machine
 		{"b", []string{"*", " "}, []string{"Pe", "R", "Pe", "R", "P:"}, "TODO"},
+
+		// TODO: Enumerate m-functions
 	}
 )
