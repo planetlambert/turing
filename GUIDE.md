@@ -66,7 +66,7 @@ Here Turing reveals **the point of the paper**. All of this work is to serve the
 The decision problem asks if it is possible for there to be an algorithm that decides if a logic statement is **provable** from a set of axioms, for every possible statement. Again, a shortened description of the algorithm:
 
 - Input: A logic statement, and a set of axioms
-- Output: A proof of the statement's truth (or falsity) based on the set of axioms
+- Output: A proof of the statement's truth (or falsity) based on the set of axioms, **or** simply a statement that the logic statement is not provable.
 
 Turing's answer to whether such an algorithm exists: *No*.
 
@@ -775,6 +775,8 @@ Argument `c` is left to [section 10](./GUIDE.md#section-10---examples-of-large-c
 
 Now Turing expounds a bit about computable functions. I think the key to understanding this section is getting the concept of a computable function to "click". Note that whenever Turing says "integral number" in this section he is referring to a "natural number". 
 
+### Computable functions of natural numbers
+
 For the entire paper we have been talking about computing a number, like $5$, $\tfrac{1}{3}$, $\sqrt{2}$, etc. Turing now wants to think about computing functions with defined input and output types. A simple one to think about is a function $f(x)$ that takes one variable ($x$) which is a natural number, and which returns a natural number. Let's use the function (to take Petzold's example) $f(x) = 2x + 1$. The input and output of $f(x) = 2x + 1$ are:
 
 | Input | Output |
@@ -790,15 +792,47 @@ $$010111011111011111110...$$
 
 where in between every $0$, is the output of $f(x)$ where $x$ is $0$, $1$, $2$, ..., etc. in $1$'s.
 
-Turing says that a function whose input and output are natural numbers like this is "a computable function" (in the sense that we can compute the outputs of the function for every possible input). In fact, there can be computable functions with other input types. I'll enumerate them here, and then describe them afterwards:
+Turing says that a function whose input and output are natural numbers like this is "a computable function" (in the sense that we can compute the outputs of the function for every possible input). Here is how we can prove this to ourselves:
 
-- $f(x)$ where $x$ is a natural number and a natural number is returned
-- $f(x)$ where $x$ is a computable number and a computable number is returned
-- $f(x, y, ...)$ where $x$, $y$, ... are natural numbers and a natural number is returned
+We already know from section 9 that we can use a machine to check if a first-order logic equation is true or false (with 1 representing true and 0 representing false). We also have a mechanism (the Peano axioms) to encode our desired function of natural numbers into first-order logic.
 
-TODO
+From this it should be clear we can do the following:
+
+1. Encode our function of natural numbers into first-order logic via the Peano axioms.
+1. Enumerate (via `K` from above) all possible formulae from the set of axioms to see if our formula from (1) is true or false for a given input (we can do this in a machine).
+1. Have a machine print $1$ if true or $0$ if false. Do this progressively for all inputs.
+
+### The rest of the section
+
+Turing goes on in the rest of this section to talk about functions that take a computable number as input and as output (and more). Because these numbers could be infinitely long, we would need to take the input and compute the output at the same time (for the simplest function we would read one digit and output one digit, then move onto the next).
+
+I'm going to skip the rest of this section in this guide because it is extremely in the weeds and not required for [section 11](./GUIDE.md#section-11---application-to-the-entscheidungsproblem). Feel free to read Petzold's description of whats going on here, but I have to be honest I didn't follow anything after the description of Dedekind's cuts applied to computable numbers.
+
+Maybe one day I'll come back and finish this section up.
 
 ## Section 11 - Application to the Entscheidungsproblem
+
+### The Entscheidungsproblem
+
+Okay, the Entscheidungsproblem. It is worth taking some time to discuss what this is and why it is important. Probably worth watching [this Veritasium video](https://www.youtube.com/watch?v=HeQX2HjkcNo) first.
+
+Long ago [David Hilbert](https://en.wikipedia.org/wiki/David_Hilbert) and [Wilhelm Ackermann](https://en.wikipedia.org/wiki/Wilhelm_Ackermann) posed a question about first-order logic (thank's to Petzold for finding the source):
+
+> The decision problem is solved when we know a procedure with a finite number of operations that determines the validity or satisfiability of any given expression.
+
+> The decision problem must be considered the main problem of mathematical logic.
+
+Hilbert and Ackermann envisioned an algorithm that could universally prove to you whether a first-order logic formula was provable (can we *decide* whether it is true or false, or is it *undecidable*) based on a set of axioms, for any possible formula constructed from those set of axioms (in finite time). They believed it was just a matter of time before we find such an algorithm and show that there was "no such thing as an unsolvable problem".
+
+So would an algorithm that solves the decision problem look like? It would take, as inputs, any possible first-order logic formula and a set of axioms. The output of the algorithm would be whether or not the formula is provable (and if true, a proof to prove it).
+
+Turing's approach in the proof below is another proof by contradiction. The gist is:
+
+1. Turing will construct a machine that encodes a first-order logic formula that is only provable if the machine ever prints a $0$.
+2. We know this is impossible from section 8, therefore the decision problem has no solution for Turing's machines.
+3. We know from sections 9 and 10 that Turing's machines encompass all computation, so the decision problem has no solution *at all*.
+
+### The argument
 
 TODO
 
