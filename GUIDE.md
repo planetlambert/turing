@@ -665,11 +665,11 @@ Turing attempts to convince the reader using three separate arguments. Before di
 
 > Once it is granted that computable numbers are all "computable", several other propositions of the same character follow. In particular, it follows that, if there is a general process for determining whether a formula of the Hilbert function calculus is provable, then the determination can be carried out by a machine.
 
-Here he is simply saying that if the answer to Hilbert's decision problem is `yes` (that there is an algorithm that can decide if a logic statement is **provable** from a set of axioms, for every possible statement), then he will be able to construct a machine that carries out this decision process.
+Here he is simply saying that if the answer to Hilbert's decision problem is `yes` (that there is an algorithm that can decide if a logic statement is **provable** from a set of axioms, for every possible statement), then it should be possible to construct a machine that carries out this decision process.
 
 ### Argument `a` - A direct appeal to intuition
 
-The first of Turing's arguments should be easy for the modern reader to understand. Turing is essentially convincing the reader that his machines are "[Turing Complete](https://en.wikipedia.org/wiki/Turing_completeness)" (a term Turing did not have access to at the time). For us, it is a long-established fact that there is nothing "special" happening in the human brain (there is nothing in the brain that is not replicatable by a machine that is powerful enough).
+The first of Turing's arguments should be easy for the modern reader to understand. Turing is essentially convincing the reader that his machines are "[Turing Complete](https://en.wikipedia.org/wiki/Turing_completeness)" (a term that Turing obviously did not have access to at the time). For us, it is a long-established fact that there is nothing "special" happening in the human brain (there is nothing in the brain that is not replicatable by a machine that is powerful enough).
 
 In Turing's time this was not the case, and he went into painstaking detail about why this intuitively true. This argument in its entirety is quite readable, so I won't add anything else here except that when Turing mentions "computer" he is referring to a human performing computations.
 
@@ -679,7 +679,7 @@ Turing's second argument is more complex, and will require an understanding of [
 
 #### First-order logic 101
 
-- Propositions are sentences that can be true or false.
+- Propositions are sentences that can be true or false
   - Ex: It will snow today
   - Repesented by capital letters ($X$, $Y$, etc.)
 - $\vee$ represents OR
@@ -709,7 +709,7 @@ Turing wants to use a version of Hilbert's calculus that is modified slightly (h
 Back to argument `b`. This argument has the following outline:
 1. Turing's machines are capable of representing and simulating Hilbert's calculus (the two definitions are "equivalent").
 2. Numbers defined by Hilbert's calculus in the way Turing describes include *all* computable numbers (just simulate the correct first-order logic formula).
-3. Therefore, Turing's machine can be directly applied to problems relating to Hilbert's calculus (like the decision problem)
+3. Therefore, Turing's machine can be directly applied to problems relating to Hilbert's calculus (like the decision problem).
 
 Turing shows (1) and (2), while (3) is implied. Lets get into the details of the argument.
 
@@ -730,9 +730,14 @@ where:
 - $N(x)$ - $x$ is a natural number
 - $F(x, y)$ - The successor function ($y$ is one greater than $x$)
 
-*Aside: Petzold explains Turing is missing some axioms to ensure the uniqueness of zero, uniqueness of the successor, etc., but lets just assume $P$ correctly enumerates the Peano axioms.*
+The equation above essentially means:
+1. $(\exists u)N(u)$ - There exists a natural number.
+2. $(x)(N(x) → (\exists y)F(x, y))$ - For every natural number, there exists a successor to that number.
+3. $F(x, y) → N(y)$ - A successor to a natural number is itself also a natural number. 
 
 You can think of Peano's axioms as a way to bootstrap mathematics within first-order logic. Using Peano's axioms you can do things like actually defining $\text{IsPrime}(x)$ using only first-order logic.
+
+*Aside: Petzold explains Turing is missing some axioms to ensure the uniqueness of zero, uniqueness of the successor, etc., but lets just assume *$P$* correctly enumerates the Peano axioms.*
 
 #### Computing a sequence
 
@@ -743,12 +748,12 @@ Turing now explains that we will be attempting to compute a sequence $a$, and pr
 
 Using $P$ and any other combination of propositions built from the axioms, we can define a formula $U$ (Turing uses the [Fraktur](https://en.wikipedia.org/wiki/Fraktur) letter A which is not available in GitHub's LaTeX) which give the foundation for computing $a$ using first-order logic. Note that these "other combination of propositions" are what makes $a$ unique.
 
-Finally we have two formulas are $A_n$ and $B_n$, which represent the following:
+Next we have two formulas $A_n$ and $B_n$, which represent the following:
 
 - $A_n$ is the formula built up from our axioms that implies that the $n$'th figure of $a$ is $1$.
 - $B_n$ is the formula built up from our axioms that implies that the $n$'th figure of $a$ is $0$.
 
-It should be clear that only $A_n$ or $B_n$ can be true. Turing uses more successor functions in $A_n$/$B_n$ to ensure that we are keeping things finite.
+It should be clear that only either $A_n$ or $B_n$ can be true. Turing uses exactly the amount of successor functions in $A_n$/$B_n$ that are required to ensure that we are keeping things finite.
 
 Now we have everything we need to describe a machine $K_a$ that can compute $a$:
 
@@ -764,19 +769,28 @@ Turing sews the argument up by explaining that all computable numbers can be der
 
 In the final subsection (III), Turing relates the axiom system described above with the human argument from subsection (I). It's a bit philosophical, but I believe Turing is dispelling doubts readers may have about the human argument from subsection (I). Instead of having to rely on the muddy "state of mind" concept, we can replace it with a more formulaic one as described in subsection (II).
 
-Argument `c` is left to [section 10](./GUIDE.md#section-10---examples-of-large-classes-of-numbers-which-are-computable).
+Argument `c` is left to [section 10](./GUIDE.md#section-10---examples-of-large-classes-of-numbers-which-are-computable) (below).
 
 ## Section 10 - Examples of large classes of numbers which are computable
 
 Now Turing expounds a bit about computable functions. I think the key to understanding this section is getting the concept of a computable function to "click". Note that whenever Turing says "integral number" in this section he is referring to a "natural number". 
 
-For the entire paper we have been talking about computing a number, like $5$, $\tfrac{1}{3}$, $\sqrt{2}$, etc. Turing now wants to think about computing functions with defined input and output types. A simple one to think about is a function $f(x)$ that takes one variable ($x$) which is a natural number, and which returns a natural number. Let's just say (to take Petzold's example) that $f(x) = 2x + 1$. We could codify this function of natural numbers into the following:
+For the entire paper we have been talking about computing a number, like $5$, $\tfrac{1}{3}$, $\sqrt{2}$, etc. Turing now wants to think about computing functions with defined input and output types. A simple one to think about is a function $f(x)$ that takes one variable ($x$) which is a natural number, and which returns a natural number. Let's use the function (to take Petzold's example) $f(x) = 2x + 1$. The input and output of $f(x) = 2x + 1$ are:
+
+| Input | Output |
+| ----- | ------ |
+| 0     | 1      |
+| 1     | 3      |
+| 2     | 5      |
+| 3     | 7      |
+
+We could codify this function of natural numbers into the following:
 
 $$010111011111011111110...$$
 
 where in between every $0$, is the output of $f(x)$ where $x$ is $0$, $1$, $2$, ..., etc. in $1$'s.
 
-Turing says function whose input and output are natural numbers like this is "a computable function" (in the sense that we can compute the outputs of the function for every possible input). In fact, there can be computable functions with other input types. I'll enumerate them here, and then describe them afterwards:
+Turing says that a function whose input and output are natural numbers like this is "a computable function" (in the sense that we can compute the outputs of the function for every possible input). In fact, there can be computable functions with other input types. I'll enumerate them here, and then describe them afterwards:
 
 - $f(x)$ where $x$ is a natural number and a natural number is returned
 - $f(x)$ where $x$ is a computable number and a computable number is returned
