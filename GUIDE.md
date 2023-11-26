@@ -863,7 +863,7 @@ These are building blocks Turing will use to construct a statement about a machi
 
 Turing now wants to encode the m-configurations of $M$ one-by-one in formal logic. Each standard instruction (in it's "move operation") can move left ($L$), right ($R$), or do nothing ($N$). Using his helper functions, he first gives us the formulation for an instruction that moves left, which I break down below:
 
-- $Inst \; \{q_i \; S_j \; S_k \; L \; q_l\}$ - This format should be familiar to you (it is Turing's standard form). We have the m-configuration name $q_i$, the scanned symbol $S_j$, the printed symbol $S_k$, the move operation (left in this case), and the final m-configuration $q_l$.
+- $Inst \{q_i S_j S_k L q_l\}$ - This format should be familiar to you (it is Turing's standard form). We have the m-configuration name $q_i$, the scanned symbol $S_j$, the printed symbol $S_k$, the move operation (left in this case), and the final m-configuration $q_l$.
 - $(x, y, x', y')$ - Four universal quantifiers begin the statement. $x$ and $x'$ represent the $x$'th and $x+1$'th m-configurations. $y$ and $y'$ represent the $y$'th and the $y-1$'th square.
 - $R_{S_j}(x, y) \\& I(x, y) \\& K_{q_i}(x) \\& F(x, x') \\& F(y', y)$ - this part (everything before the $→$ sign) encodes the initial state of the m-configuration: It is the $x$'th complete configuration, and in the complete configuration $x$ we state the m-configuration name, the location of the scanned square, and the scanned symbol. We also codify that $x'$ is the complete configuration that comes after $x$, and $y$ is the square that comes after $y'$.
 - $I(x', y') \\& R_{S_k}(x', y) \\& K_{q_l}(x)$ - the second line describes what should happen in the next complete configuration ($x'$). This should make intuitive sense - the complete configuration $x$ should indeed imply what occurs in complete configuration $x'$.
@@ -873,7 +873,7 @@ Turing doesn't go into the detail of the equations for instructions that move ri
 
 Turing now wants to take each row in our m-configuration, convert it to an instruction of the form $Inst$, and make one large formula $Des(M)$:
 
-$$Inst \{ ... \} \\& Inst \{ ... \} \\& Inst \{ ... \} ...$$
+$$Inst \\& Inst \\& Inst \\& ...$$
 
 $Des(M)$ is an abbreviation describes the entirety of $M$. Turing can now finally construct his $Un(M)$, which can be thought of basically stating "some machine $M$ prints $0$ at some point". $Un(M)$ is quite a large equation. First lets break down the less-important bits:
 
@@ -898,7 +898,7 @@ Turing now uses two Lemmas to show that $Un(M)$ is provable *if and only if* $0$
 
 ### Lemma 1
 
-> LEMMA 1. *If $S_1$ appears on the tape in some complete configuration of $M$, then $Un(M)$ is provable.*
+> LEMMA 1. If $S_1$ appears on the tape in some complete configuration of $M$, then $Un(M)$ is provable.
 
 This is the harder of the two Lemmas, and the crux of the proof. Let's start with the assumption that $0$ appears somewhere on the tape in some complete configuration of $M$. Give this information, we need to show that $Un(M)$ is provable.
 
@@ -906,7 +906,7 @@ TODO
 
 ### Lemma 2
 
-> LEMMA 2. *If $Un(M)$ is provable, then $S_1$ appears on the tape in some complete configuration of $M$.*
+> LEMMA 2. If $Un(M)$ is provable, then $S_1$ appears on the tape in some complete configuration of $M$.
 
 This Lemma is much easier. If we assume $Un(M)$ is provable, then it should result from our formulation of $Un(M)$ that $0$ appears on the tape. No tricks or gotchas here.
 
