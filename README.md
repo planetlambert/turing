@@ -23,8 +23,8 @@ I wrote a section-by-section guide ([GUIDE.md](./GUIDE.md)) that explains the pa
 - [X] [**Section 8** - Application of the diagonal process](./GUIDE.md#section-8---application-of-the-diagonal-process)
 - [X] [**Section 9** - The extent of computable numbers](./GUIDE.md#section-9---the-extent-of-computable-numbers)
 - [X] [**Section 10** - Examples of large classes of numbers which are computable](./GUIDE.md#section-10---examples-of-large-classes-of-numbers-which-are-computable)
-- [ ] [**Section 11** - Application to the Entscheidungsproblem](./GUIDE.md#section-11---application-to-the-entscheidungsproblem)
-- [ ] **Appendix** - Computability and effective calculability
+- [X] [**Section 11** - Application to the Entscheidungsproblem](./GUIDE.md#section-11---application-to-the-entscheidungsproblem)
+- [X] [**Appendix** - Computability and effective calculability](./GUIDE.md#appendix---computability-and-effective-calculability)
 
 ## Usage
 
