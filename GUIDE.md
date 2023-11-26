@@ -889,6 +889,7 @@ And here is the meat of the equation:
   - $I(u, u)$ - in the first complete configuration the tape starts at the first square
 - $Des(M)$ - Turing adds the full description of the machine $M$. In total, the left-hand side of the $→$ sign comes to mean "the motion of $M$". We have the description of $M$, the initial state of the $M$, and successors to encode motion itself.
 - $(\exists s)(\exists t)[N(s) \\& N(t) \\& R_{S_1}(s, t)]$ - For some complete configuration $s$ of $M$, on some square $t$, there exists a printed character $0$.
+- Turing abbreviates (for use in Lemma 1) the left-hand side of the equation to $A(M)$.
 
 Turing concludes this bit by summarizing:
 
@@ -900,9 +901,17 @@ Turing now uses two Lemmas to show that $Un(M)$ is provable *if and only if* $0$
 
 > LEMMA 1. If $S_1$ appears on the tape in some complete configuration of $M$, then $Un(M)$ is provable.
 
-This is the harder of the two Lemmas, and the crux of the proof. Let's start with the assumption that $0$ appears somewhere on the tape in some complete configuration of $M$. Given this information, we need to show that $Un(M)$ is provable.
+This is the harder of the two Lemmas. Given the assumption that $0$ appears somewhere on the tape in some complete configuration of $M$, we need to show that $Un(M)$ is provable.
 
-TODO
+This one is pretty involved. I won't go into full detail (I recommend Petzold's explanations for this), but my interpretation of Lemma 1 is:
+
+1. The initial state of the machine, the description of the machine, and the fact that natural numbers have successors ($A(M) \\& F^{(n)}$) prove the first complete configuration ($CC_0$).
+1. Each complete configuration proves it's successor ($CF_n → CF_{n+1}$).
+1. All complete configurations are therefore provable.
+1. The lemma takes for granted that in some complete configuration, $0$ is somewhere on the tape ($CC_N → R_{S_1}(u^{(N)}, u^{(K)})$ where $u^{(x)}$ equals the number $x$, and $K$ is some number).
+1. We can therefore show that $Un(M)$ is provable - the initial state of the machine, the description of the machine, and the successor functions imply (as long as we have our assumption) that $0$ is on the tape in one of the complete configurations -$(\exists u)A(M) → (\exists s)(\exists t)R_{S_1}(s, t)$.
+
+If you think about it, it makes sense. Of course we would be able to show $Un(M)$ is provable if we already know that $0$ is printed somewhere.
 
 ### Lemma 2
 
