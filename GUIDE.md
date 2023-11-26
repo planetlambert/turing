@@ -873,7 +873,7 @@ Turing doesn't go into the detail of the equations for instructions that move ri
 
 Turing now wants to take each row in our m-configuration, convert it to an instruction of the form $Inst$, and make one large formula $Des(M)$:
 
-$$Inst \\& Inst \\& Inst \\& ...$$
+$$Inst \\; \\& \\; Inst \\; \\& \\; Inst \\; \\& \\; ...$$
 
 $Des(M)$ is an abbreviation describes the entirety of $M$. Turing can now finally construct his $Un(M)$, which can be thought of basically stating "some machine $M$ prints $0$ at some point". $Un(M)$ is quite a large equation. First lets break down the less-important bits:
 
