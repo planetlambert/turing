@@ -900,7 +900,7 @@ Turing now uses two Lemmas to show that $Un(M)$ is provable *if and only if* $0$
 
 > LEMMA 1. If $S_1$ appears on the tape in some complete configuration of $M$, then $Un(M)$ is provable.
 
-This is the harder of the two Lemmas, and the crux of the proof. Let's start with the assumption that $0$ appears somewhere on the tape in some complete configuration of $M$. Give this information, we need to show that $Un(M)$ is provable.
+This is the harder of the two Lemmas, and the crux of the proof. Let's start with the assumption that $0$ appears somewhere on the tape in some complete configuration of $M$. Given this information, we need to show that $Un(M)$ is provable.
 
 TODO
 
@@ -938,7 +938,11 @@ The "Undecidable Machine" (which doesn't actually work), is available in [decisi
 
 ## Appendix - Computability and effective calculability
 
-TODO
+I have decided to learn about the Lambda (λ) Calculus and λ-definability in a separate project - https://github.com/planetlambert/lambda.
+
+When this project is complete, I will return here and do the following:
+1. Flesh out this section of the guide
+1. Implement Turing's machine which is capable of parsing and converting λ-definable sequences in [lambda.go](./lambda.go) and [lambda_test.go](./lambda_test.go)
 
 ## Overall Thoughts
 
