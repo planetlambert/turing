@@ -708,14 +708,14 @@ Turing wants to use a version of Hilbert's calculus that is modified slightly (h
 
 Back to argument `b`. This argument has the following outline:
 1. Turing's machines are capable of representing and simulating Hilbert's calculus (the two definitions are "equivalent").
-2. Numbers defined by Hilbert's calculus in the way Turing describes include *all* computable numbers (just simulate the correct first-order logic formula).
+2. Numbers defined by Hilbert's calculus in the way Turing describes include *all* computable numbers (just simulate the correct first-order logic statement).
 3. Therefore, Turing's machine can be directly applied to problems relating to Hilbert's calculus (like the decision problem).
 
 Turing shows (1) and (2), while (3) is implied. Lets get into the details of the argument.
 
 #### `K` exists
 
-Turing first presupposes that a machine `K` exists (it actually does this time...) that can find all provable formulae of Hilbert's calculus. We know that `K` exists because we can recursively enumerate all formulae from a set of axioms, a consequence of [Gödel's completeness theorum](https://en.wikipedia.org/wiki/G%C3%B6del%27s_completeness_theorem).
+Turing first presupposes that a machine `K` exists (it actually does this time...) that can find all provable statements of Hilbert's calculus. We know that `K` exists because we can recursively enumerate all statements from a set of axioms, a consequence of [Gödel's completeness theorum](https://en.wikipedia.org/wiki/G%C3%B6del%27s_completeness_theorem).
 
 How does this actually work though? `K` is implemented in [hilbert.go](./hilbert.go) and [hilbert_test.go](./hilbert_test.go) to show you, but the secret is to just brute force every combination of operators and axioms using prefix notation.
 
@@ -746,12 +746,12 @@ Turing now explains that we will be attempting to compute a sequence $a$, and pr
 - $G_a(x)$ - The $x$'th figure of $a$ is $1$
 - $-G_a(x)$ - The $x$'th figure of $a$ is $0$
 
-Using $P$ and any other combination of propositions built from the axioms, we can define a formula $U$ (Turing uses the [Fraktur](https://en.wikipedia.org/wiki/Fraktur) letter A which is not available in GitHub's LaTeX) which give the foundation for computing $a$ using first-order logic. Note that these "other combination of propositions" are what makes $a$ unique.
+Using $P$ and any other combination of propositions built from the axioms, we can define a statement $U$ (Turing uses the [Fraktur](https://en.wikipedia.org/wiki/Fraktur) letter A which is not available in GitHub's LaTeX) which give the foundation for computing $a$ using first-order logic. Note that these "other combination of propositions" are what makes $a$ unique.
 
-Next we have two formulas $A_n$ and $B_n$, which represent the following:
+Next we have two statements $A_n$ and $B_n$, which represent the following:
 
-- $A_n$ is the formula built up from our axioms that implies that the $n$'th figure of $a$ is $1$.
-- $B_n$ is the formula built up from our axioms that implies that the $n$'th figure of $a$ is $0$.
+- $A_n$ is the statement built up from our axioms that implies that the $n$'th figure of $a$ is $1$.
+- $B_n$ is the statement built up from our axioms that implies that the $n$'th figure of $a$ is $0$.
 
 It should be clear that only either $A_n$ or $B_n$ can be true. Turing uses exactly the amount of successor functions in $A_n$/$B_n$ that are required to ensure that we are keeping things finite.
 
@@ -763,9 +763,9 @@ Now we have everything we need to describe a machine $K_a$ that can compute $a$:
   - Enumerate all theorums deduced from the set of axioms using `K`
   - Eventually we will find either $A_n$ or $B_n$ in this enumeration. If it is $A_n$, print $1$. If it is $B_n$, print $0$.
 
-To recap what is happening here: We have created a machine ($K_a$) that computes the sequence $a$ digit-by-digit. It does this by checking if our custom first-order logic formula ($U$) is true or false for a given digit (via brute force) and printing $1$ or $0$ accordingly. Our implementation of $K_a$ can be found in [hilbert.go](./hilbert.go) and [hilbert_test.go](./hilbert_test.go).
+To recap what is happening here: We have created a machine ($K_a$) that computes the sequence $a$ digit-by-digit. It does this by checking if our custom first-order logic statement ($U$) is true or false for a given digit (via brute force) and printing $1$ or $0$ accordingly. Our implementation of $K_a$ can be found in [hilbert.go](./hilbert.go) and [hilbert_test.go](./hilbert_test.go).
 
-Turing sews the argument up by explaining that all computable numbers can be derived this way (we would just need the correct formula $U$). He then gives a gentle reminder that these computable numbers are not all definable numbers (which we learned in section 8).
+Turing sews the argument up by explaining that all computable numbers can be derived this way (we would just need the correct statement $U$). He then gives a gentle reminder that these computable numbers are not all definable numbers (which we learned in section 8).
 
 In the final subsection (III), Turing relates the axiom system described above with the human argument from subsection (I). It's a bit philosophical, but I believe Turing is dispelling doubts readers may have about the human argument from subsection (I). Instead of having to rely on the muddy "state of mind" concept, we can replace it with a more formulaic one as described in subsection (II).
 
@@ -799,7 +799,7 @@ We already know from section 9 that we can use a machine to check if a first-ord
 From this it should be clear we can do the following:
 
 1. Encode our function of natural numbers into first-order logic via the Peano axioms.
-1. Enumerate (via `K` from above) all possible formulae from the set of axioms to see if our formula from (1) is true or false for a given input (we can do this in a machine).
+1. Enumerate (via `K` from above) all possible statements from the set of axioms to see if our statement from (1) is true or false for a given input (we can do this in a machine).
 1. Have a machine print $1$ if true or $0$ if false. Do this progressively for all inputs.
 
 ### The rest of the section
@@ -822,19 +822,119 @@ Long ago [David Hilbert](https://en.wikipedia.org/wiki/David_Hilbert) and [Wilhe
 
 > The decision problem must be considered the main problem of mathematical logic.
 
-Hilbert and Ackermann envisioned an algorithm that could universally prove to you whether a first-order logic formula was provable (can we *decide* whether it is true or false, or is it *undecidable*) based on a set of axioms, for any possible formula constructed from those set of axioms (in finite time). They believed it was just a matter of time before we find such an algorithm and show that there was "no such thing as an unsolvable problem".
+Hilbert and Ackermann envisioned an algorithm that could universally prove to you whether a first-order logic statement was provable (can we *decide* whether it is true or false, or is it *undecidable*) based on a set of axioms, for any possible statement constructed from those set of axioms (in finite time). They believed it was just a matter of time before we find such an algorithm and show that there was "no such thing as an unsolvable problem".
 
-So would an algorithm that solves the decision problem look like? It would take, as inputs, any possible first-order logic formula and a set of axioms. The output of the algorithm would be whether or not the formula is provable (and if true, a proof to prove it).
+So would an algorithm that solves the decision problem look like? It would take, as inputs, any possible first-order logic statement and a set of axioms. The output of the algorithm would be whether or not the statement is provable (and if true, a proof to prove it).
+
+It is important to note here that Turing is going to substitute "process" or "procedure" or "algorithm" here with his machines (he earned the right to do this in section 9). If the Entscheidungsproblem is looking for a "process", Turing's machine will be the thing carrying out that process.
+
+Note that this notion of decidability is slightly different from Gödel's Incompleteness Theorum which proved that first-order logic is not complete.
+
+- **Completeness**:
+  - For every statement $S$, can we prove that $S$ is either true or false?
+  - To be complete, there must be an algorithm $Prove(S)$ that returns true or false, along with a proof.
+  - Gödel gave an example of an unprovable statement.
+- **Decidability**:
+  - For every statement $S$, can we decide if $S$ is provable or not?
+  - To be decidable, there must be an algorithm $Decide(S)$ that returns true or false depending on if $Prove(S)$ has an answer.
+  - Turing gave an example of an undecidable statement.
+
+### The Proof
 
 Turing's approach in the proof below is another proof by contradiction. The gist is:
 
-1. Turing will construct a machine that encodes a first-order logic formula that is only provable if the machine ever prints a $0$.
-2. We know this is impossible from section 8, therefore the decision problem has no solution for Turing's machines.
-3. We know from sections 9 and 10 that Turing's machines encompass all computation, so the decision problem has no solution *at all*.
+1. Turing will construct a machine that encodes a first-order logic statement $Un(M)$.
+1. The statement $Un(M)$ essentially states $0$ is printed on the tape somewhere in $M$'s complete configurations.
+1. Turing shows (via two Lemmas) that $Un(M)$ is provable *if and only if* $0$ is printed on the tape (using [logical equivalence](https://en.wikipedia.org/wiki/Logical_equivalence)).
+1. We assume the Entscheidungsproblem has a solution. Then we would have a process for determining (deciding) whether $Un(M)$ is provable.
+1. Because of our logical equivalence, this would mean we would have a process for determining if a machine ever prints a $0$ on the tape.
+1. We know from section 8 that a process for determining if a machine ever prints a $0$ does not exist, therefore there is no process for determining if $Un(M)$ is provable, and the Entscheidungsproblem cannot have a general solution (a solution for all statements).
+1. We know from sections 9 and 10 that Turing's machines encompass all computation, so Turing's answer to the Entscheidungsproblem is universal (there isn't some other type of machine where we may be able to answer the Entscheidungsproblem in the affirmative).
 
-### The argument
+### $Un(M)$
+
+After framing the proof, Turing builds up his description of $Un(M)$. He takes a bottom-up approach, which I will replicate here. He first describes the following three helper functions:
+
+- $R_{S_l}(x, y)$ - means "In the $x$'th complete configuration of $M$, the symbol on the $y$'th square is $S_l$" (where $S_0$ is the blank square, $S_1$ is $0$, $S_2$ is $1$, and so on).
+- $I(x, y)$ - means "In the $x$'th complete configuration of $M$, the $y$'th square is the one that is scanned" (in each complete configuration, we scan one square).
+- $K_{q_m}(x)$ - means "In the $x$'th complete configuration of $M$, the m-configuration is $q_m$".
+
+These are building blocks Turing will use to construct a statement about a machine $M$ itself. He gives one more helper $F(x, y)$ which is the successor function, before getting to $Inst$, which stands for "instruction".
+
+Turing now wants to encode the m-configurations of $M$ one-by-one in formal logic. Each standard instruction (in it's "move operation") can move left ($L$), right ($R$), or do nothing ($N$). Using his helper functions, he first gives us the formulation for an instruction that moves left, which I break down below:
+
+- $Inst \; \{q_i \; S_j \; S_k \; L \; q_l\}$ - This format should be familiar to you (it is Turing's standard form). We have the m-configuration name $q_i$, the scanned symbol $S_j$, the printed symbol $S_k$, the move operation (left in this case), and the final m-configuration $q_l$.
+- $(x, y, x', y')$ - Four universal quantifiers begin the statement. $x$ and $x'$ represent the $x$'th and $x+1$'th m-configurations. $y$ and $y'$ represent the $y$'th and the $y-1$'th square.
+- $R_{S_j}(x, y) \\& I(x, y) \\& K_{q_i}(x) \\& F(x, x') \\& F(y', y)$ - this part (everything before the $→$ sign) encodes the initial state of the m-configuration: It is the $x$'th complete configuration, and in the complete configuration $x$ we state the m-configuration name, the location of the scanned square, and the scanned symbol. We also codify that $x'$ is the complete configuration that comes after $x$, and $y$ is the square that comes after $y'$.
+- $I(x', y') \\& R_{S_k}(x', y) \\& K_{q_l}(x)$ - the second line describes what should happen in the next complete configuration ($x'$). This should make intuitive sense - the complete configuration $x$ should indeed imply what occurs in complete configuration $x'$.
+- The last line of $Inst$ is incorrect, and Turing published a correction a year later. I won't go over the details, but it essentially states that all other squares on the tape remain the same.
+
+Turing doesn't go into the detail of the equations for instructions that move right ($R$) or do nothing ($N$) (and neither will we), but it should be simple given his formulation of an instruction that moves left ($L$).
+
+Turing now wants to take each row in our m-configuration, convert it to an instruction of the form $Inst$, and make one large formula $Des(M)$:
+
+$$Inst \{ ... \} \\& Inst \{ ... \} \\& Inst \{ ... \} ...$$
+
+$Des(M)$ is an abbreviation describes the entirety of $M$. Turing can now finally construct his $Un(M)$, which can be thought of basically stating "some machine $M$ prints $0$ at some point". $Un(M)$ is quite a large equation. First lets break down the less-important bits:
+
+- $N(x)$ - The helper function stating that $x$ is a natural number.
+- $(x)(N(x) → (\exists x')F(x, x'))$ - All numbers have succesors.
+- $(y, z)(F(y, z) → N(y) \\& N(z))$ - All successors are also natural numbers.
+
+And here is the meat of the equation:
+
+- $(\exists u)$ - $Un(M)$ starts with the existence of some number which Turing intends to be zero. I think Turing's ordering is a little strange here, but he uses $u$ to set the initial state of the machine:
+  - $K_{q_1}(u)$ - in the first complete configuration the m-configuration is $q_1$
+  - $(y)R_{S_0}(u, y)$ - in the first complete configuration all squares are blank
+  - $I(u, u)$ - in the first complete configuration the tape starts at the first square
+- $Des(M)$ - Turing adds the full description of the machine $M$. In total, the left-hand side of the $→$ sign comes to mean "the motion of $M$". We have the description of $M$, the initial state of the $M$, and successors to encode motion itself.
+- $(\exists s)(\exists t)[N(s) \\& N(t) \\& R_{S_1}(s, t)]$ - For some complete configuration $s$ of $M$, on some square $t$, there exists a printed character $0$.
+
+Turing concludes this bit by summarizing:
+
+> $Un(M)$ has the interpretation, "in some complete configuration of $M$, $S_1$ (i.e. $0$) appears on the tape"
+
+Turing now uses two Lemmas to show that $Un(M)$ is provable *if and only if* $0$ appears on the tape in some complete configuration of $M$. Each lemma deals with one side of the logical equivalence.
+
+### Lemma 1
+
+> LEMMA 1. *If $S_1$ appears on the tape in some complete configuration of $M$, then $Un(M)$ is provable.*
+
+This is the harder of the two Lemmas, and the crux of the proof. Let's start with the assumption that $0$ appears somewhere on the tape in some complete configuration of $M$. Give this information, we need to show that $Un(M)$ is provable.
 
 TODO
+
+### Lemma 2
+
+> LEMMA 2. *If $Un(M)$ is provable, then $S_1$ appears on the tape in some complete configuration of $M$.*
+
+This Lemma is much easier. If we assume $Un(M)$ is provable, then it should result from our formulation of $Un(M)$ that $0$ appears on the tape. No tricks or gotchas here.
+
+### Conclusion
+
+Turing now has the right to say that "$Un(M)$ is provable *if and only if* $0$ appears on the tape in some complete configuration of $M$". I will simply restate Turing's short answer to the Entscheidungsproblem:
+
+> We are now in a position to show that the Entscheidungsproblem cannot be solved. Let us suppose the contrary. Then there is a general (mechanical) process for determining whether $Un(M)$ is provable. By Lemmas 1 and 2, this implies that there is a process for determining whether $M$ ever prints $0$, and this is impossible, by § 8. Hence the Entscheidungsproblem cannot be solved.
+
+Let's bring this full circle (no pun intended). We can actually use our implementation to construct a machine that simulates $Un(M)$ for some $M$:
+
+```go
+m := MachineInput{ ... } // Any machine
+undecidableMachine := NewUndecidableMachine(m) // Prints `1` or `0` if `m` does or does not ever print a `0`.
+
+for {
+    undecidableMachine.Move()
+    if strings.Contains(undecidableMachine.TapeStringFromUniversalMachine(), "1") {
+        // The machine `m` prints a 0 at some point (this block is possible)
+    } else {
+        // The machine `m` never prints a 0 (this block is not logically possile)
+    }
+}
+```
+
+If by some stroke of luck $M$ actually prints a $0$, we may actually be able to detect this as $Un(M)$ runs through the motion of $M$. The problem is that we cannot actually detect whether some machine $M$ prints a $0$ (other than simulating the machine in-full, which requires infinite time). So we don't have a process in the general case that returns an answer here, which can be seen in the `else` block above.
+
+The "Undecidable Machine" (which doesn't actually work), is available in [decision.go](./decision.go) and [decision_test.go](./decision_test.go).
 
 ## Appendix - Computability and effective calculability
 
@@ -842,8 +942,9 @@ TODO
 
 ## Overall Thoughts
 
-- Turing essentially invents (in theory) the computer and the concept of software/programming, all in service to solve a math problem.
+- Turing essentially invents (in theory) the computer and the concept of software/programming, all in service to solve a (what I thought was an obscure, but I guess is actually an important) math problem.
 - It felt as if Turing piled three or four genius insights on-top of one another, so while reading I was never able to get comfortable before he took things to the next level.
 - There are a lot of bugs (which makes sense as he was not able to run the machine himself).
 - Attempting to learn this paper as a non-mathematician makes me want to get a deeper understanding of the history of math/logic (probably via [Frege to Gödel](https://www.amazon.com/Frege-Godel-Mathematical-1879-1931-Sciences/dp/0674324498))
 - The appendix is a great segue to Church's [Lambda Calculus](https://en.wikipedia.org/wiki/Lambda_calculus), which will probably be my next project.
+- [Self-reference](https://en.wikipedia.org/wiki/Self-reference) is a fascinating concept. I hear [Douglas Hofstadter's](https://en.wikipedia.org/wiki/Douglas_Hofstadter) books are the best resource on this topic.

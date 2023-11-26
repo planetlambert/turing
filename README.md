@@ -84,7 +84,7 @@ func main() {
     }))
 
     // Turing's Universal Machine is quite complex and has to undergo quite a few moves to achieve the same Tape
-    universalMachine.Move(500000)
+    universalMachine.MoveN(500000)
 
     // Prints "0 1 0 1 0 1 ..."
     fmt.Println(universalMachine.TapeStringFromUniversalMachine())
