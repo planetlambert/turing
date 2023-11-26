@@ -822,7 +822,7 @@ Long ago [David Hilbert](https://en.wikipedia.org/wiki/David_Hilbert) and [Wilhe
 
 > The decision problem must be considered the main problem of mathematical logic.
 
-Hilbert and Ackermann envisioned an algorithm that could universally prove to you whether a first-order logic statement was provable (can we *decide* whether it is true or false, or is it *undecidable*) based on a set of axioms, for any possible statement constructed from those set of axioms (in finite time). They believed it was just a matter of time before we find such an algorithm and show that there was "no such thing as an unsolvable problem".
+Hilbert and Ackermann envisioned an algorithm that could universally prove to you whether a first-order logic statement was provable (can we *decide* whether it is or is not possible to produce a proof) based on a set of axioms, for any possible statement constructed from those set of axioms (in finite time). They believed it was just a matter of time before we find such an algorithm and show that there was "no such thing as an unsolvable problem".
 
 So would an algorithm that solves the decision problem look like? It would take, as inputs, any possible first-order logic statement and a set of axioms. The output of the algorithm would be whether or not the statement is provable (and if true, a proof to prove it).
 
@@ -832,11 +832,11 @@ Note that this notion of decidability is slightly different from Gödel's Incomp
 
 - **Completeness**:
   - For every statement $S$, can we prove that $S$ is either true or false?
-  - To be complete, there must be an algorithm $Prove(S)$ that returns true or false, along with a proof.
+  - To be complete, there must be an algorithm $Prove(S)$ that returns true or false, along with a proof for all statements.
   - Gödel gave an example of an unprovable statement.
 - **Decidability**:
   - For every statement $S$, can we decide if $S$ is provable or not?
-  - To be decidable, there must be an algorithm $Decide(S)$ that returns true or false depending on if $Prove(S)$ has an answer.
+  - To be decidable, there must be an algorithm $Decide(S)$ that returns true or false depending on if $Prove(S)$ has an answer, for all statements.
   - Turing gave an example of an undecidable statement.
 
 ### The Proof
