@@ -945,6 +945,8 @@ If by some stroke of luck $M$ actually prints a $0$, we may actually be able to 
 
 The "Undecidable Machine" (which doesn't actually work), is available in [decision.go](./decision.go) and [decision_test.go](./decision_test.go).
 
+The final bit of the paper outside of the appendix talks about putting $Un(M)$ into [prenex normal form](https://en.wikipedia.org/wiki/Prenex_normal_form). Turing tells us that $Un(M)$ is a member of the [reduction class](https://en.wikipedia.org/wiki/Reduction_(complexity)) $\forall \exists \forall \exists^6$ (meaning all statements in this class are also undecidable). I found it interesting that particular reduction classes are indeed decidable (though of course Turing just proved that in the general case first-order logic is not decidable).
+
 ## Appendix - Computability and effective calculability
 
 I have decided to learn about the Lambda (λ) Calculus and λ-definability in a separate project - https://github.com/planetlambert/lambda.
@@ -961,3 +963,4 @@ When this project is complete, I will return here and do the following:
 - Attempting to learn this paper as a non-mathematician makes me want to get a deeper understanding of the history of math/logic (probably via [Frege to Gödel](https://www.amazon.com/Frege-Godel-Mathematical-1879-1931-Sciences/dp/0674324498))
 - The appendix is a great segue to Church's [Lambda Calculus](https://en.wikipedia.org/wiki/Lambda_calculus), which will probably be my next project.
 - [Self-reference](https://en.wikipedia.org/wiki/Self-reference) is a fascinating concept. I hear [Douglas Hofstadter's](https://en.wikipedia.org/wiki/Douglas_Hofstadter) books are the best resource on this topic.
+- It is interesting that the modern formulation of the [halting problem](https://en.wikipedia.org/wiki/Halting_problem) is nowhere to be found in this paper. There seem to be many research offshoots that stem from Turing.
