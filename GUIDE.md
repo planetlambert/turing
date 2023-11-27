@@ -962,5 +962,7 @@ When this project is complete, I will return here and do the following:
 - There are a lot of bugs (which makes sense as he was not able to run the machine himself).
 - Attempting to learn this paper as a non-mathematician makes me want to get a deeper understanding of the history of math/logic (probably via [Frege to Gödel](https://www.amazon.com/Frege-Godel-Mathematical-1879-1931-Sciences/dp/0674324498))
 - The appendix is a great segue to Church's [Lambda Calculus](https://en.wikipedia.org/wiki/Lambda_calculus), which will probably be my next project.
-- [Self-reference](https://en.wikipedia.org/wiki/Self-reference) is a fascinating concept. I hear [Douglas Hofstadter's](https://en.wikipedia.org/wiki/Douglas_Hofstadter) books are the best resource on this topic.
+- [Self-reference](https://en.wikipedia.org/wiki/Self-reference) is a fascinating concept. I hear [Douglas Hofstadter](https://en.wikipedia.org/wiki/Douglas_Hofstadter)'s books are the best resource on this topic.
 - It is interesting that the modern formulation of the [halting problem](https://en.wikipedia.org/wiki/Halting_problem) is nowhere to be found in this paper. There seem to be many research offshoots that stem from Turing.
+- Someone on [HN](https://news.ycombinator.com/item?id=37548095) asked about [Busy Beavers](https://en.wikipedia.org/wiki/Busy_beaver) so I implemented them in [beaver.go](./beaver.go) and [beaver_test.go](./beaver_test.go).
+- The concept I struggled with the most is the difference between [decidability](https://en.wikipedia.org/wiki/Decidability_(logic)) and [completeness](https://en.wikipedia.org/wiki/Completeness_(logic)).

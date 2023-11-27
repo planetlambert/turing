@@ -135,14 +135,15 @@ func NewMachine(input MachineInput) *Machine {
 	return m
 }
 
-// Moves the machine n times
-func (m *Machine) MoveN(n int) {
+// Moves the machine n times and stops early if halted. Returns the amount of moves the machine took.
+func (m *Machine) MoveN(n int) int {
 	for i := 1; i <= n; i++ {
 		m.Move()
 		if m.halted {
-			return
+			return i
 		}
 	}
+	return n
 }
 
 // Moves the machine once
