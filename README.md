@@ -62,7 +62,7 @@ func main() {
     // Convert the same Machine input to Turing's "standard" forms
     standardTable := turing.NewStandardTable(machineInput)
     standardMachineInput := standardTable.MachineInput
-    symbolMap := standardDescription.SymbolMap
+    symbolMap := standardTable.SymbolMap
     standardDescription := standardTable.StandardDescription
     descriptionNumber := standardTable.DescriptionNumber
 
